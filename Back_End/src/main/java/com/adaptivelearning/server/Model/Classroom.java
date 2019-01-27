@@ -3,7 +3,6 @@ package com.adaptivelearning.server.Model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.NaturalId;
-
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -54,6 +53,13 @@ public class Classroom {
     private List<User> students;
 
 
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
+    @JoinTable(name = "classrooms_courses",
+            joinColumns = {@JoinColumn(name = "classroom_id")},
+            inverseJoinColumns = {@JoinColumn(name = "course_id")})
+    private List<User> courses;
     // end of mapping
     public Classroom() {
     }
@@ -102,5 +108,13 @@ public class Classroom {
 
     public void setStudents(List<User> students) {
         this.students = students;
+    }
+
+    public List<User> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<User> courses) {
+        this.courses = courses;
     }
 }

@@ -2,17 +2,12 @@ package com.adaptivelearning.server.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.hibernate.annotations.NaturalId;
-
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -108,12 +103,22 @@ public class User implements Serializable {
             mappedBy = "creator")
     private List<Classroom> classrooms;
 
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL},
+            mappedBy = "publisher")
+    private List<Course> courses;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH},
             mappedBy = "students")
-//    @JoinColumn(name = "CLASSROOMS")
     private List<Classroom> joins;
+
+
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH},
+            mappedBy = "learners")
+    private List<Course> enrolls;
 
     // end of mapping
 
@@ -237,5 +242,13 @@ public class User implements Serializable {
 
     public void setParent(User parent) {
         this.parent = parent;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public List<Course> getEnrolls() {
+        return enrolls;
     }
 }
