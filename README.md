@@ -24,7 +24,7 @@ or
 >http://localhost:8080/student/classrooms?access_token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}
 
 ### Update the classroom info by it's name (PUT method)
->http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_name=CSE19 Security&passcode=fbg98u
+>http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_name=CSE19_Security&passcode=fbg98u
 
 ### Delete classroom by it's name (DELETE method)
 >http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_name=CSE19 Security
@@ -33,10 +33,10 @@ or
 >http://localhost:8080/classroom?access_token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}&classroom_id=2
 
 ### Enroll student in classroom with it's id (POST method)
->http://localhost:8080/student/enroll?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&classroom_name=CSE19 ComputerSecurity&passcode=fbg98u
+>http://localhost:8080/student/enroll?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&classroom_name=CSE19_ComputerSecurity&passcode=fbg98u
 
 ### Add child for a parent (POST method)
 >http://localhost:8080/parent/addchild?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}&firstname=habebbaba&date_of_birth=2001-02-05&email=child1@hotmail.com&password=12345678&username=kelo1&gender=1
 
 ### join child into classroom (POST method)
->http://localhost:8080/parent/enrollchild?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&firstname=habebbaba&classroom_name=CSE19 ComputerSecurity&passcode=fbg98u
+>http://localhost:8080/parent/enrollchild?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&firstname=habebbaba&classroom_name=CSE19_ComputerSecurity&passcode=fbg98u
