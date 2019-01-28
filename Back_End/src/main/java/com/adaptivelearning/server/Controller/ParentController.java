@@ -2,28 +2,27 @@ package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.User;
-import com.adaptivelearning.server.Repository.ClassRoomRepository;
+import com.adaptivelearning.server.Repository.ClassroomRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientResponseException;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
-//@RequestMapping(Mapping.BASE_AUTH)
 @RequestMapping(Mapping.PARENT)
 public class ParentController {
 
@@ -34,7 +33,7 @@ public class ParentController {
     UserRepository userRepository;
 
     @Autowired
-    ClassRoomRepository classRoomRepository;
+    ClassroomRepository classroomRepository;
 
 
     @Autowired
@@ -44,113 +43,130 @@ public class ParentController {
     JwtTokenProvider jwtTokenChecker;
 
 
-    @SuppressWarnings("unchecked")
     @PostMapping(Mapping.AddChild)
     public void addChild(@RequestParam(Param.ACCESSTOKEN) String token,
                          @Valid @RequestParam(Param.FIRSTNAME) String name,
-                         @Valid @RequestParam(Param.DATEOFBIRTH) Date dob,
+                         @Valid @RequestParam(Param.DATEOFBIRTH) String dob,
                          @Valid @RequestParam(Param.USERNAME) String username,
                          @Valid @RequestParam(Param.EMAIL) String email,
                          @Valid @RequestParam(Param.PASSWORD) String password,
-                         @Valid @RequestParam(Param.GENDRE) short gender) {
+                         @Valid @RequestParam(Param.GENDRE) short gender,
+                         HttpServletResponse response) throws ParseException {
 
-        if(!userRepository.findByToken(token).isPresent())
-            throw new RestClientResponseException("Invalid token", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        User user = userRepository.findByToken(token);
 
-        if (!jwtTokenChecker.validateToken(token))
-            throw new RestClientResponseException("Session expired", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
-
-        //        //Long user_id = jwtTokenChecker.getUserIdFromToken(token);
-        User parent = userRepository.findByToken(token).get();
-
-
-        if (userRepository.existsByEmail(email))
-            throw new RestClientResponseException("User present", 400, "Badrequest", HttpHeaders.EMPTY, null, null);
-
-        List<User> myChildren = parent.getChildren();
-        for (User child:myChildren){
-            if (child.getFirstName().equals(name))
-                throw new RestClientResponseException("You added this child before", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        if(user == null){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+//            throw new RestClientResponseException("Invalid token",
+//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+//            throw new RestClientResponseException("Session expired",
+//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
         }
 
 
+        if (userRepository.existsByEmail(email)||
+                userRepository.existsByUsername(username)) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+//            throw new RestClientResponseException("User present",
+//                    400, "Badrequest", HttpHeaders.EMPTY, null, null);
+        }
+
+//        List<User> myChildren = user.getChildren();
+//        for (User child:myChildren){
+//            if (child.getFirstName().equals(name))
+//                throw new RestClientResponseException("You added this child before", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
+//        }
+
+        if(userRepository.findByFirstNameAndParent(name,user) != null){
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
         // Creating Child account
-        User child = new User(name, parent.getLastName(), email, username, password, dob, gender);
+        DateFormat format = new SimpleDateFormat("yyyy-mm-dd");
+        Date dateOfBirth = format.parse(dob);
+        name = name.substring(0, 1).toUpperCase() + name.substring(1);
+        User child = new User(name, user.getLastName(), email, username, password, dateOfBirth, gender);
 
         child.setPassword(passwordEncoder.encode(child.getPassword()));
-        child.setParent(parent);
-
-        parent.getChildren().add(child);
+        child.setParent(user);
         userRepository.save(child);
     }
 
 
-    @PostMapping(Mapping.PARENTENROLL)
+    @PostMapping(Mapping.ENROLLCHILD)
      public void enroll(@RequestParam(Param.ACCESSTOKEN) String token,
-                        @Valid @RequestParam(Param.USER_ID) long childId,
-                        @Valid @RequestParam(Param.CLASSROOM_ID) Integer classId,
-                        @Valid @RequestParam(Param.PASSCODE) String passCode) {
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        String user_email = ((UserPrincipal) principal).getEmail();
-//        User parent = userRepository.findByEmail(user_email);
+                        @Valid @RequestParam(Param.FIRSTNAME) String childName,
+                        @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
+                        @Valid @RequestParam(Param.PASSCODE) String passCode,
+                        HttpServletResponse response) {
 
-        //// the new way
-        if(!userRepository.findByToken(token).isPresent())
-            throw new RestClientResponseException("Invalid token", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        User user = userRepository.findByToken(token);
 
-        if (!jwtTokenChecker.validateToken(token))
-            throw new RestClientResponseException("Session expired", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        if(user == null){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+//            throw new RestClientResponseException("Invalid token",
+//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+//            throw new RestClientResponseException("Session expired",
+//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        }
 
-        //        //Long user_id = jwtTokenChecker.getUserIdFromToken(token);
-        User parent = userRepository.findByToken(token).get();
+        User enrollChild = userRepository.findByFirstNameAndParent(childName,user);
+        Classroom classroom = classroomRepository.findByClassroomName(classroomName);
 
-        Optional<User> enrollChild = userRepository.findById(childId);
-        Optional<Classroom> classRoomSearch = classRoomRepository.findById(classId);
+        if (enrollChild == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+//            throw new RestClientResponseException("Child not found",
+//                    400, "Badrequest", HttpHeaders.EMPTY, null, null);
+        }
+
+        if (classroom == null ||
+                !classroom.getPassCode().equals(passCode)) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+//            throw new RestClientResponseException("Classroom Not found or passcode is wrong",
+//                    404, "Notfound", HttpHeaders.EMPTY, null, null);
+        }
 
 
-        if (!classRoomSearch.isPresent())
-            throw new RestClientResponseException("Classroom Not found", 404, "Notfound", HttpHeaders.EMPTY, null, null);
+        classroom.getStudents().add(enrollChild);
 
+//        enrollChild.getJoins().add(classroom);
 
-        if (!enrollChild.isPresent())
-            throw new RestClientResponseException("Child not found", 400, "Badrequest", HttpHeaders.EMPTY, null, null);
-
-
-        if (enrollChild.get().getParent().getUserId()!=(parent.getUserId()))
-            throw new RestClientResponseException("Not Allowed you are not the parent of this child", 405, "Forbidden", HttpHeaders.EMPTY, null, null);
-
-        if(!classRoomSearch.get().getPassCode().equals(passCode))
-            throw new RestClientResponseException("Passcode is wrong", 403, "Forbidden", HttpHeaders.EMPTY, null, null);
-
-        Classroom classRoom = classRoomSearch.get();
-
-        classRoom.getStudents().add(enrollChild.get());
-
-        User child = enrollChild.get();
-
-        child.getJoins().add(classRoom);
-
-        userRepository.save(child);
-
-        classRoomRepository.save(classRoom);
+        classroomRepository.save(classroom);
 
     }
 
-    @GetMapping(Mapping.PARENTCHILDREN)
-    List<User> retrieveChildren(@RequestParam(Param.ACCESSTOKEN) String token) {
-        //// the new way
-        if (!userRepository.findByToken(token).isPresent())
-            throw new RestClientResponseException("Invalid token", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
+    @GetMapping(Mapping.CHILDREN)
+    List<User> retrieveChildren(@RequestParam(Param.ACCESSTOKEN) String token,
+                                HttpServletResponse response) {
 
-        if (!jwtTokenChecker.validateToken(token))
-            throw new RestClientResponseException("Session expired", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        User user = userRepository.findByToken(token);
 
-        //        //Long user_id = jwtTokenChecker.getUserIdFromToken(token);
-        User user = userRepository.findByToken(token).get();
-
-
-
-//        return userRepository.findAllByParent(user);
+        if(user == null){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return null;
+//            throw new RestClientResponseException("Invalid token",
+//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return null;
+//            throw new RestClientResponseException("Session expired",
+//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        }
 
         return user.getChildren();
 

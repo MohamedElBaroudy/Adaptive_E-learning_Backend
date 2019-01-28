@@ -2,10 +2,10 @@ package com.adaptivelearning.server.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.hibernate.annotations.NaturalId;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
@@ -23,7 +23,7 @@ import javax.validation.constraints.Size;
         scope=User.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "userId")
-public class User implements Serializable {
+public class User {
     // id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +55,7 @@ public class User implements Serializable {
     @NotBlank
     @Size(max = 30)
     @Column(name = "USERNAME")
-    private String userName;
+    private String username;
 
     // password
     @NotBlank
@@ -131,14 +131,14 @@ public class User implements Serializable {
     public User(@NotBlank @Size(max = 40) String firstName,
                 @NotBlank @Size(max = 40) String lastName,
                 @NotBlank @Size(max = 40) @Email String email,
-                @NotBlank @Size(max = 30) String userName,
+                @NotBlank @Size(max = 30) String username,
                 @NotBlank @Size(max = 100) String password,
                 Date dateOfBirth,
                 @NotNull short gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
@@ -176,12 +176,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     public String getPassword() {

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientResponseException;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -42,17 +44,33 @@ public class UserController {
     JwtTokenProvider tokenProvider;
 
     @GetMapping(Mapping.LOGIN)
-    public User authenticateUser(@Valid @RequestParam(Param.EMAIL) String email,
-                                 @Valid @RequestParam(Param.PASSWORD) String password) {
-        User user = userRepository.findByEmail(email);
+    public User authenticateUser(@Valid @RequestParam(value = Param.EMAIL,required = false) String email,
+                                 @Valid @RequestParam(value = Param.USERNAME,required = false) String username,
+                                 @Valid @RequestParam(Param.PASSWORD) String password,
+                                 HttpServletResponse response) {
+        if (email == null && username == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return null;
+        }
+
+        User user = userRepository.findByEmailOrUsername(email,username);
 
         //Do like this instead of optional
-        if (user == null)
-            throw new RestClientResponseException("User present", 300, "Unregistered", HttpHeaders.EMPTY, null, null);
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return null;
+//            throw new RestClientResponseException("User present", 300, "Unregistered", HttpHeaders.EMPTY, null, null);
+        }
+
+        // already logged in
+        if(user.getToken()!=""){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return null;
+        }
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        email,
+                        user.getEmail(),
                         password
                 )
         );
@@ -69,19 +87,30 @@ public class UserController {
     }
 
     @GetMapping(Mapping.LOGOUT)
-    public void KickOutUser(@RequestParam(Param.ACCESSTOKEN) String token){
-        if (!userRepository.findByToken(token).isPresent())
-            throw new RestClientResponseException("Not found token", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
+    public void KickOutUser(@RequestParam(Param.ACCESSTOKEN) String token,
+                            HttpServletResponse response){
 
-        if (!tokenProvider.validateToken(token))
-            throw new RestClientResponseException("Session expired", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        User user = userRepository.findByToken(token);
 
-        User user = userRepository.findByToken(token).get();
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+//            throw new RestClientResponseException("Not found token",
+//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        }
+
+        if (!tokenProvider.validateToken(token)) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+//            throw new RestClientResponseException("Session expired",
+//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        }
+
         user.setToken("");
         userRepository.save(user);
     }
 
-    @SuppressWarnings("unchecked")
+
     @PostMapping(Mapping.REGISTER)
     public void registerUser(@Valid @RequestParam(Param.FIRSTNAME) String fname,
                              @Valid @RequestParam(Param.LASTNAME) String lname,
@@ -89,12 +118,22 @@ public class UserController {
                              @Valid @RequestParam(Param.USERNAME) String username,
                              @Valid @RequestParam(Param.EMAIL) String email,
                              @Valid @RequestParam(Param.PASSWORD) String password,
-                             @Valid @RequestParam(Param.GENDRE) short gender) throws ParseException {
-        if (userRepository.existsByEmail(email))
-            throw new RestClientResponseException("Email is used", 300, "Unregistered", HttpHeaders.EMPTY, null, null);
+                             @Valid @RequestParam(Param.GENDRE) short gender,
+                             HttpServletResponse response) throws ParseException {
 
-        if (userRepository.existsByUserName(username))
-            throw new RestClientResponseException("Username is used", 300, "Unregistered", HttpHeaders.EMPTY, null, null);
+        if (userRepository.existsByEmail(email)) {
+            response.setStatus(HttpServletResponse.SC_MULTIPLE_CHOICES);
+            return;
+//            throw new RestClientResponseException("Email is used",
+//                    300, "Unregistered", HttpHeaders.EMPTY, null, null);
+        }
+
+        if (userRepository.existsByUsername(username)) {
+            response.setStatus(HttpServletResponse.SC_MULTIPLE_CHOICES);
+            return;
+//            throw new RestClientResponseException("Username is used",
+//                    300, "Unregistered", HttpHeaders.EMPTY, null, null);
+        }
 
 
         // Creating user's account

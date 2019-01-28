@@ -1,17 +1,20 @@
 package com.adaptivelearning.server.constants;
 
 public class Mapping {
+    //Base
+    public static final String TEACHER = "/teacher";
+    public static final String STUDENT = "/student";
+    public static final String PARENT = "/parent";
+
+    //authentication
+    public static final String AUTH = "/auth"; // base
     public static final String LOGIN = "/login";
     public static final String REGISTER = "/register";
     public static final String LOGOUT = "/logout";
-    public static final String AUTH = "/auth";
-
-    public static final String PARENT = "/parent";
 
 
     //for classrooms & common for user and kids
-    public static final String TEACHERCLASSROOMS = "/classrooms/created";
-    public static final String STUDENTCLASSROOMS = "/classrooms/joined";
+    public static final String CLASSROOMS = "/classrooms";
     public static final String CLASSROOM = "/classroom";
 
     //Student
@@ -19,6 +22,6 @@ public class Mapping {
 
     //parent
     public static final String AddChild = "/addchild";
-    public static final String PARENTENROLL = "/parentenroll";
-    public static final String PARENTCHILDREN = "/children";
+    public static final String ENROLLCHILD = "/enrollchild";
+    public static final String CHILDREN = "/children";
 }
