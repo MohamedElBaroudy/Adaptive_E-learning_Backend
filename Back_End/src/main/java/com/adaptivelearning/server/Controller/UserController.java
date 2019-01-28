@@ -6,7 +6,8 @@ import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,9 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClientResponseException;
-
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -44,29 +42,23 @@ public class UserController {
     JwtTokenProvider tokenProvider;
 
     @GetMapping(Mapping.LOGIN)
-    public User authenticateUser(@Valid @RequestParam(value = Param.EMAIL,required = false) String email,
+    public ResponseEntity<?> authenticateUser(@Valid @RequestParam(value = Param.EMAIL,required = false) String email,
                                  @Valid @RequestParam(value = Param.USERNAME,required = false) String username,
-                                 @Valid @RequestParam(Param.PASSWORD) String password,
-                                 HttpServletResponse response) {
-        if (email == null && username == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return null;
-        }
+                                 @Valid @RequestParam(Param.PASSWORD) String password) {
+        if (email == null && username == null)
+            return new ResponseEntity<>("you must enter email or user name",
+                    HttpStatus.BAD_REQUEST);
 
         User user = userRepository.findByEmailOrUsername(email,username);
 
-        //Do like this instead of optional
-        if (user == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return null;
-//            throw new RestClientResponseException("User present", 300, "Unregistered", HttpHeaders.EMPTY, null, null);
-        }
+        if (user == null)
+            return new ResponseEntity<>("user is not present",
+                    HttpStatus.BAD_REQUEST);
 
         // already logged in
-        if(user.getToken()!=""){
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return null;
-        }
+        if(user.getToken()!=null)
+            return new ResponseEntity<>("already logged in"+", token is : " +user.getToken(),
+                    HttpStatus.BAD_REQUEST);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -83,57 +75,40 @@ public class UserController {
 
         userRepository.save(user);
 
-        return user;
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @GetMapping(Mapping.LOGOUT)
-    public void KickOutUser(@RequestParam(Param.ACCESSTOKEN) String token,
-                            HttpServletResponse response){
+    public ResponseEntity<?> KickOutUser(@RequestParam(Param.ACCESSTOKEN) String token){
 
         User user = userRepository.findByToken(token);
 
-        if (user == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-//            throw new RestClientResponseException("Not found token",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
-        }
+        if (user == null)
+            return new ResponseEntity<>("user isn't logged in",HttpStatus.BAD_REQUEST);
 
-        if (!tokenProvider.validateToken(token)) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-//            throw new RestClientResponseException("Session expired",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
-        }
+        if (!tokenProvider.validateToken(token))
+            return new ResponseEntity<>("session expired",HttpStatus.BAD_REQUEST);
 
-        user.setToken("");
+        user.setToken(null);
         userRepository.save(user);
+        return new ResponseEntity<>("user logged out",HttpStatus.OK);
     }
 
 
     @PostMapping(Mapping.REGISTER)
-    public void registerUser(@Valid @RequestParam(Param.FIRSTNAME) String fname,
+    public ResponseEntity<?> registerUser(@Valid @RequestParam(Param.FIRSTNAME) String fname,
                              @Valid @RequestParam(Param.LASTNAME) String lname,
                              @Valid @RequestParam(Param.DATEOFBIRTH) String dob,
                              @Valid @RequestParam(Param.USERNAME) String username,
                              @Valid @RequestParam(Param.EMAIL) String email,
                              @Valid @RequestParam(Param.PASSWORD) String password,
-                             @Valid @RequestParam(Param.GENDRE) short gender,
-                             HttpServletResponse response) throws ParseException {
+                             @Valid @RequestParam(Param.GENDRE) short gender) throws ParseException {
 
-        if (userRepository.existsByEmail(email)) {
-            response.setStatus(HttpServletResponse.SC_MULTIPLE_CHOICES);
-            return;
-//            throw new RestClientResponseException("Email is used",
-//                    300, "Unregistered", HttpHeaders.EMPTY, null, null);
-        }
+        if (userRepository.existsByEmail(email))
+            return new ResponseEntity<>("Email is used",HttpStatus.MULTIPLE_CHOICES);
 
-        if (userRepository.existsByUsername(username)) {
-            response.setStatus(HttpServletResponse.SC_MULTIPLE_CHOICES);
-            return;
-//            throw new RestClientResponseException("Username is used",
-//                    300, "Unregistered", HttpHeaders.EMPTY, null, null);
-        }
+        if (userRepository.existsByUsername(username))
+            return new ResponseEntity<>("Username is used",HttpStatus.MULTIPLE_CHOICES);
 
 
         // Creating user's account
@@ -147,6 +122,6 @@ public class UserController {
 
         userRepository.save(user);
 
-//        return ResponseEntity.ok().body(new ApiResponse(200, "User registered successfully"));
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 }
