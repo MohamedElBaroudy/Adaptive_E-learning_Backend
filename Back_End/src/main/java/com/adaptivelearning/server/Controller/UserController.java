@@ -61,10 +61,8 @@ public class UserController {
                     HttpStatus.BAD_REQUEST);
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        user.getEmail(),
-                        password
-                )
+                new UsernamePasswordAuthenticationToken( user.getEmail(),password)
+        
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);

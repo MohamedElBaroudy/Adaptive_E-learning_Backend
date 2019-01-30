@@ -5,6 +5,7 @@ public class Mapping {
     public static final String TEACHER = "/teacher";
     public static final String STUDENT = "/student";
     public static final String PARENT = "/parent";
+    public static final String COURSE = "/course";
 
     //authentication
     public static final String AUTH = "/auth"; // base
@@ -30,4 +31,8 @@ public class Mapping {
     public static final String AddChild = "/addchild";
     public static final String ENROLLCHILD = "/enrollchild";
     public static final String CHILDREN = "/children";
+    
+    // classroom
+    public static final String CreateClassroom = "/createclassroom";
+
 }
