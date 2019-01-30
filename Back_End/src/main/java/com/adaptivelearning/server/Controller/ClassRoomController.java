@@ -106,7 +106,7 @@ public class ClassRoomController {
        }
        
         Classroom New_classroom = new Classroom(classroomName, passCode , user);
-
+        classroomRepository.save(New_classroom);
         return new ResponseEntity<>(New_classroom ,HttpStatus.OK);
 
     }
