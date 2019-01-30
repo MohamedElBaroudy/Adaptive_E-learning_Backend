@@ -76,38 +76,4 @@ public class ClassRoomController {
 
         return new ResponseEntity<>(classroom ,HttpStatus.OK);
     }
-    
-    @PostMapping(Mapping.CreateClassroom)
-    public ResponseEntity<?> CreateClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
-                       @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
-                       @Valid @RequestParam(Param.PASSCODE) String passCode,
-                       HttpServletResponse response) {
-
-
-        User user = userRepository.findByToken(token);
-
-        if(user == null){
-       	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.MULTIPLE_CHOICES);
-//            throw new RestClientResponseException("Invalid token",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
-        }
-        if (!jwtTokenChecker.validateToken(token)) {
-          	 return new ResponseEntity<>("Session Expired",HttpStatus.MULTIPLE_CHOICES);
-//            throw new RestClientResponseException("Session expired",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
-        }
-        
-        Classroom classroom = classroomRepository.findByClassroomName(classroomName);
-        
-        if (classroom != null ) {
-        	 return new ResponseEntity<>("Classroom Is Found Before  ",HttpStatus.MULTIPLE_CHOICES);
-//           throw new RestClientResponseException("Classroom Not found ",
-//                   404, "Notfound", HttpHeaders.EMPTY, null, null);
-       }
-       
-        Classroom New_classroom = new Classroom(classroomName, passCode , user);
-        classroomRepository.save(New_classroom);
-        return new ResponseEntity<>(New_classroom ,HttpStatus.OK);
-
-    }
 }
