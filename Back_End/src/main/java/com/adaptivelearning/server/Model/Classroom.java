@@ -70,14 +70,6 @@ public class Classroom {
         this.classroomName = classroomName;
         this.passCode = passCode;
     }
-    
-    public Classroom(@NotBlank @Size(max = 40) String classroomName,
-                     @NotBlank @Size(max = 50) String passCode ,
-                     @NotNull User creator ) {
-				this.classroomName = classroomName;
-				this.passCode = passCode;
-				this.creator = creator ;
-      }
 
     public int getClassroomId() {
         return classroomId;

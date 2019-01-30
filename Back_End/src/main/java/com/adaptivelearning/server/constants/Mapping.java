@@ -31,8 +31,5 @@ public class Mapping {
     public static final String AddChild = "/addchild";
     public static final String ENROLLCHILD = "/enrollchild";
     public static final String CHILDREN = "/children";
-    
-    // classroom
-    public static final String CreateClassroom = "/createclassroom";
 
 }
