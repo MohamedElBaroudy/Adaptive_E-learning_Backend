@@ -17,6 +17,12 @@ public class Mapping {
     public static final String CLASSROOMS = "/classrooms";
     public static final String CLASSROOM = "/classroom";
 
+    //for courses
+    public static final String Course = "/course";
+    public static final String Classroom_course = "/classroom_course";
+    
+
+    
     //Student
     public static final String EnrollStudent = "/enroll";
 

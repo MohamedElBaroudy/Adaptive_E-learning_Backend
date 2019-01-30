@@ -59,7 +59,7 @@ public class Classroom {
     @JoinTable(name = "classrooms_courses",
             joinColumns = {@JoinColumn(name = "classroom_id")},
             inverseJoinColumns = {@JoinColumn(name = "course_id")})
-    private List<User> courses;
+    private List<Course> courses;
     // end of mapping
     public Classroom() {
     }
@@ -110,11 +110,11 @@ public class Classroom {
         this.students = students;
     }
 
-    public List<User> getCourses() {
+    public List<Course> getCourses() {
         return courses;
     }
 
-    public void setCourses(List<User> courses) {
+    public void setCourses(List<Course> courses) {
         this.courses = courses;
     }
 }

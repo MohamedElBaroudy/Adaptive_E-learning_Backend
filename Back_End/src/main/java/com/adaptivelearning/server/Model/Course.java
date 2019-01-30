@@ -5,6 +5,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -76,7 +78,7 @@ public class Course {
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH},
             mappedBy = "courses")
-    private List<Classroom> classrooms;
+    private List<Classroom> classrooms=new ArrayList<Classroom>();
 
 
 

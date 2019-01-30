@@ -15,4 +15,14 @@ public class Param {
     public static final String CLASSROOM_ID = "classroom_id";
     public static final String CLASSROOMNAME = "classroom_name";
     public static final String PASSCODE = "passcode";
+    
+    //for courses
+    public static final String Title = "title";
+    public static final String Detailed_title = "detailed_title";
+    public static final String Description = "description";
+    public static final String Level = "level";
+    public static final String Rate = "rate";
+
+
+    
 }
