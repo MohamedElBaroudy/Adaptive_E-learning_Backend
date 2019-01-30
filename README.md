@@ -40,3 +40,9 @@ or
 
 ### join child into classroom (POST method)
 >http://localhost:8080/parent/enrollchild?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&firstname=habebbaba&classroom_name=CSE19_ComputerSecurity&passcode=fbg98u
+
+create course (POST method)
+http://localhost:8080/teacher/course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w&title=java&detailed_title=spring&description=it'sjavaspringcourse&level=1
+
+Create course in a classroom (POST method)
+http://localhost:8080/teacher/classroom_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w&classroom_id=1&title=c++&detailed_title=datastructure&description=it's datastructure and algorithm course&level=2
