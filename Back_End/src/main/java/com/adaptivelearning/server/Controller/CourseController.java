@@ -8,12 +8,9 @@ import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.constants.Mapping;
 
 @RestController
-@RequestMapping(Mapping.Course)
+@RequestMapping(Mapping.COURSE)
 public class CourseController {
 	 @Autowired
 	    UserRepository userRepository;
-
-	 
-	
 	
 }
