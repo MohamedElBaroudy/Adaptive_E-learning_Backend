@@ -32,7 +32,7 @@ or
 >http://localhost:8080/login?username=keloi&password=12345678
 
 ### Register example (POST method)
->http://localhost:8080/auth/register?firstname=mohamed&lastname=adel&email=user2@gmail.com&username=keloi&password=12345678&gender=1&date_of_birth=2001-07-27
+>http://localhost:8080/register?firstname=mohamed&lastname=adel&email=user2@gmail.com&username=keloi&password=12345678&gender=1&date_of_birth=2001-07-27
 
 ### Retrieve user data (GET method)
 >http://localhost:8080/profile?token=eyJhbGciOiJIUzUxMiJ9....Na5P8wg
