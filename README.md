@@ -2,6 +2,29 @@
 Graduation project about adaptive e-learning. This repo is the backend of the app.
 
 
+## ERROR Codes
+### 401 Unauthorized
+> user isn't logged in.
+### 409 Conflict
+>unique name is token like username, email, classroom name, etc.
+
+### 403 Forbidden
+>this functionallity is not allowed to this user.
+
+### 400 Bad Request
+>the data stream sent by the client to the server didn't follow the rules.
+
+### 304 Not Modified
+>redirect without doing the request.
+
+### 404 Not Found
+
+### 204 No Content
+>success without showing content. in delete functions.
+
+### 201 Created
+>post or put functions
+
 ## API Samples
 ### Login example (GET method)
 >http://localhost:8080/auth/login?email=muhammed@gmail.com&password=12345678
@@ -42,7 +65,7 @@ or
 >http://localhost:8080/parent/enrollchild?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&firstname=habebbaba&classroom_name=CSE19_ComputerSecurity&passcode=fbg98u
 
 ### Create course (POST method)
-http://localhost:8080/teacher/course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w&title=java&detailed_title=spring&description=it'sjavaspringcourse&level=1
+>http://localhost:8080/teacher/course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w&title=java&detailed_title=spring&description=it'sjavaspringcourse&level=1
 
 ### Create course in a classroom (POST method)
-http://localhost:8080/teacher/classroom_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w&classroom_id=1&title=c++&detailed_title=datastructure&description=it's datastructure and algorithm course&level=2
+>http://localhost:8080/teacher/classroom_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w&classroom_id=1&title=c++&detailed_title=datastructure&description=it's datastructure and algorithm course&level=2
