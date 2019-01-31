@@ -12,11 +12,7 @@ import com.adaptivelearning.server.constants.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClientResponseException;
-
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -43,8 +39,7 @@ public class TeacherController {
     @PostMapping(Mapping.CLASSROOMS)
     ResponseEntity<?> create(@RequestParam(Param.ACCESSTOKEN) String token,
                      @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
-                     @Valid @RequestParam(Param.PASSCODE) String passcode,
-                     HttpServletResponse response) {
+                     @Valid @RequestParam(Param.PASSCODE) String passcode) {
 
         User user = userRepository.findByToken(token);
 
@@ -59,7 +54,7 @@ public class TeacherController {
 
         if(user.getParent() != null){
         	 return new ResponseEntity<>("user is child it's not allowed ",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.FORBIDDEN);
         }
 
         Classroom classRoom = new Classroom(classroomName, passcode);
@@ -73,11 +68,9 @@ public class TeacherController {
 
 
     @GetMapping(Mapping.CLASSROOMS)
-    ResponseEntity<?>retrieveCreatedClassrooms(@RequestParam(Param.ACCESSTOKEN) String token,
-                                                  HttpServletResponse response) {
+    ResponseEntity<?>retrieveCreatedClassrooms(@RequestParam(Param.ACCESSTOKEN) String token) {
 
         User user = userRepository.findByToken(token);
-
 
         if(user == null){
         	 return new ResponseEntity<>(" user is not present ",
@@ -96,10 +89,8 @@ public class TeacherController {
     @PutMapping(Mapping.CLASSROOM)
     ResponseEntity<?> updateClassroomInfo(@RequestParam(Param.ACCESSTOKEN) String token,
                                   @Valid @RequestParam(value = Param.CLASSROOMNAME,required = false) String classroomName,
-                                  @Valid @RequestParam(value = Param.PASSCODE,required = false) String passcode,
-                                  HttpServletResponse response) {
+                                  @Valid @RequestParam(value = Param.PASSCODE,required = false) String passcode) {
         User user = userRepository.findByToken(token);
-
 
         if(user == null){
         	 return new ResponseEntity<>(" user is not present ",
@@ -114,13 +105,13 @@ public class TeacherController {
 
         if (classroom == null) {
         	 return new ResponseEntity<>(" classroom is not present ",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.NOT_FOUND);
         }
 
         if (classroom.getCreator().getUserId()!=
                 (user.getUserId())) {
         	return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your classroom to update",
-                    HttpStatus.BAD_REQUEST);            
+                    HttpStatus.FORBIDDEN);
         }
 
 //        classroom.setPassCode(passwordEncoder.encode(passcode));
@@ -132,43 +123,35 @@ public class TeacherController {
 
 
     @DeleteMapping(Mapping.CLASSROOM)
-    void delete(@RequestParam(Param.ACCESSTOKEN) String token,
-                @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
-                HttpServletResponse response) {
+    ResponseEntity<?> deleteClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
+                @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName) {
 
         User user = userRepository.findByToken(token);
 
-
         if(user == null){
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-//            throw new RestClientResponseException("Invalid token",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+            return new ResponseEntity<>(" user is not present ",
+                    HttpStatus.BAD_REQUEST);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-//            throw new RestClientResponseException("Session expired",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+            return new ResponseEntity<>(" invalid token ",
+                    HttpStatus.BAD_REQUEST);
         }
 
         Classroom classroom = classroomRepository.findByClassroomName(classroomName);
 
         if (classroom == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-//            throw new RestClientResponseException("Not found classroom",
-//                    404, "NotFound", HttpHeaders.EMPTY, null, null);
+            return new ResponseEntity<>(" classroom is not present ",
+                    HttpStatus.NOT_FOUND);
         }
 
         if(classroom.getCreator().getUserId() != user.getUserId()) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            return;
-//            throw new RestClientResponseException("Only creator of this classroom is allowed",
-//                    405, "NotAllowed", HttpHeaders.EMPTY, null, null);
+            return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your classroom to update",
+                    HttpStatus.FORBIDDEN);
         }
 
         classroomRepository.deleteById(classroom.getClassroomId());
+        return new ResponseEntity<>("Classroom has been deleted",
+                HttpStatus.OK);
     }
     
     
@@ -179,8 +162,7 @@ public class TeacherController {
                      @Valid @RequestParam(Param.Title) String courseTitle,
                      @Valid @RequestParam(Param.Detailed_title) String detailed_title,
                      @Valid @RequestParam(Param.Description) String description,
-                     @Valid @RequestParam(Param.Level) short level,
-                     HttpServletResponse response) {
+                     @Valid @RequestParam(Param.Level) short level) {
 
         User user = userRepository.findByToken(token);
 
@@ -195,7 +177,7 @@ public class TeacherController {
 
         if(user.getParent() != null){
         	 return new ResponseEntity<>("user is child it's not allowed ",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.FORBIDDEN);
         }
 
         Course course=new Course(courseTitle, detailed_title, description, true, level);
@@ -207,13 +189,12 @@ public class TeacherController {
 
 
     @PostMapping(Mapping.Classroom_course)
-    ResponseEntity<?> createClassroom_Course (@RequestParam(Param.ACCESSTOKEN) String token,
+    ResponseEntity<?> createClassroomCourse (@RequestParam(Param.ACCESSTOKEN) String token,
     	           	 @Valid @RequestParam(Param.CLASSROOM_ID) int classroomId,
                      @Valid @RequestParam(Param.Title) String courseTitle,
                      @Valid @RequestParam(Param.Detailed_title) String detailed_title,
                      @Valid @RequestParam(Param.Description) String description,
-                     @Valid @RequestParam(Param.Level) short level,
-                     HttpServletResponse response) {
+                     @Valid @RequestParam(Param.Level) short level) {
 
         User user = userRepository.findByToken(token);
         Classroom classroom=classroomRepository.findByClassroomId(classroomId);
@@ -221,30 +202,31 @@ public class TeacherController {
         	 return new ResponseEntity<>("user is not present",
                      HttpStatus.BAD_REQUEST); 
         }
+        if (!jwtTokenChecker.validateToken(token)) {
+            return new ResponseEntity<>("invalid token",
+                    HttpStatus.BAD_REQUEST);
+        }
+
         if(classroom == null){
       	  return new ResponseEntity<>("classroom is not present",
-                  HttpStatus.BAD_REQUEST);
-        }
-        if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>("invalid token",
-                     HttpStatus.BAD_REQUEST);
+                  HttpStatus.NOT_FOUND);
         }
 
         if(user.getParent() != null){
         	 return new ResponseEntity<>("user is child it's not allowed ",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.FORBIDDEN);
         }
         
         if(user.getUserId()!= classroom.getCreator().getUserId()) {
         	 return new ResponseEntity<>("this classroom not belongs to this user",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.FORBIDDEN);
         }
 
         Course course=new Course(courseTitle, detailed_title, description, false , level);
         course.setPublisher(user);
         
         course.getClassrooms().add(classroom);
-        classroom.getCourses().add(course);
+//        classroom.getCourses().add(course); // the mapping will do it automatically
         
         courseRepository.save(course);
 

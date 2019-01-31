@@ -14,14 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClientResponseException;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -52,34 +48,22 @@ public class ParentController {
                          @Valid @RequestParam(Param.USERNAME) String username,
                          @Valid @RequestParam(Param.EMAIL) String email,
                          @Valid @RequestParam(Param.PASSWORD) String password,
-                         @Valid @RequestParam(Param.GENDRE) short gender,
-                         HttpServletResponse response) throws ParseException {
+                         @Valid @RequestParam(Param.GENDRE) short gender) throws ParseException {
 
         User user = userRepository.findByToken(token);
 
         if(user == null){
-        	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.MULTIPLE_CHOICES);
-//            throw new RestClientResponseException("Invalid token",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+        	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.BAD_REQUEST);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-       	 return new ResponseEntity<>("Session Expired",HttpStatus.MULTIPLE_CHOICES);
-//            throw new RestClientResponseException("Session expired",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+       	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
         }
 
 
         if (userRepository.existsByEmail(email)  ||  userRepository.existsByUsername(username)) {
-       	 return new ResponseEntity<>("User Is Present Before",HttpStatus.MULTIPLE_CHOICES);
-//            throw new RestClientResponseException("User present",
-//                    400, "Badrequest", HttpHeaders.EMPTY, null, null);
+       	 return new ResponseEntity<>("User Is Present Before",HttpStatus.BAD_REQUEST);
         }
 
-//        List<User> myChildren = user.getChildren();
-//        for (User child:myChildren){
-//            if (child.getFirstName().equals(name))
-//                throw new RestClientResponseException("You added this child before", 400, "BadRequest", HttpHeaders.EMPTY, null, null);
-//        }
 
         if(userRepository.findByFirstNameAndParent(name,user) != null){
           	 return new ResponseEntity<>("User Is Present",HttpStatus.MULTIPLE_CHOICES);
@@ -101,74 +85,56 @@ public class ParentController {
 
 
     @PostMapping(Mapping.ENROLLCHILD)
-     public ResponseEntity<?> enroll(@RequestParam(Param.ACCESSTOKEN) String token,
+     public ResponseEntity<?> enrollChild(@RequestParam(Param.ACCESSTOKEN) String token,
                         @Valid @RequestParam(Param.FIRSTNAME) String childName,
                         @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
-                        @Valid @RequestParam(Param.PASSCODE) String passCode,
-                        HttpServletResponse response) {
+                        @Valid @RequestParam(Param.PASSCODE) String passCode) {
 
         User user = userRepository.findByToken(token);
 
         if(user == null){
-       	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.MULTIPLE_CHOICES);
-//            throw new RestClientResponseException("Invalid token",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+       	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.BAD_REQUEST);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-          	 return new ResponseEntity<>("Session Expired",HttpStatus.MULTIPLE_CHOICES);
-//            throw new RestClientResponseException("Session expired",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+          	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
         }
 
         User enrollChild = userRepository.findByFirstNameAndParent(childName,user);
         Classroom classroom = classroomRepository.findByClassroomName(classroomName);
 
         if (enrollChild == null) {
-          	 return new ResponseEntity<>("Child Is Not Found",HttpStatus.MULTIPLE_CHOICES);
-//            throw new RestClientResponseException("Child not found",
-//                    400, "Badrequest", HttpHeaders.EMPTY, null, null);
+          	 return new ResponseEntity<>("Child Is Not Found",HttpStatus.BAD_REQUEST);
         }
 
         if (classroom == null ) {
-         	 return new ResponseEntity<>("Classroom Is Not Found   ",HttpStatus.MULTIPLE_CHOICES);
-//            throw new RestClientResponseException("Classroom Not found ",
-//                    404, "Notfound", HttpHeaders.EMPTY, null, null);
+         	 return new ResponseEntity<>("Classroom Is Not Found   ",
+                     HttpStatus.NOT_FOUND);
         }
         
        if (!classroom.getPassCode().equals(passCode) ) {
 
-    	   return new ResponseEntity<>("Classroom Has Wrong Passcode ",HttpStatus.MULTIPLE_CHOICES);
-//         throw new RestClientResponseException("passcode is wrong",
-//                 404, "Notfound", HttpHeaders.EMPTY, null, null);
+    	   return new ResponseEntity<>("Classroom Has Wrong Passcode ",
+                   HttpStatus.NOT_FOUND);
        }
 
         classroom.getStudents().add(enrollChild);
-
-//        enrollChild.getJoins().add(classroom);
-
         classroomRepository.save(classroom);
        return new ResponseEntity<>(classroom ,HttpStatus.OK);
-
-
     }
 
+
+
     @GetMapping(Mapping.CHILDREN)
-    ResponseEntity<?> retrieveChildren(@RequestParam(Param.ACCESSTOKEN) String token,
-                                HttpServletResponse response) {
+    ResponseEntity<?> retrieveChildren(@RequestParam(Param.ACCESSTOKEN) String token) {
 
         User user = userRepository.findByToken(token);
 
         if(user == null){
-          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.MULTIPLE_CHOICES);
-          	 //            throw new RestClientResponseException("Invalid token",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.BAD_REQUEST);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-         	 return new ResponseEntity<>("Session Expired",HttpStatus.MULTIPLE_CHOICES);
-//            throw new RestClientResponseException("Session expired",
-//                    400, "BadRequest", HttpHeaders.EMPTY, null, null);
+         	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(user.getChildren() ,HttpStatus.OK);
     }
-
 }
