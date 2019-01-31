@@ -19,7 +19,6 @@ import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping(Mapping.AUTH)
 public class ClassRoomController {
 
     @Autowired
@@ -44,10 +43,10 @@ public class ClassRoomController {
 
 
         if(user == null){
-       	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.BAD_REQUEST);
+       	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-          	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
+          	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
         }
 
         Classroom classroom = classroomRepository.findByClassroomId(classroomId);
@@ -60,7 +59,7 @@ public class ClassRoomController {
         if (user.getUserId()!=
                 classroom.getCreator().getUserId() || !classroom.getStudents().contains(user)) {
           	 return new ResponseEntity<>("Sorry You Are Not Teacher Nor Student In This Classroom ",
-                     HttpStatus.FORBIDDEN);
+                     HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(classroom ,HttpStatus.OK);

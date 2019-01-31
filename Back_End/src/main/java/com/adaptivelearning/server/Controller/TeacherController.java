@@ -37,7 +37,7 @@ public class TeacherController {
 
 
     @PostMapping(Mapping.CLASSROOMS)
-    ResponseEntity<?> create(@RequestParam(Param.ACCESSTOKEN) String token,
+    ResponseEntity<?> createClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
                      @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
                      @Valid @RequestParam(Param.PASSCODE) String passcode) {
 
@@ -45,11 +45,11 @@ public class TeacherController {
 
         if(user == null){
         	 return new ResponseEntity<>(" user is not present ",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
         	 return new ResponseEntity<>("invalid token ",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.UNAUTHORIZED);
         }
 
         if(user.getParent() != null){
@@ -62,8 +62,7 @@ public class TeacherController {
 //        classRoom.setPassCode(passwordEncoder.encode(classRoom.getPassCode()));
         classroomRepository.save(classRoom);
         
-        return new ResponseEntity<>(classRoom,
-                HttpStatus.OK); 
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -74,11 +73,11 @@ public class TeacherController {
 
         if(user == null){
         	 return new ResponseEntity<>(" user is not present ",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
         	 return new ResponseEntity<>(" invalid token ",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.UNAUTHORIZED);
         }
 
        return new ResponseEntity<>(user.getClassrooms(),
@@ -94,11 +93,11 @@ public class TeacherController {
 
         if(user == null){
         	 return new ResponseEntity<>(" user is not present ",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
         	 return new ResponseEntity<>(" invalid token ",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.UNAUTHORIZED);
         }
 
         Classroom classroom = classroomRepository.findByClassroomName(classroomName);
@@ -117,8 +116,7 @@ public class TeacherController {
 //        classroom.setPassCode(passwordEncoder.encode(passcode));
         classroom.setPassCode(passcode);
         classroomRepository.save(classroom);
-         return new ResponseEntity<>(classroom,
-                HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -130,11 +128,11 @@ public class TeacherController {
 
         if(user == null){
             return new ResponseEntity<>(" user is not present ",
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
             return new ResponseEntity<>(" invalid token ",
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.UNAUTHORIZED);
         }
 
         Classroom classroom = classroomRepository.findByClassroomName(classroomName);
@@ -150,14 +148,13 @@ public class TeacherController {
         }
 
         classroomRepository.deleteById(classroom.getClassroomId());
-        return new ResponseEntity<>("Classroom has been deleted",
-                HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     
     ////////////////////////////////////////////////////Courses Functions/////////////////////////////////////////////////////////////////////////
     
-    @PostMapping(Mapping.Course)
+    @PostMapping(Mapping.COURSES)
     ResponseEntity<?> createCourse(@RequestParam(Param.ACCESSTOKEN) String token,
                      @Valid @RequestParam(Param.Title) String courseTitle,
                      @Valid @RequestParam(Param.Detailed_title) String detailed_title,
@@ -168,11 +165,11 @@ public class TeacherController {
 
         if(user == null){
         	  return new ResponseEntity<>("user is not present",
-                      HttpStatus.BAD_REQUEST);
+                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
         	  return new ResponseEntity<>("invalid token",
-                      HttpStatus.BAD_REQUEST); 
+                      HttpStatus.UNAUTHORIZED);
         }
 
         if(user.getParent() != null){
@@ -184,11 +181,11 @@ public class TeacherController {
         course.setPublisher(user);
         courseRepository.save(course);
 
-        return new ResponseEntity<>(course,HttpStatus.OK); 
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
-    @PostMapping(Mapping.Classroom_course)
+    @PostMapping(Mapping.CLASSROOM_COURSES)
     ResponseEntity<?> createClassroomCourse (@RequestParam(Param.ACCESSTOKEN) String token,
     	           	 @Valid @RequestParam(Param.CLASSROOM_ID) int classroomId,
                      @Valid @RequestParam(Param.Title) String courseTitle,
@@ -200,11 +197,11 @@ public class TeacherController {
         Classroom classroom=classroomRepository.findByClassroomId(classroomId);
         if(user == null){
         	 return new ResponseEntity<>("user is not present",
-                     HttpStatus.BAD_REQUEST); 
+                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
             return new ResponseEntity<>("invalid token",
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.UNAUTHORIZED);
         }
 
         if(classroom == null){
@@ -230,8 +227,7 @@ public class TeacherController {
         
         courseRepository.save(course);
 
-        return new ResponseEntity<>(course,
-                HttpStatus.OK); 
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 

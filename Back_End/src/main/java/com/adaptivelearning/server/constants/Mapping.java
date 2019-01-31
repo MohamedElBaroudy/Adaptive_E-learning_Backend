@@ -7,29 +7,32 @@ public class Mapping {
     public static final String PARENT = "/parent";
     public static final String COURSE = "/course";
 
-    //authentication
+    //Authentication
     public static final String AUTH = "/auth"; // base
     public static final String LOGIN = "/login";
     public static final String REGISTER = "/register";
     public static final String LOGOUT = "/logout";
 
+    //General user
+    public static final String PROFILE = "/profile";
 
-    //for classrooms & common for user and kids
+    //For classrooms & common for user and kids
     public static final String CLASSROOMS = "/classrooms";
     public static final String CLASSROOM = "/classroom";
 
-    //for courses
-    public static final String Course = "/course";
-    public static final String Classroom_course = "/classroom_course";
+    //For courses
+    public static final String COURSES = "/courses";
+    public static final String CLASSROOM_COURSES = "/classroom_courses";
     
 
     
     //Student
     public static final String EnrollStudent = "/enroll";
 
-    //parent
+    //Parent
     public static final String AddChild = "/addchild";
     public static final String ENROLLCHILD = "/enrollchild";
     public static final String CHILDREN = "/children";
+    public static final String CHILD = "/child";
 
 }

@@ -32,33 +32,33 @@ public class StudentController {
 
     @SuppressWarnings("unchecked")
     @PostMapping(Mapping.EnrollStudent)
-    public ResponseEntity<?> enrollStudent(@RequestParam(Param.ACCESSTOKEN) String token,
+    public ResponseEntity<?> joinStudentIntoClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
                               @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
                               @Valid @RequestParam(Param.PASSCODE) String passcode) {
 
         User user = userRepository.findByToken(token);
 
         if(user == null){
-          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.BAD_REQUEST);
+          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-         	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
+         	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
         }
 
         if(user.getParent() != null){
          	 return new ResponseEntity<>("You Must Have Parent permission",
-                     HttpStatus.UNAUTHORIZED);
+                     HttpStatus.FORBIDDEN);
         }
 
         Classroom classroom = classroomRepository.findByClassroomName(classroomName);
 
         if (classroom == null ) {
-        	 return new ResponseEntity<>("Classroom Is Not Found   ",
+        	 return new ResponseEntity<>("Classroom Is Not Found",
                      HttpStatus.NOT_FOUND);
         }
 
         if (!classroom.getPassCode().equals(passcode) ) {
-            return new ResponseEntity<>("Classroom Has Wrong Passcode ",
+            return new ResponseEntity<>("Classroom Has Wrong Passcode",
                HttpStatus.NOT_FOUND);
         }
 

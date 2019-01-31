@@ -53,21 +53,24 @@ public class ParentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-        	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.BAD_REQUEST);
+        	 return new ResponseEntity<>("User Is Not Valid",
+                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-       	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
+       	 return new ResponseEntity<>("Session Expired",
+                 HttpStatus.UNAUTHORIZED);
         }
 
 
         if (userRepository.existsByEmail(email)  ||  userRepository.existsByUsername(username)) {
-       	 return new ResponseEntity<>("User Is Present Before",HttpStatus.BAD_REQUEST);
+       	 return new ResponseEntity<>("User, Email or both of them are in use",
+                 HttpStatus.CONFLICT);
         }
 
 
         if(userRepository.findByFirstNameAndParent(name,user) != null){
-          	 return new ResponseEntity<>("User Is Present",HttpStatus.MULTIPLE_CHOICES);
-
+          	 return new ResponseEntity<>("Child added before",
+                     HttpStatus.CONFLICT);
         }
 
         // Creating Child account
@@ -79,13 +82,12 @@ public class ParentController {
         child.setPassword(passwordEncoder.encode(child.getPassword()));
         child.setParent(user);
         userRepository.save(child);
-      	 return new ResponseEntity<>(child,HttpStatus.OK);
-
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
     @PostMapping(Mapping.ENROLLCHILD)
-     public ResponseEntity<?> enrollChild(@RequestParam(Param.ACCESSTOKEN) String token,
+     public ResponseEntity<?> joinChildIntoClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
                         @Valid @RequestParam(Param.FIRSTNAME) String childName,
                         @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
                         @Valid @RequestParam(Param.PASSCODE) String passCode) {
@@ -93,33 +95,33 @@ public class ParentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-       	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.BAD_REQUEST);
+       	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-          	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
+          	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
         }
 
         User enrollChild = userRepository.findByFirstNameAndParent(childName,user);
         Classroom classroom = classroomRepository.findByClassroomName(classroomName);
 
         if (enrollChild == null) {
-          	 return new ResponseEntity<>("Child Is Not Found",HttpStatus.BAD_REQUEST);
+          	 return new ResponseEntity<>("Child Is Not Found",HttpStatus.NOT_FOUND);
         }
 
         if (classroom == null ) {
-         	 return new ResponseEntity<>("Classroom Is Not Found   ",
+         	 return new ResponseEntity<>("Classroom Is Not Found",
                      HttpStatus.NOT_FOUND);
         }
         
        if (!classroom.getPassCode().equals(passCode) ) {
 
-    	   return new ResponseEntity<>("Classroom Has Wrong Passcode ",
+    	   return new ResponseEntity<>("Wrong Passcode or Classroom Is Not Found",
                    HttpStatus.NOT_FOUND);
        }
 
         classroom.getStudents().add(enrollChild);
         classroomRepository.save(classroom);
-       return new ResponseEntity<>(classroom ,HttpStatus.OK);
+       return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -130,11 +132,33 @@ public class ParentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.BAD_REQUEST);
+          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-         	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
+         	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(user.getChildren() ,HttpStatus.OK);
+    }
+
+    @GetMapping(Mapping.CHILD)
+    ResponseEntity<?> retrieveChild(@RequestParam(Param.ACCESSTOKEN) String token,
+                                    @Valid @RequestParam(Param.FIRSTNAME) String childName) {
+
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+            return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+        }
+
+        User child = userRepository.findByFirstNameAndParent(childName,user);
+
+        if (child == null)
+            return new ResponseEntity<>("Child is not found",
+                    HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(child ,HttpStatus.OK);
     }
 }

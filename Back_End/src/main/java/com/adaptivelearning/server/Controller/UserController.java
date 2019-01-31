@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController
-@RequestMapping(Mapping.AUTH)
+//@RequestMapping(Mapping.AUTH)
 public class UserController {
 
     @Autowired
@@ -47,13 +47,13 @@ public class UserController {
                                  @Valid @RequestParam(Param.PASSWORD) String password) {
         if (email == null && username == null)
             return new ResponseEntity<>("you must enter email or user name",
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.UNAUTHORIZED);
 
         User user = userRepository.findByEmailOrUsername(email,username);
 
         if (user == null)
             return new ResponseEntity<>("user is not present",
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.UNAUTHORIZED);
 
         // already logged in
         if(user.getToken()!=null)
@@ -62,7 +62,6 @@ public class UserController {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken( user.getEmail(),password)
-        
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -73,6 +72,22 @@ public class UserController {
 
         userRepository.save(user);
 
+        return new ResponseEntity<>("user logged in and token is : "+user.getToken(),HttpStatus.OK);
+    }
+
+    @GetMapping(Mapping.PROFILE)
+    public ResponseEntity<?> getUserProfile(@RequestParam(Param.ACCESSTOKEN) String token){
+
+        User user = userRepository.findByToken(token);
+
+        if (user == null)
+            return new ResponseEntity<>("user isn't logged in",
+                    HttpStatus.UNAUTHORIZED);
+
+        if (!tokenProvider.validateToken(token))
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
+
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
@@ -82,10 +97,12 @@ public class UserController {
         User user = userRepository.findByToken(token);
 
         if (user == null)
-            return new ResponseEntity<>("user isn't logged in",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("user isn't logged in",
+                    HttpStatus.UNAUTHORIZED);
 
         if (!tokenProvider.validateToken(token))
-            return new ResponseEntity<>("session expired",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
 
         user.setToken(null);
         userRepository.save(user);
@@ -103,10 +120,10 @@ public class UserController {
                              @Valid @RequestParam(Param.GENDRE) short gender) throws ParseException {
 
         if (userRepository.existsByEmail(email))
-            return new ResponseEntity<>("Email is used",HttpStatus.MULTIPLE_CHOICES);
+            return new ResponseEntity<>("Email is used",HttpStatus.CONFLICT);
 
         if (userRepository.existsByUsername(username))
-            return new ResponseEntity<>("Username is used",HttpStatus.MULTIPLE_CHOICES);
+            return new ResponseEntity<>("Username is used",HttpStatus.CONFLICT);
 
 
         // Creating user's account
