@@ -1,10 +1,10 @@
 package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.Model.Classroom;
-
+import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Repository.ClassroomRepository;
-
+import com.adaptivelearning.server.Repository.CourseRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
@@ -14,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -23,6 +27,9 @@ public class StudentController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    CourseRepository courseRepository;
+    
     @Autowired
     ClassroomRepository classroomRepository;
 
@@ -82,4 +89,46 @@ public class StudentController {
 
         return new ResponseEntity<>(user.getClassrooms() ,HttpStatus.OK);
     }
+    
+    
+    @PostMapping(Mapping.EnrollCourse)
+    ResponseEntity<?> EnrollCourse(@RequestParam(Param.ACCESSTOKEN) String token,
+                                   @Valid @RequestParam(Param.CourseID) int courseId,
+                                   HttpServletResponse response) {
+
+        User user = userRepository.findByToken(token);
+        Course course=courseRepository.findByCourseId(courseId);
+        
+        if(user == null){
+        	 return new ResponseEntity<>(" user is not present ",
+                     HttpStatus.UNAUTHORIZED); 
+        }
+        if(course == null){
+       	 return new ResponseEntity<>(" course with this id is not found ",
+                    HttpStatus.NOT_FOUND); 
+       }
+        if (!jwtTokenChecker.validateToken(token)) {
+        	 return new ResponseEntity<>("invalid token ",
+                     HttpStatus.UNAUTHORIZED); 
+        }
+
+        if(user.getParent() != null){
+        	 return new ResponseEntity<>("user is child it's not allowed ",
+                     HttpStatus.FORBIDDEN); 
+        }
+        if(course.getPublisher().getUserId()==user.getUserId()) {
+        	 return new ResponseEntity<>("course publisher can't enroll in his courses",
+                     HttpStatus.FORBIDDEN); 
+        }
+        if(courseRepository.existsByLearners(user)) {
+        	 return new ResponseEntity<>("Already Enrolled ",
+                     HttpStatus.FORBIDDEN); 
+        }
+       course.getLearners().add(user);
+   
+       courseRepository.save(course);
+        return new ResponseEntity<>(HttpStatus.OK); 
+    }
+
+
 }

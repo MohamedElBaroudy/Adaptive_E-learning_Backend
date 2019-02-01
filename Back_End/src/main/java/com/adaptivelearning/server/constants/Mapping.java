@@ -28,10 +28,12 @@ public class Mapping {
     
     //Student
     public static final String EnrollStudent = "/enroll";
+    public static final String EnrollCourse = "/enroll_course";
 
     //Parent
     public static final String AddChild = "/addchild";
     public static final String ENROLLCHILD = "/enrollchild";
+    public static final String ENROLLCHILDInCourse = "/enrollchild_course";  
     public static final String CHILDREN = "/children";
     public static final String CHILD = "/child";
 

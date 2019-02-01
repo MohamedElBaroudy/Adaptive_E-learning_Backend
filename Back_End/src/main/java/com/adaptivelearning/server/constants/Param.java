@@ -17,6 +17,7 @@ public class Param {
     public static final String PASSCODE = "passcode";
     
     //for courses
+    public static final String CourseID = "courseID";
     public static final String Title = "title";
     public static final String Detailed_title = "detailed_title";
     public static final String Description = "description";

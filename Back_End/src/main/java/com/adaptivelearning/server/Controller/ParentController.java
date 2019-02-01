@@ -1,8 +1,10 @@
 package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.Model.Classroom;
+import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Repository.ClassroomRepository;
+import com.adaptivelearning.server.Repository.CourseRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
@@ -30,6 +32,10 @@ public class ParentController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    CourseRepository courseRepository;
+
+    
     @Autowired
     ClassroomRepository classroomRepository;
 
@@ -124,6 +130,42 @@ public class ParentController {
        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+
+    @PostMapping(Mapping.ENROLLCHILDInCourse)
+    public ResponseEntity<?> enrollChildIntoCourse(@RequestParam(Param.ACCESSTOKEN) String token,
+                       @Valid @RequestParam(Param.FIRSTNAME) String childName,
+                       @Valid @RequestParam(Param.CourseID) int courseId) {
+
+       User user = userRepository.findByToken(token);
+       Course course = courseRepository.findByCourseId(courseId);
+       User enrollChild = userRepository.findByFirstNameAndParent(childName,user);
+       
+       if(user == null){
+      	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+       }
+       if (!jwtTokenChecker.validateToken(token)) {
+         	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+       }
+
+      
+       if (enrollChild == null) {
+         	 return new ResponseEntity<>("Child Is Not Found",HttpStatus.NOT_FOUND);
+       }
+
+       if (course == null ) {
+        	 return new ResponseEntity<>("course Is Not Found",
+                    HttpStatus.NOT_FOUND);
+       }
+       if(courseRepository.existsByLearners(enrollChild)) {
+      	 return new ResponseEntity<>("Already Enrolled ",
+                   HttpStatus.FORBIDDEN); 
+      }
+     
+      course.getLearners().add(enrollChild);
+      
+      courseRepository.save(course);
+      return new ResponseEntity<>(HttpStatus.OK);
+   }
 
 
     @GetMapping(Mapping.CHILDREN)
