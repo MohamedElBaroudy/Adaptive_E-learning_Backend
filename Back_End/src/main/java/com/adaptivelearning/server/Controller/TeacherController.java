@@ -307,7 +307,7 @@ public class TeacherController {
     
 
     @DeleteMapping(Mapping.SECTION)
-    ResponseEntity<?> updateClassroomInfo(@RequestParam(Param.ACCESSTOKEN) String token,
+    ResponseEntity<?> deleteSection(@RequestParam(Param.ACCESSTOKEN) String token,
                                  @Valid @RequestParam(value = Param.SECTION_TITLE) String sectionTtile){
         User user = userRepository.findByToken(token);
 
