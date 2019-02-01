@@ -2,9 +2,11 @@ package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.Course;
+import com.adaptivelearning.server.Model.Section;
 import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Repository.ClassroomRepository;
 import com.adaptivelearning.server.Repository.CourseRepository;
+import com.adaptivelearning.server.Repository.SectionRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
@@ -18,6 +20,9 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(Mapping.TEACHER)
 public class TeacherController {
+	
+	@Autowired
+	SectionRepository sectionRepository ;
 
     @Autowired
     ClassroomRepository classroomRepository;
@@ -230,13 +235,105 @@ public class TeacherController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+/////////////////////////////////////// Section Functions //////////////////////////////////////////////////////
+    
+    @PostMapping(Mapping.SECTION)
+    ResponseEntity<?> createSection(@RequestParam(Param.ACCESSTOKEN) String token,
+          	         @Valid @RequestParam(Param.COURSE_ID) int courseId,
+                     @Valid @RequestParam(Param.SECTION_TITLE) String sectionTitle) {
 
+        User user = userRepository.findByToken(token);
+        Course course = courseRepository.findByCourseId(courseId) ;
+
+        if(user == null){
+        	  return new ResponseEntity<>("user is not present",
+                      HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+        	  return new ResponseEntity<>("invalid token",
+                      HttpStatus.UNAUTHORIZED);
+        }
+        
+        if(user.getParent() != null){
+       	 return new ResponseEntity<>("user is child it's not allowed ",
+                    HttpStatus.FORBIDDEN);
+       }
+
+        if(course == null){
+      	  return new ResponseEntity<>("The Course Is Not Present",
+                    HttpStatus.NOT_FOUND);
+      }
+
+        Section section=new Section(sectionTitle);
+        section.setCourse(course);
+        sectionRepository.save(section);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping(Mapping.SECTION)
+    ResponseEntity<?> updateSectionInfo(@RequestParam(Param.ACCESSTOKEN) String token,
+                                  @Valid @RequestParam(value = Param.SECTION_ID) int sectionId,
+                                  @Valid @RequestParam(value = Param.SECTION_TITLE) String NewsectionTitle) {
+                                   
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+        	 return new ResponseEntity<>(" user is not present ",
+                     HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+        	 return new ResponseEntity<>(" invalid token ",
+                     HttpStatus.UNAUTHORIZED);
+        }
+
+        Section section = sectionRepository.findBySectionId(sectionId);
+
+        if (section == null) {
+        	 return new ResponseEntity<>(" Section Is Not Present ",
+                     HttpStatus.NOT_FOUND);
+        }
+
+        if (section.getCourse().getPublisher().getUserId()!=
+                (user.getUserId())) {
+        	return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your section to update",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        section.setTitle(NewsectionTitle);
+        sectionRepository.save(section);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
     
-    
-    
-    
-    
-    
-    
-    
+
+    @DeleteMapping(Mapping.SECTION)
+    ResponseEntity<?> updateClassroomInfo(@RequestParam(Param.ACCESSTOKEN) String token,
+                                 @Valid @RequestParam(value = Param.SECTION_TITLE) String sectionTtile){
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+        	 return new ResponseEntity<>(" user is not present ",
+                     HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+        	 return new ResponseEntity<>(" invalid token ",
+                     HttpStatus.UNAUTHORIZED);
+        }
+
+        Section section = sectionRepository.findByTitle(sectionTtile);
+
+        if (section == null) {
+        	 return new ResponseEntity<>(" Section Is Not Present ",
+                     HttpStatus.NOT_FOUND);
+        }
+
+        if (section.getCourse().getPublisher().getUserId()!=
+                (user.getUserId())) {
+        	return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your section to update",
+                    HttpStatus.FORBIDDEN);
+        }
+        sectionRepository.deleteById(section.getSectionId());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

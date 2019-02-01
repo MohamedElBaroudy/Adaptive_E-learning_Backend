@@ -34,5 +34,9 @@ public class Mapping {
     public static final String ENROLLCHILD = "/enrollchild";
     public static final String CHILDREN = "/children";
     public static final String CHILD = "/child";
+    
+    //For sections
+    public static final String SECTION = "/section";
+
 
 }

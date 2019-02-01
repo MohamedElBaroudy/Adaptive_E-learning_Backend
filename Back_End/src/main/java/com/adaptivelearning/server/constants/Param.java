@@ -25,6 +25,11 @@ public class Param {
 
 
     //for sections
+    public static final String COURSE_ID = "course_id";
+    public static final String SECTION_ID = "section_id";
+    public static final String SECTION_TITLE = "section_title";
+
+    
 
     
 }
