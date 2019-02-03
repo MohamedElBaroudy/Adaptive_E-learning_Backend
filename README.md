@@ -52,8 +52,8 @@ or
 ### Update the classroom info by it's name (PUT method)
 >http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_name=CSE19_Security&passcode=fbg98u
 
-### Delete classroom by it's name (DELETE method)
->http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_name=CSE19 Security
+### Delete classroom by it's Id (DELETE method)
+>http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_id=1
 
 ### Find classroom by it's id (GET method)
 >http://localhost:8080/classroom?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}&classroom_id=2
@@ -65,31 +65,31 @@ or
 >http://localhost:8080/parent/addchild?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}&firstname=habebbaba&date_of_birth=2001-02-05&email=child1@hotmail.com&password=12345678&username=kelo1&gender=1
 
 ### Join child into classroom (POST method)
->http://localhost:8080/parent/enrollchild?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&firstname=habebbaba&classroom_name=CSE19_ComputerSecurity&passcode=fbg98u
+>http://localhost:8080/parent/enrollchild?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&firstname=habebbaba&passcode=fbg98u
 
 ### Retrieve children (GET method)
 >http://localhost:8080/parent/children?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ
 
 ### Retrieve child (GET method)
->http://localhost:8080/parent/child?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&firstname=habebbaba
+>http://localhost:8080/parent/child?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&user_id=4
 
 ### Create course (POST method)
->http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w&title=java&detailed_title=spring&description=it'sjavaspringcourse&level=1
+>http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUxMi...gI17icUx9w&title=java&detailed_title=spring&description=it'sjavaspringcourse&category=it_and_software&level=1
 
 ### Create course in a classroom (POST method)
->http://localhost:8080/teacher/classroom_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w&classroom_id=1&title=c++&detailed_title=datastructure&description=it's datastructure and algorithm course&level=2
+>http://localhost:8080/teacher/classroom_course?token=eyJhbGciOiJIUzUxMi...gI17icUx9w&classroom_id=1&title=c++&detailed_title=datastructure&description=it's datastructure and algorithm course&category=it_and_software&level=2
 
 ### Enroll Child into course (POST method)
->http://localhost:8080/parent/enrollchild_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w&firstname=Habebbaba&courseID=2
+>http://localhost:8080/parent/enrollchild_course?token=eyJhbGciOiJIUzUxMiJ9eyJ....17icUx9w&firstname=Habebbaba&courseID=2
 
 ### Enroll Student into course (POST method)
->http://localhost:8080/student/enroll_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w&courseID=1
+>http://localhost:8080/student/enroll_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9....ZJgI17icUx9w&courseID=1
 
 ### Create section in a course (POST method)
->http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQ5MDMxNTk2LCJleHAiOjE1NDk2MzYzOTV9.H_aVoCHPM8ITwN18qEtQUngPic5xP_hGup3RqTKmzmV7Lv-rJ9CPwxa6qvI3s1TNP1bgLQMfE5ubI3S7ARVtGA&course_id=1&section_title=Introduction
+>http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQ5MDMxNTk2LCJleHAiOjE1NDk2MzYzOTV9....E5ubI3S7ARVtGA&course_id=1&section_title=Introduction
 
 ### Update the section info by it's id (PUT method)
->http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQ5MDMxNTk2LCJleHAiOjE1NDk2MzYzOTV9.H_aVoCHPM8ITwN18qEtQUngPic5xP_hGup3RqTKmzmV7Lv-rJ9CPwxa6qvI3s1TNP1bgLQMfE5ubI3S7ARVtGA&section_id=2&section_title=INTRODUCTION
+>http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQ5MDMxNTk2LCJleHAiOjE1NDk2MzYzOTV9....QMfE5ubI3S7ARVtGA&section_id=2&section_title=INTRODUCTION
 
-### Delete section by it's title (DELETE method)
->http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQ5MDMxNTk2LCJleHAiOjE1NDk2MzYzOTV9.H_aVoCHPM8ITwN18qEtQUngPic5xP_hGup3RqTKmzmV7Lv-rJ9CPwxa6qvI3s1TNP1bgLQMfE5ubI3S7ARVtGA&section_title=INTRODUCTION
+### Delete section by it's id (DELETE method)
+>http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOi....1bgLQMfE5ubI3S7ARVtGA&section_id=3
