@@ -2,11 +2,10 @@ package com.adaptivelearning.server.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.hibernate.annotations.NaturalId;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -65,7 +64,7 @@ public class User {
     // DOB
     @JsonFormat(pattern="yyyy-MM-dd")
     @Column(name = "DATEOFBIRTH")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     // token for rest api purpose
     @Ignore
@@ -81,6 +80,20 @@ public class User {
     // grade   if child
     @Column(name = "GRADE")
     private String grade;
+
+    // bool values
+
+    @Column(name = "IS_TEACHER")
+    private boolean isTeacher = false;
+
+    @Column(name = "IS_CHILD")
+    private boolean isChild = false;
+
+    @Column(name = "IS_PARENT")
+    private boolean isParent = false;
+
+
+    // end of bool values
 
 
 
@@ -133,7 +146,7 @@ public class User {
                 @NotBlank @Size(max = 40) @Email String email,
                 @NotBlank @Size(max = 30) String username,
                 @NotBlank @Size(max = 100) String password,
-                Date dateOfBirth,
+                LocalDate dateOfBirth,
                 @NotNull short gender) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -192,11 +205,11 @@ public class User {
         this.password = password;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -250,5 +263,29 @@ public class User {
 
     public List<Course> getEnrolls() {
         return enrolls;
+    }
+
+    public boolean isTeacher() {
+        return isTeacher;
+    }
+
+    public void setTeacher(boolean teacher) {
+        isTeacher = teacher;
+    }
+
+    public boolean isChild() {
+        return isChild;
+    }
+
+    public void setChild(boolean child) {
+        isChild = child;
+    }
+
+    public boolean isParent() {
+        return isParent;
+    }
+
+    public void setParent(boolean parent) {
+        isParent = parent;
     }
 }

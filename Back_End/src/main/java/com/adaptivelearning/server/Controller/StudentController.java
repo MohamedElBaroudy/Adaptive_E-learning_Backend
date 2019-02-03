@@ -40,7 +40,6 @@ public class StudentController {
     @SuppressWarnings("unchecked")
     @PostMapping(Mapping.EnrollStudent)
     public ResponseEntity<?> joinStudentIntoClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
-                              @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
                               @Valid @RequestParam(Param.PASSCODE) String passcode) {
 
         User user = userRepository.findByToken(token);
@@ -57,16 +56,11 @@ public class StudentController {
                      HttpStatus.FORBIDDEN);
         }
 
-        Classroom classroom = classroomRepository.findByClassroomName(classroomName);
+        Classroom classroom = classroomRepository.findByPassCode(passcode);
 
         if (classroom == null ) {
         	 return new ResponseEntity<>("Classroom Is Not Found",
                      HttpStatus.NOT_FOUND);
-        }
-
-        if (!classroom.getPassCode().equals(passcode) ) {
-            return new ResponseEntity<>("Classroom Has Wrong Passcode",
-               HttpStatus.NOT_FOUND);
         }
 
         classroom.getStudents().add(user);
@@ -76,7 +70,7 @@ public class StudentController {
 
 
     @GetMapping(Mapping.CLASSROOMS)
-    ResponseEntity<?> retrieveJoinedClassrooms(@RequestParam(Param.ACCESSTOKEN) String token) {
+    public ResponseEntity<?> retrieveJoinedClassrooms(@RequestParam(Param.ACCESSTOKEN) String token) {
 
         User user = userRepository.findByToken(token);
 
@@ -92,7 +86,7 @@ public class StudentController {
     
     
     @PostMapping(Mapping.EnrollCourse)
-    ResponseEntity<?> EnrollCourse(@RequestParam(Param.ACCESSTOKEN) String token,
+    public ResponseEntity<?> EnrollCourse(@RequestParam(Param.ACCESSTOKEN) String token,
                                    @Valid @RequestParam(Param.CourseID) int courseId,
                                    HttpServletResponse response) {
 
@@ -125,6 +119,7 @@ public class StudentController {
                      HttpStatus.FORBIDDEN); 
         }
        course.getLearners().add(user);
+        course.increamentStudents();
    
        courseRepository.save(course);
         return new ResponseEntity<>(HttpStatus.OK); 

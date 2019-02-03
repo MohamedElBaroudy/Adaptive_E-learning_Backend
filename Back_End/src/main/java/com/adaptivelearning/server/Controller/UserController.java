@@ -19,13 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RestController
-//@RequestMapping(Mapping.AUTH)
+@RequestMapping(Mapping.AUTH)
 public class UserController {
 
     @Autowired
@@ -57,8 +55,8 @@ public class UserController {
 
         // already logged in
         if(user.getToken()!=null)
-            return new ResponseEntity<>("already logged in"+", token is : " +user.getToken(),
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(user.getToken(),
+                    HttpStatus.OK);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken( user.getEmail(),password)
@@ -92,7 +90,7 @@ public class UserController {
     }
 
     @GetMapping(Mapping.LOGOUT)
-    public ResponseEntity<?> KickOutUser(@RequestParam(Param.ACCESSTOKEN) String token){
+    public ResponseEntity<?> kickOutUser(@RequestParam(Param.ACCESSTOKEN) String token){
 
         User user = userRepository.findByToken(token);
 
@@ -106,7 +104,7 @@ public class UserController {
 
         user.setToken(null);
         userRepository.save(user);
-        return new ResponseEntity<>("user logged out",HttpStatus.OK);
+        return new ResponseEntity<>("user logged out",HttpStatus.NO_CONTENT);
     }
 
 
@@ -117,7 +115,7 @@ public class UserController {
                              @Valid @RequestParam(Param.USERNAME) String username,
                              @Valid @RequestParam(Param.EMAIL) String email,
                              @Valid @RequestParam(Param.PASSWORD) String password,
-                             @Valid @RequestParam(Param.GENDRE) short gender) throws ParseException {
+                             @Valid @RequestParam(Param.GENDRE) short gender){
 
         if (userRepository.existsByEmail(email))
             return new ResponseEntity<>("Email is used",HttpStatus.CONFLICT);
@@ -127,8 +125,8 @@ public class UserController {
 
 
         // Creating user's account
-        DateFormat format = new SimpleDateFormat("yyyy-mm-dd");
-        Date dateOfBirth = format.parse(dob);
+        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+        LocalDate dateOfBirth = LocalDate.parse(dob,dtf);
         fname = fname.substring(0, 1).toUpperCase() + fname.substring(1);
         lname = lname.substring(0, 1).toUpperCase() + lname.substring(1);
         User user = new User(fname, lname, email, username, password, dateOfBirth, gender);

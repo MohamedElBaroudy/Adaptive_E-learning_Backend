@@ -2,6 +2,7 @@ package com.adaptivelearning.server.constants;
 
 public class Param {
     //user
+    public static final String USERID = "user_id";
     public static final String FIRSTNAME = "firstname";
     public static final String LASTNAME = "lastname";
     public static final String USERNAME = "username";
@@ -21,6 +22,7 @@ public class Param {
     public static final String Title = "title";
     public static final String Detailed_title = "detailed_title";
     public static final String Description = "description";
+    public static final String CATEGORY = "category";
     public static final String Level = "level";
     public static final String Rate = "rate";
 

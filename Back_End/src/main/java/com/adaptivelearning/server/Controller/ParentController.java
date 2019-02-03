@@ -16,10 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.validation.Valid;
 
 @RestController
@@ -54,7 +52,7 @@ public class ParentController {
                          @Valid @RequestParam(Param.USERNAME) String username,
                          @Valid @RequestParam(Param.EMAIL) String email,
                          @Valid @RequestParam(Param.PASSWORD) String password,
-                         @Valid @RequestParam(Param.GENDRE) short gender) throws ParseException {
+                         @Valid @RequestParam(Param.GENDRE) short gender){
 
         User user = userRepository.findByToken(token);
 
@@ -80,10 +78,13 @@ public class ParentController {
         }
 
         // Creating Child account
-        DateFormat format = new SimpleDateFormat("yyyy-mm-dd");
-        Date dateOfBirth = format.parse(dob);
+        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+        LocalDate dateOfBirth = LocalDate.parse(dob,dtf);
         name = name.substring(0, 1).toUpperCase() + name.substring(1);
         User child = new User(name, user.getLastName(), email, username, password, dateOfBirth, gender);
+
+        user.setParent(true);
+        child.setChild(true);
 
         child.setPassword(passwordEncoder.encode(child.getPassword()));
         child.setParent(user);
@@ -95,7 +96,6 @@ public class ParentController {
     @PostMapping(Mapping.ENROLLCHILD)
      public ResponseEntity<?> joinChildIntoClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
                         @Valid @RequestParam(Param.FIRSTNAME) String childName,
-                        @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
                         @Valid @RequestParam(Param.PASSCODE) String passCode) {
 
         User user = userRepository.findByToken(token);
@@ -108,7 +108,7 @@ public class ParentController {
         }
 
         User enrollChild = userRepository.findByFirstNameAndParent(childName,user);
-        Classroom classroom = classroomRepository.findByClassroomName(classroomName);
+        Classroom classroom = classroomRepository.findByPassCode(passCode);
 
         if (enrollChild == null) {
           	 return new ResponseEntity<>("Child Is Not Found",HttpStatus.NOT_FOUND);
@@ -118,12 +118,6 @@ public class ParentController {
          	 return new ResponseEntity<>("Classroom Is Not Found",
                      HttpStatus.NOT_FOUND);
         }
-        
-       if (!classroom.getPassCode().equals(passCode) ) {
-
-    	   return new ResponseEntity<>("Wrong Passcode or Classroom Is Not Found",
-                   HttpStatus.NOT_FOUND);
-       }
 
         classroom.getStudents().add(enrollChild);
         classroomRepository.save(classroom);
@@ -184,7 +178,7 @@ public class ParentController {
 
     @GetMapping(Mapping.CHILD)
     ResponseEntity<?> retrieveChild(@RequestParam(Param.ACCESSTOKEN) String token,
-                                    @Valid @RequestParam(Param.FIRSTNAME) String childName) {
+                                    @Valid @RequestParam(Param.USERID) Integer childId) {
 
         User user = userRepository.findByToken(token);
 
@@ -195,11 +189,14 @@ public class ParentController {
             return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
         }
 
-        User child = userRepository.findByFirstNameAndParent(childName,user);
+        User child = userRepository.findByUserId(childId);
 
         if (child == null)
             return new ResponseEntity<>("Child is not found",
                     HttpStatus.NOT_FOUND);
+        if (!user.equals(child.getParent()))
+            return new ResponseEntity<>("User is not your child",
+                    HttpStatus.FORBIDDEN);
 
         return new ResponseEntity<>(child ,HttpStatus.OK);
     }

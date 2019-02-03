@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "CLASSROOM",uniqueConstraints = {
         @UniqueConstraint(columnNames = "ID"),
-        @UniqueConstraint(columnNames = "CLASSROOM_NAME")})
+        @UniqueConstraint(columnNames = "PASSCODE")})
 @JsonIdentityInfo(
         scope=Classroom.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -25,15 +25,16 @@ public class Classroom {
     private int classroomId;
 
     // classroom name   for searching purpose
-    @NaturalId
     @NotBlank
     @Size(max = 40)
     @Column(name = "CLASSROOM_NAME")
     private String classroomName;
 
     // classroom passcode
+    @NaturalId
     @NotBlank
     @Size(max = 255)
+    @Column(name = "PASSCODE")
     private String passCode;
 
 

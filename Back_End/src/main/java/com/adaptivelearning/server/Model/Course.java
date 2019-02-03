@@ -6,6 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +57,20 @@ public class Course {
     @Column(name = "LEVEL")
     private short level;
 
+    // category
+    @NotBlank
+    @Size(max = 40)
+    @Column(name = "CATEGORY")
+    private String category;
+
+    // publish date
+    @NotNull
+    @Column(name = "PUBLISH_DATE")
+    private LocalDate publishDate;
+
+    @NotNull
+    @Column(name = "NUMBER_OF_STUDENTS")
+    private Integer numberOfStudents=0;
 
     // Mapping
     @ManyToOne(fetch = FetchType.EAGER,
@@ -91,18 +106,22 @@ public class Course {
 
 
     public Course() {
+
     }
 
     public Course(@NotBlank @Size(max = 40) String title,
                   @NotBlank @Size(max = 100) String detailedTitle,
                   @NotBlank @Size(max = 1000) String description,
                   @NotNull boolean isPublic,
-                  @NotNull short level) {
+                  @NotNull short level,
+                  @NotBlank @Size(max = 40) String category) {
         this.title = title;
         this.detailedTitle = detailedTitle;
         this.description = description;
         this.isPublic = isPublic;
         this.level = level;
+        this.category = category;
+        this.publishDate = LocalDate.now();
     }
 
     public int getCourseId() {
@@ -191,5 +210,25 @@ public class Course {
 
     public void setSections(List<Section> sections) {
         this.sections = sections;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public LocalDate getPublishDate() {
+        return publishDate;
+    }
+
+    public Integer getNumberOfStudents() {
+        return numberOfStudents;
+    }
+
+    public void increamentStudents() {
+        this.numberOfStudents += 1;
     }
 }
