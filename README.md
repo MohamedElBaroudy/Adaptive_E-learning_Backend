@@ -27,18 +27,18 @@ Graduation project about adaptive e-learning. This repo is the backend of the ap
 
 ## API Samples
 ### Login example (GET method)
->http://localhost:8080/login?email=muhammed@gmail.com&password=12345678
+>http://localhost:8080/auth/login?email=muhammed@gmail.com&password=12345678
 or
->http://localhost:8080/login?username=keloi&password=12345678
+>http://localhost:8080/auth/login?username=keloi&password=12345678
 
 ### Register example (POST method)
->http://localhost:8080/register?firstname=mohamed&lastname=adel&email=user2@gmail.com&username=keloi&password=12345678&gender=1&date_of_birth=2001-07-27
+>http://localhost:8080/auth/register?firstname=mohamed&lastname=adel&email=user2@gmail.com&username=keloi&password=12345678&gender=1&date_of_birth=2001-07-27
 
 ### Retrieve user data (GET method)
->http://localhost:8080/profile?token=eyJhbGciOiJIUzUxMiJ9....Na5P8wg
+>http://localhost:8080/auth/profile?token=eyJhbGciOiJIUzUxMiJ9....Na5P8wg
 
 ### Logout example (GET method)
->http://localhost:8080/logout?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...
+>http://localhost:8080/auth/logout?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...
 
 ### Create classroom (POST method)
 >http://localhost:8080/teacher/classrooms?token=eyJhbGciOiJIUzUxMiJ9....Na5P8wg&classroom_name=CSE19 ComputerNetworks&passcode=af39ns
