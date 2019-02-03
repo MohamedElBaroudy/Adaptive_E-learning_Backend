@@ -1,5 +1,6 @@
 package com.adaptivelearning.server.Controller;
 
+import com.adaptivelearning.server.FancyModel.FancyClassroom;
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.Section;
@@ -86,7 +87,8 @@ public class TeacherController {
                      HttpStatus.UNAUTHORIZED);
         }
 
-       return new ResponseEntity<>(user.getClassrooms(),
+        FancyClassroom fancyClassroom = new FancyClassroom();
+       return new ResponseEntity<>(fancyClassroom.toClassroomIdListMapping(user.getClassrooms()),
                 HttpStatus.OK);
     }
 
@@ -241,7 +243,7 @@ public class TeacherController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-/////////////////////////////////////// Section Functions //////////////////////////////////////////////////////
+/////////////////////////////////////// FancySection Functions //////////////////////////////////////////////////////
     
     @PostMapping(Mapping.SECTION)
     public ResponseEntity<?> createSection(@RequestParam(Param.ACCESSTOKEN) String token,
@@ -266,7 +268,7 @@ public class TeacherController {
        }
 
         if(course == null){
-      	  return new ResponseEntity<>("The Course Is Not Present",
+      	  return new ResponseEntity<>("The FancyCourse Is Not Present",
                     HttpStatus.NOT_FOUND);
       }
 
@@ -296,7 +298,7 @@ public class TeacherController {
         Section section = sectionRepository.findBySectionId(sectionId);
 
         if (section == null) {
-        	 return new ResponseEntity<>(" Section Is Not Present ",
+        	 return new ResponseEntity<>(" FancySection Is Not Present ",
                      HttpStatus.NOT_FOUND);
         }
 
@@ -329,7 +331,7 @@ public class TeacherController {
         Section section = sectionRepository.findBySectionId(sectionId);
 
         if (section == null) {
-        	 return new ResponseEntity<>(" Section Is Not Present ",
+        	 return new ResponseEntity<>(" FancySection Is Not Present ",
                      HttpStatus.NOT_FOUND);
         }
 

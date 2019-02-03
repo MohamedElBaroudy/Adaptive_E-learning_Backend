@@ -23,7 +23,7 @@ public class Mapping {
     //For courses
     public static final String COURSES = "/courses";
     public static final String CLASSROOM_COURSES = "/classroom_courses";
-    
+
 
     
     //Student

@@ -1,5 +1,6 @@
 package com.adaptivelearning.server.Controller;
 
+import com.adaptivelearning.server.FancyModel.FancyUser;
 import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
@@ -86,7 +87,10 @@ public class UserController {
             return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        FancyUser fancyUser = new FancyUser();
+        fancyUser.toFancyUserMapper(user);
+
+        return new ResponseEntity<>(fancyUser,HttpStatus.OK);
     }
 
     @GetMapping(Mapping.LOGOUT)
@@ -125,7 +129,7 @@ public class UserController {
 
 
         // Creating user's account
-        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dateOfBirth = LocalDate.parse(dob,dtf);
         fname = fname.substring(0, 1).toUpperCase() + fname.substring(1);
         lname = lname.substring(0, 1).toUpperCase() + lname.substring(1);
@@ -134,6 +138,9 @@ public class UserController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
+
+        FancyUser fancyUser = new FancyUser();
+        fancyUser.toFancyUserMapper(user);
 
         return new ResponseEntity<>(user,HttpStatus.OK);
     }

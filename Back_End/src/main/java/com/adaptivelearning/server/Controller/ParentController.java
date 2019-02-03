@@ -1,5 +1,6 @@
 package com.adaptivelearning.server.Controller;
 
+import com.adaptivelearning.server.FancyModel.FancyUser;
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.User;
@@ -57,7 +58,7 @@ public class ParentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-        	 return new ResponseEntity<>("User Is Not Valid",
+        	 return new ResponseEntity<>("FancyUser Is Not Valid",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -67,7 +68,7 @@ public class ParentController {
 
 
         if (userRepository.existsByEmail(email)  ||  userRepository.existsByUsername(username)) {
-       	 return new ResponseEntity<>("User, Email or both of them are in use",
+       	 return new ResponseEntity<>("FancyUser, Email or both of them are in use",
                  HttpStatus.CONFLICT);
         }
 
@@ -101,7 +102,7 @@ public class ParentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-       	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+       	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
           	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
@@ -115,7 +116,7 @@ public class ParentController {
         }
 
         if (classroom == null ) {
-         	 return new ResponseEntity<>("Classroom Is Not Found",
+         	 return new ResponseEntity<>("FancyClassroom Is Not Found",
                      HttpStatus.NOT_FOUND);
         }
 
@@ -135,7 +136,7 @@ public class ParentController {
        User enrollChild = userRepository.findByFirstNameAndParent(childName,user);
        
        if(user == null){
-      	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+      	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
        }
        if (!jwtTokenChecker.validateToken(token)) {
          	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
@@ -168,12 +169,15 @@ public class ParentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+          	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
          	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(user.getChildren() ,HttpStatus.OK);
+
+        FancyUser fancyUser = new FancyUser();
+        return new ResponseEntity<>(fancyUser.toUserIdListMapping(user.getChildren()),
+                HttpStatus.OK);
     }
 
     @GetMapping(Mapping.CHILD)
@@ -183,7 +187,7 @@ public class ParentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
             return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
@@ -195,9 +199,12 @@ public class ParentController {
             return new ResponseEntity<>("Child is not found",
                     HttpStatus.NOT_FOUND);
         if (!user.equals(child.getParent()))
-            return new ResponseEntity<>("User is not your child",
+            return new ResponseEntity<>("FancyUser is not your child",
                     HttpStatus.FORBIDDEN);
 
-        return new ResponseEntity<>(child ,HttpStatus.OK);
+        FancyUser fancyUserChild = new FancyUser();
+        fancyUserChild.toFancyUserMapper(child);
+
+        return new ResponseEntity<>(fancyUserChild ,HttpStatus.OK);
     }
 }

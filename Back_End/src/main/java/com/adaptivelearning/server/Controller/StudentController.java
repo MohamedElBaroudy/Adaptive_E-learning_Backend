@@ -1,5 +1,6 @@
 package com.adaptivelearning.server.Controller;
 
+import com.adaptivelearning.server.FancyModel.FancyClassroom;
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.User;
@@ -37,7 +38,6 @@ public class StudentController {
     JwtTokenProvider jwtTokenChecker;
 
 
-    @SuppressWarnings("unchecked")
     @PostMapping(Mapping.EnrollStudent)
     public ResponseEntity<?> joinStudentIntoClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
                               @Valid @RequestParam(Param.PASSCODE) String passcode) {
@@ -45,7 +45,7 @@ public class StudentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+          	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
          	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
@@ -65,7 +65,10 @@ public class StudentController {
 
         classroom.getStudents().add(user);
         classroomRepository.save(classroom);
-        return new ResponseEntity<>(classroom ,HttpStatus.OK);
+
+        FancyClassroom fancyClassroom = new FancyClassroom();
+        fancyClassroom.toFancyClassroomMapping(classroom);
+        return new ResponseEntity<>(fancyClassroom ,HttpStatus.OK);
     }
 
 
@@ -75,13 +78,14 @@ public class StudentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-         	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.BAD_REQUEST);
+         	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.BAD_REQUEST);
         }
         if (!jwtTokenChecker.validateToken(token)) {
         	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(user.getClassrooms() ,HttpStatus.OK);
+        FancyClassroom fancyClassroom = new FancyClassroom();
+        return new ResponseEntity<>(fancyClassroom.toClassroomIdListMapping(user.getClassrooms()),
+                HttpStatus.OK);
     }
     
     
@@ -124,6 +128,4 @@ public class StudentController {
        courseRepository.save(course);
         return new ResponseEntity<>(HttpStatus.OK); 
     }
-
-
 }
