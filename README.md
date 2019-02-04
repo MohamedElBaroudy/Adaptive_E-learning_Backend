@@ -49,11 +49,20 @@ or
 ### Retrieve classrooms for students (GET method)
 >http://localhost:8080/student/classrooms?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}
 
+### Retrieve courses for teacher (GET method)
+>http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w
+
+### Retrieve courses for students (GET method)
+>http://localhost:8080/student/courses?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQ5MjQ4ODI5LCJleHAiOjE1NDk4NTM2Mjl9.Enpd_wlGv3aoUq0hb-eleNyjXE4F1SSegW9Pb5SDQgkvvXHSp6fxf3qQs4leXISeo2UMCyOM9IQ2Jcjj1P8-Rg
+
 ### Update the classroom info by it's name (PUT method)
 >http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_name=CSE19_Security&passcode=fbg98u
 
 ### Delete classroom by it's Id (DELETE method)
 >http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_id=1
+
+### Delete course by it's Id (DELETE method)
+>http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ5MjQ0MjUyLCJleHAiOjE1NDk4NDkwNTJ9.LYczc5lPxhEcdZ_dYJrQwuYcb7iPBTduB7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ&course_id=2
 
 ### Find classroom by it's id (GET method)
 >http://localhost:8080/classroom?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}&classroom_id=2
@@ -80,10 +89,10 @@ or
 >http://localhost:8080/teacher/classroom_course?token=eyJhbGciOiJIUzUxMi...gI17icUx9w&classroom_id=1&title=c++&detailed_title=datastructure&description=it's datastructure and algorithm course&category=it_and_software&level=2
 
 ### Enroll Child into course (POST method)
->http://localhost:8080/parent/enrollchild_course?token=eyJhbGciOiJIUzUxMiJ9eyJ....17icUx9w&firstname=Habebbaba&courseID=2
+>http://localhost:8080/parent/enrollchild_course?token=eyJhbGciOiJIUzUxMiJ9eyJ....17icUx9w&firstname=Habebbaba&course_id=2
 
 ### Enroll Student into course (POST method)
->http://localhost:8080/student/enroll_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9....ZJgI17icUx9w&courseID=1
+>http://localhost:8080/student/enroll_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9....ZJgI17icUx9w&course_id=1
 
 ### Create section in a course (POST method)
 >http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQ5MDMxNTk2LCJleHAiOjE1NDk2MzYzOTV9....E5ubI3S7ARVtGA&course_id=1&section_title=Introduction
