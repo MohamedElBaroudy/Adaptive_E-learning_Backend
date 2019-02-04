@@ -53,7 +53,8 @@ public class ParentController {
                          @Valid @RequestParam(Param.USERNAME) String username,
                          @Valid @RequestParam(Param.EMAIL) String email,
                          @Valid @RequestParam(Param.PASSWORD) String password,
-                         @Valid @RequestParam(Param.GENDRE) short gender){
+                         @Valid @RequestParam(Param.GENDRE) short gender,
+                         @Valid @RequestParam(Param.GRADE) String grade){
 
         User user = userRepository.findByToken(token);
 
@@ -82,7 +83,7 @@ public class ParentController {
         final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
         LocalDate dateOfBirth = LocalDate.parse(dob,dtf);
         name = name.substring(0, 1).toUpperCase() + name.substring(1);
-        User child = new User(name, user.getLastName(), email, username, password, dateOfBirth, gender);
+        User child = new User(name, user.getLastName(), email, username, password, dateOfBirth, gender,grade);
 
         user.setParent(true);
         child.setChild(true);
@@ -119,7 +120,10 @@ public class ParentController {
          	 return new ResponseEntity<>("FancyClassroom Is Not Found",
                      HttpStatus.NOT_FOUND);
         }
-
+        if (classroomRepository.existsByStudents(enrollChild)) {
+        	 return new ResponseEntity<>("this child already enrolled to this classroom ",
+                    HttpStatus.FORBIDDEN);
+        }
         classroom.getStudents().add(enrollChild);
         classroomRepository.save(classroom);
        return new ResponseEntity<>(HttpStatus.CREATED);

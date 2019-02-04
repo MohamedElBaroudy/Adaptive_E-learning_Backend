@@ -13,6 +13,8 @@ import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,8 +45,7 @@ public class TeacherController {
 
     @PostMapping(Mapping.CLASSROOMS)
     public ResponseEntity<?> createClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
-                     @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName,
-                     @Valid @RequestParam(Param.PASSCODE) String passcode) {
+                     @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName) {
 
         User user = userRepository.findByToken(token);
 
@@ -64,7 +65,14 @@ public class TeacherController {
 
         if(!user.isTeacher())
             user.setTeacher(true);
-
+        
+        //generate random passcode
+        String passcode = RandomStringUtils.randomAlphanumeric(6, 8);
+        while(classroomRepository.existsByPassCode(passcode)) {
+        	passcode=RandomStringUtils.randomAlphanumeric(6, 8);
+        }
+        
+        
         Classroom classRoom = new Classroom(classroomName, passcode);
         classRoom.setCreator(user);
 //        classRoom.setPassCode(passwordEncoder.encode(classRoom.getPassCode()));
@@ -95,9 +103,8 @@ public class TeacherController {
 
 
     @PutMapping(Mapping.CLASSROOM)
-    public ResponseEntity<?> updateClassroomInfo(@RequestParam(Param.ACCESSTOKEN) String token,
-                                  @Valid @RequestParam(value = Param.CLASSROOMNAME,required = false) String classroomName,
-                                  @Valid @RequestParam(value = Param.PASSCODE,required = false) String passcode) {
+    public ResponseEntity<?> updateClassroomPassCode(@RequestParam(Param.ACCESSTOKEN) String token,
+                                  @Valid @RequestParam(value = Param.CLASSROOM_ID,required = false) int classroomId) {
         User user = userRepository.findByToken(token);
 
         if(user == null){
@@ -109,7 +116,7 @@ public class TeacherController {
                      HttpStatus.UNAUTHORIZED);
         }
 
-        Classroom classroom = classroomRepository.findByClassroomName(classroomName);
+        Classroom classroom = classroomRepository.findByClassroomId(classroomId);
 
         if (classroom == null) {
         	 return new ResponseEntity<>(" classroom is not present ",
@@ -123,9 +130,13 @@ public class TeacherController {
         }
 
 //        classroom.setPassCode(passwordEncoder.encode(passcode));
+        String passcode = RandomStringUtils.randomAlphanumeric(6, 8);
+        while(classroomRepository.existsByPassCode(passcode)) {
+        	passcode=RandomStringUtils.randomAlphanumeric(6, 8);
+        }
         classroom.setPassCode(passcode);
         classroomRepository.save(classroom);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(passcode,HttpStatus.CREATED);
     }
 
 

@@ -31,7 +31,7 @@ public class Classroom {
     private String classroomName;
 
     // classroom passcode
-    @NaturalId
+   // @NaturalId      
     @NotBlank
     @Size(max = 255)
     @Column(name = "PASSCODE")

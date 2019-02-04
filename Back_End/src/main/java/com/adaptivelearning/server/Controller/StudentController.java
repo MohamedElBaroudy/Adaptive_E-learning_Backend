@@ -63,6 +63,18 @@ public class StudentController {
         	 return new ResponseEntity<>("Classroom Is Not Found",
                      HttpStatus.NOT_FOUND);
         }
+        
+        if(classroomRepository.existsByStudents(user)) {
+        	 return new ResponseEntity<>("Already Joined ",
+                     HttpStatus.FORBIDDEN); 
+        }
+        
+        // i don't know if the creator can join to his classroom or not
+        
+//        if(classroom.getCreator().getUserId()==user.getUserId()) {
+//       	    return new ResponseEntity<>("classroom creator can't join to his classroom",
+//                    HttpStatus.FORBIDDEN); 
+//       }
 
         classroom.getStudents().add(user);
         classroomRepository.save(classroom);

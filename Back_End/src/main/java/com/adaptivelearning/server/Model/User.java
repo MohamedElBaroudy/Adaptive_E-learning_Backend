@@ -147,7 +147,26 @@ public class User {
                 @NotBlank @Size(max = 30) String username,
                 @NotBlank @Size(max = 100) String password,
                 LocalDate dateOfBirth,
-                @NotNull short gender) {
+                @NotNull short gender,
+                String grade) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.grade=grade;
+    }
+
+    public User(@NotBlank @Size(max = 40) String firstName,
+                @NotBlank @Size(max = 40) String lastName,
+                @NotBlank @Size(max = 40) @Email String email,
+                @NotBlank @Size(max = 30) String username,
+                @NotBlank @Size(max = 100) String password,
+                LocalDate dateOfBirth,
+                @NotNull short gender
+               ) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

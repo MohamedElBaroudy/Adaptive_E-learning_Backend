@@ -9,6 +9,7 @@ public class Param {
     public static final String PASSWORD = "password";
     public static final String EMAIL = "email";
     public static final String GENDRE = "gender";
+    public static final String GRADE = "grade";
     public static final String DATEOFBIRTH = "date_of_birth";
     public static final String ACCESSTOKEN = "token";
 
