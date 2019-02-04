@@ -41,7 +41,7 @@ or
 >http://localhost:8080/auth/logout?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...
 
 ### Create classroom (POST method)
->http://localhost:8080/teacher/classrooms?token=eyJhbGciOiJIUzUxMiJ9....Na5P8wg&classroom_name=CSE19 ComputerNetworks&passcode=af39ns
+>http://localhost:8080/teacher/classrooms?token=eyJhbGciOiJIUzUxMiJ9....Na5P8wg&classroom_name=CSE19 ComputerNetworks
 
 ### Retrieve classrooms for teacher (GET method)
 >http://localhost:8080/teacher/classrooms?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}
@@ -55,8 +55,8 @@ or
 ### Retrieve courses for students (GET method)
 >http://localhost:8080/student/courses?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQ5MjQ4ODI5LCJleHAiOjE1NDk4NTM2Mjl9.Enpd_wlGv3aoUq0hb-eleNyjXE4F1SSegW9Pb5SDQgkvvXHSp6fxf3qQs4leXISeo2UMCyOM9IQ2Jcjj1P8-Rg
 
-### Update the classroom info by it's name (PUT method)
->http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_name=CSE19_Security&passcode=fbg98u
+### Update the classroom passcode by it's Id (PUT method)
+>http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_id=2
 
 ### Delete classroom by it's Id (DELETE method)
 >http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_id=1
@@ -67,14 +67,14 @@ or
 ### Find classroom by it's id (GET method)
 >http://localhost:8080/classroom?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}&classroom_id=2
 
-### Enroll student in classroom with it's id (POST method)
->http://localhost:8080/student/enroll?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&classroom_name=CSE19_ComputerSecurity&passcode=fbg98u
+### Enroll student in classroom with it's Passcode (POST method)
+>http://localhost:8080/student/enroll?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&passcode=SsfNioz
 
 ### Add child for a parent (POST method)
->http://localhost:8080/parent/addchild?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}&firstname=habebbaba&date_of_birth=2001-02-05&email=child1@hotmail.com&password=12345678&username=kelo1&gender=1
+>http://localhost:8080/parent/addchild?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}&firstname=habebbaba&date_of_birth=2001-02-05&email=child1@hotmail.com&password=12345678&username=kelo1&gender=1&grade=1'st grade
 
 ### Join child into classroom (POST method)
->http://localhost:8080/parent/enrollchild?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&firstname=habebbaba&passcode=fbg98u
+>http://localhost:8080/parent/enrollchild?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&firstname=habebbaba&passcode=SsfNioz
 
 ### Retrieve children (GET method)
 >http://localhost:8080/parent/children?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ
