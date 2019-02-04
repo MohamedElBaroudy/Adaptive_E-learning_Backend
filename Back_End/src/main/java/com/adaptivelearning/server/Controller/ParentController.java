@@ -80,7 +80,7 @@ public class ParentController {
         }
 
         // Creating Child account
-        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MMM-dd");
+        final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dateOfBirth = LocalDate.parse(dob,dtf);
         name = name.substring(0, 1).toUpperCase() + name.substring(1);
         User child = new User(name, user.getLastName(), email, username, password, dateOfBirth, gender,grade);
