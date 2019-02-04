@@ -1,6 +1,7 @@
 package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.FancyModel.FancyClassroom;
+import com.adaptivelearning.server.FancyModel.FancyCourse;
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.User;
@@ -88,10 +89,26 @@ public class StudentController {
                 HttpStatus.OK);
     }
     
+    @GetMapping(Mapping.COURSES)
+    public ResponseEntity<?> retrieveEnrolledCourses(@RequestParam(Param.ACCESSTOKEN) String token) {
+
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+         	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.BAD_REQUEST);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+        	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
+        }
+        FancyCourse fancyCourse = new FancyCourse();
+        return new ResponseEntity<>(fancyCourse.toCourseIdListMapping(user.getEnrolls()),
+                HttpStatus.OK);
+    }
     
+
     @PostMapping(Mapping.EnrollCourse)
     public ResponseEntity<?> EnrollCourse(@RequestParam(Param.ACCESSTOKEN) String token,
-                                   @Valid @RequestParam(Param.CourseID) int courseId,
+                                   @Valid @RequestParam(Param.COURSE_ID) int courseId,
                                    HttpServletResponse response) {
 
         User user = userRepository.findByToken(token);

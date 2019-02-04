@@ -129,7 +129,7 @@ public class ParentController {
     @PostMapping(Mapping.ENROLLCHILDInCourse)
     public ResponseEntity<?> enrollChildIntoCourse(@RequestParam(Param.ACCESSTOKEN) String token,
                        @Valid @RequestParam(Param.FIRSTNAME) String childName,
-                       @Valid @RequestParam(Param.CourseID) int courseId) {
+                       @Valid @RequestParam(Param.COURSE_ID) int courseId) {
 
        User user = userRepository.findByToken(token);
        Course course = courseRepository.findByCourseId(courseId);

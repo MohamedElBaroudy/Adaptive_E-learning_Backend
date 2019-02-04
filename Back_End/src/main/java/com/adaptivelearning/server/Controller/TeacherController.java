@@ -1,6 +1,7 @@
 package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.FancyModel.FancyClassroom;
+import com.adaptivelearning.server.FancyModel.FancyCourse;
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.Section;
@@ -242,6 +243,55 @@ public class TeacherController {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+   
+    @GetMapping(Mapping.COURSES)
+    public ResponseEntity<?>retrieveCreatedCourses(@RequestParam(Param.ACCESSTOKEN) String token) {
+
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+        	 return new ResponseEntity<>(" user is not present ",
+                     HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+        	 return new ResponseEntity<>(" invalid token ",
+                     HttpStatus.UNAUTHORIZED);
+        }
+
+        FancyCourse fancyCourse = new FancyCourse();
+       return new ResponseEntity<>(fancyCourse.toCourseIdListMapping(user.getCourses()), HttpStatus.OK);
+    }
+   
+    @DeleteMapping(Mapping.COURSES)
+    public ResponseEntity<?> deleteCourse(@RequestParam(Param.ACCESSTOKEN) String token,
+            @Valid @RequestParam(Param.COURSE_ID) Integer courseId) {
+
+    User user = userRepository.findByToken(token);
+
+    if(user == null){
+        return new ResponseEntity<>(" user is not present ",
+                HttpStatus.UNAUTHORIZED);
+    }
+    if (!jwtTokenChecker.validateToken(token)) {
+        return new ResponseEntity<>(" invalid token ",
+                HttpStatus.UNAUTHORIZED);
+    }
+
+    Course course = courseRepository.findByCourseId(courseId);
+
+    if (course == null) {
+        return new ResponseEntity<>(" course is not present ",
+                HttpStatus.NOT_FOUND);
+    }
+
+    if(course.getPublisher().getUserId() != user.getUserId()) {
+        return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your course to update",
+                HttpStatus.FORBIDDEN);
+    }
+
+    courseRepository.deleteById(courseId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+}
 
 /////////////////////////////////////// FancySection Functions //////////////////////////////////////////////////////
     
