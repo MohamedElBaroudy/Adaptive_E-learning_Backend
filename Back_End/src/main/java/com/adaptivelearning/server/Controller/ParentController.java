@@ -180,7 +180,7 @@ public class ParentController {
         }
 
         FancyUser fancyUser = new FancyUser();
-        return new ResponseEntity<>(fancyUser.toUserIdListMapping(user.getChildren()),
+        return new ResponseEntity<>(fancyUser.toFancyUserListMapping(user.getChildren()),
                 HttpStatus.OK);
     }
 
