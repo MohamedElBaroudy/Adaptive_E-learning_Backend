@@ -67,6 +67,17 @@ public class FancyCourse {
         return courseIdList;
     }
 
+    public List<FancyCourse> toFancyCourseListMapping(List<Course> courses){
+        List<FancyCourse> FancyCourseList = new LinkedList<>();
+        for (Course course:
+                courses) {
+            FancyCourse fancyCourse = new FancyCourse();
+            ((LinkedList<FancyCourse>) FancyCourseList).addLast(fancyCourse.toFancyCourseMapping(course));
+        }
+        return FancyCourseList;
+    }
+
+
     public int getCourseId() {
         return courseId;
     }
