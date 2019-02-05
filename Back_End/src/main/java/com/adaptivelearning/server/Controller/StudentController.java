@@ -97,7 +97,7 @@ public class StudentController {
         	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
         }
         FancyClassroom fancyClassroom = new FancyClassroom();
-        return new ResponseEntity<>(fancyClassroom.toClassroomIdListMapping(user.getClassrooms()),
+        return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getClassrooms()),
                 HttpStatus.OK);
     }
     
@@ -113,7 +113,7 @@ public class StudentController {
         	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
         }
         FancyCourse fancyCourse = new FancyCourse();
-        return new ResponseEntity<>(fancyCourse.toCourseIdListMapping(user.getEnrolls()),
+        return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(user.getEnrolls()),
                 HttpStatus.OK);
     }
     
