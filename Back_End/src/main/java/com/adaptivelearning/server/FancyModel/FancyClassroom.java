@@ -46,6 +46,17 @@ public class FancyClassroom {
         return classroomIdList;
     }
 
+    public List<FancyClassroom> toFancyClassroomListMapping(List<Classroom> classrooms){
+        List<FancyClassroom> FancyClassroomList = new LinkedList<>();
+        for (Classroom classroom:
+                classrooms) {
+            FancyClassroom fancyClassroom = new FancyClassroom();
+            ((LinkedList<FancyClassroom>) FancyClassroomList)
+                    .addLast(fancyClassroom.toFancyClassroomMapping(classroom));
+        }
+        return FancyClassroomList;
+    }
+
     public int getClassroomId() {
         return classroomId;
     }
