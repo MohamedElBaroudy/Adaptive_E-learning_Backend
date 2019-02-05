@@ -91,6 +91,17 @@ public class FancyUser {
         return userIdList;
     }
 
+    public List<FancyUser> toFancyUserListMapping(List<User> users){
+        List<FancyUser> fancyUserList = new LinkedList<>();
+        for (User user:
+                users) {
+            FancyUser fancyUser = new FancyUser();
+            ((LinkedList<FancyUser>) fancyUserList)
+                    .addLast(fancyUser.toFancyUserMapper(user));
+        }
+        return fancyUserList;
+    }
+
     public int getUserId() {
         return userId;
     }
