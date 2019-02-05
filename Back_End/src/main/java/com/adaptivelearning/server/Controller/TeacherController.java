@@ -97,7 +97,7 @@ public class TeacherController {
         }
 
         FancyClassroom fancyClassroom = new FancyClassroom();
-       return new ResponseEntity<>(fancyClassroom.toClassroomIdListMapping(user.getClassrooms()),
+       return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getClassrooms()),
                 HttpStatus.OK);
     }
 
@@ -270,7 +270,8 @@ public class TeacherController {
         }
 
         FancyCourse fancyCourse = new FancyCourse();
-       return new ResponseEntity<>(fancyCourse.toCourseIdListMapping(user.getCourses()), HttpStatus.OK);
+       return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
+               user.getCourses()), HttpStatus.OK);
     }
    
     @DeleteMapping(Mapping.COURSES)
