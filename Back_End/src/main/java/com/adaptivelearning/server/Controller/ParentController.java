@@ -91,7 +91,7 @@ public class ParentController {
         child.setPassword(passwordEncoder.encode(child.getPassword()));
         child.setParent(user);
         userRepository.save(child);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("child added",HttpStatus.CREATED);
     }
 
 
@@ -126,7 +126,7 @@ public class ParentController {
         }
         classroom.getStudents().add(enrollChild);
         classroomRepository.save(classroom);
-       return new ResponseEntity<>(HttpStatus.CREATED);
+       return new ResponseEntity<>("child enrolled to classroom",HttpStatus.CREATED);
     }
 
 
@@ -163,7 +163,7 @@ public class ParentController {
       course.getLearners().add(enrollChild);
       
       courseRepository.save(course);
-      return new ResponseEntity<>(HttpStatus.OK);
+      return new ResponseEntity<>("child enrolled to course",HttpStatus.OK);
    }
 
 

@@ -78,7 +78,7 @@ public class TeacherController {
 //        classRoom.setPassCode(passwordEncoder.encode(classRoom.getPassCode()));
         classroomRepository.save(classRoom);
         
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("successfully created with passcode "+classRoom.getPassCode(),HttpStatus.CREATED);
     }
 
 
@@ -168,7 +168,7 @@ public class TeacherController {
         }
 
         classroomRepository.deleteById(classroomId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("classroom deleted",HttpStatus.NO_CONTENT);
     }
     
     
@@ -205,7 +205,7 @@ public class TeacherController {
         course.setPublisher(user);
         courseRepository.save(course);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("successfully created",HttpStatus.CREATED);
     }
 
 
@@ -252,7 +252,7 @@ public class TeacherController {
         
         courseRepository.save(course);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("successfully created",HttpStatus.CREATED);
     }
    
     @GetMapping(Mapping.COURSES)
@@ -301,7 +301,7 @@ public class TeacherController {
     }
 
     courseRepository.deleteById(courseId);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    return new ResponseEntity<>("deleted",HttpStatus.NO_CONTENT);
 }
 
 /////////////////////////////////////// FancySection Functions //////////////////////////////////////////////////////
@@ -337,7 +337,7 @@ public class TeacherController {
         section.setCourse(course);
         sectionRepository.save(section);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("section created",HttpStatus.CREATED);
     }
 
     @PutMapping(Mapping.SECTION)
@@ -371,7 +371,7 @@ public class TeacherController {
 
         section.setTitle(NewsectionTitle);
         sectionRepository.save(section);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("title updated",HttpStatus.CREATED);
     }
     
 
@@ -402,7 +402,7 @@ public class TeacherController {
                     HttpStatus.FORBIDDEN);
         }
         sectionRepository.deleteById(section.getSectionId());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("section deleted",HttpStatus.NO_CONTENT);
     }
 
 }

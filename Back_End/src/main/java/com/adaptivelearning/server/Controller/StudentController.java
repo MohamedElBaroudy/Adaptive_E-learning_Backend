@@ -155,6 +155,6 @@ public class StudentController {
         course.increamentStudents();
    
        courseRepository.save(course);
-        return new ResponseEntity<>(HttpStatus.OK); 
+        return new ResponseEntity<>("enrolled to course",HttpStatus.OK); 
     }
 }
