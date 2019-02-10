@@ -1,6 +1,8 @@
 package com.adaptivelearning.server.FancyModel;
 
 import com.adaptivelearning.server.Model.Classroom;
+import com.adaptivelearning.server.Model.Course;
+import com.adaptivelearning.server.Model.User;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,8 +11,8 @@ public class FancyClassroom {
     // id
     private int classroomId;
 
-    // creator id
-    private int creatorId;
+    // creator
+    private FancyUser creator;
 
     // classroom name   for searching purpose
     private String classroomName;
@@ -24,16 +26,22 @@ public class FancyClassroom {
     //number of courses
     private short coursesNumber;
 
+    // classroom's courses 
+    private List<Integer> courses;
+    
     public FancyClassroom() {
     }
 
     public FancyClassroom toFancyClassroomMapping(Classroom classroom){
+    	FancyUser user= new FancyUser();
+    	FancyCourse courses=new FancyCourse();
         this.classroomId = classroom.getClassroomId();
         this.classroomName = classroom.getClassroomName();
         this.passCode = classroom.getPassCode();
-        this.creatorId = classroom.getCreator().getUserId();
+        this.creator = user.toTeacherMapper(classroom.getCreator());
         this.studentsNumber = classroom.getStudents().size();
         this.coursesNumber = (short) classroom.getCourses().size();
+        this.courses=courses.toCourseIdListMapping(classroom.getCourses());
         return this;
     }
 
@@ -65,15 +73,16 @@ public class FancyClassroom {
         this.classroomId = classroomId;
     }
 
-    public int getCreatorId() {
-        return creatorId;
-    }
+  
+    public FancyUser getCreator() {
+		return creator;
+	}
 
-    public void setCreatorId(int creatorId) {
-        this.creatorId = creatorId;
-    }
+	public void setCreator(FancyUser creator) {
+		this.creator = creator;
+	}
 
-    public String getClassroomName() {
+	public String getClassroomName() {
         return classroomName;
     }
 
@@ -104,4 +113,14 @@ public class FancyClassroom {
     public void setCoursesNumber(short coursesNumber) {
         this.coursesNumber = coursesNumber;
     }
+
+	public List<Integer> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<Integer> courses) {
+		this.courses = courses;
+	}
+
+	
 }

@@ -1,6 +1,7 @@
 package com.adaptivelearning.server.FancyModel;
 
 import com.adaptivelearning.server.Model.Section;
+import com.adaptivelearning.server.Model.User;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,8 +16,8 @@ public class FancySection {
     // course id
     private int courseId;
 
-    // editor id
-    private int editorId;
+    // editor 
+    private User editor;
 
     public FancySection() {
     }
@@ -25,7 +26,7 @@ public class FancySection {
         this.sectionId = section.getSectionId();
         this.title = section.getTitle();
         this.courseId = section.getCourse().getCourseId();
-        this.editorId = section.getCourse().getPublisher().getUserId();
+        this.editor = section.getCourse().getPublisher();
         return this;
     }
 
@@ -62,11 +63,15 @@ public class FancySection {
         this.courseId = courseId;
     }
 
-    public int getEditorId() {
-        return editorId;
-    }
+	public User getEditor() {
+		return editor;
+	}
 
-    public void setEditorId(int editorId) {
-        this.editorId = editorId;
-    }
+	public void setEditor(User editor) {
+		this.editor = editor;
+	}
+
+
+
+   
 }

@@ -81,6 +81,33 @@ public class FancyUser {
         return this;
 
     }
+    
+    public FancyUser toTeacherMapper(User user){
+        short userAge=0;
+
+        if (user.getDateOfBirth() != null)
+            userAge = (short)Period.between(user.getDateOfBirth(), LocalDate.now()).getYears();
+
+        String userGender = "other";
+
+        if(user.getGender()==1)
+            userGender = "male";
+        else if (user.getGender()==2)
+            userGender = "female";
+
+        this.userId = user.getUserId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.username = user.getUsername();
+        this.dateOfBirth = user.getDateOfBirth();
+        this.age = userAge;
+        this.gender = userGender;
+
+        return this;
+
+    }
+
 
     public List<Integer> toUserIdListMapping(List<User> users){
         List<Integer> userIdList = new LinkedList<>();

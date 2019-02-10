@@ -247,8 +247,8 @@ public class TeacherController {
         Course course=new Course(courseTitle, detailed_title, description, false , level,category);
         course.setPublisher(user);
         
-        course.getClassrooms().add(classroom);
-//        classroom.getCourses().add(course); // the mapping will do it automatically
+ //       course.getClassrooms().add(classroom);
+        classroom.getCourses().add(course); // the mapping will do it automatically
         
         courseRepository.save(course);
 

@@ -1,6 +1,10 @@
 package com.adaptivelearning.server.FancyModel;
 
 import com.adaptivelearning.server.Model.Course;
+import com.adaptivelearning.server.Model.Section;
+import com.adaptivelearning.server.Model.User;
+
+import javassist.compiler.ast.NewExpr;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -40,13 +44,19 @@ public class FancyCourse {
     // number of raters
     private Integer numberOfRaters=0;
 
-    // publisher id
-    private Integer publisherId;
-
+    // publisher
+    private FancyUser publisher;
+    
+    // sections
+    private List<Section> sections;
+    
+    
     public FancyCourse() {
     }
 
-    public FancyCourse toFancyCourseMapping(Course course){
+   
+	public FancyCourse toFancyCourseMapping(Course course){
+		FancyUser user= new FancyUser();
         this.courseId = course.getCourseId();
         this.title = course.getTitle();
         this.detailedTitle = course.getDetailedTitle();
@@ -58,10 +68,11 @@ public class FancyCourse {
         this.numberOfRaters = course.getNumberOfRaters();
         this.isPublic = course.isPublic();
         this.rate = course.getRate();
-        this.publisherId = course.getPublisher().getUserId();
+        this.publisher = user.toTeacherMapper(course.getPublisher());
+        this.sections=course.getSections();
         return this;
     }
-
+	
     public List<Integer> toCourseIdListMapping(List<Course> courses){
         List<Integer> courseIdList = new LinkedList<>();
         for (Course course:
@@ -169,12 +180,23 @@ public class FancyCourse {
     public void setNumberOfRaters(Integer numberOfRaters) {
         this.numberOfRaters = numberOfRaters;
     }
+    public FancyUser getPublisher() {
+		return publisher;
+	}
 
-    public Integer getPublisherId() {
-        return publisherId;
-    }
+	public void setPublisher(FancyUser publisher) {
+		this.publisher = publisher;
+	}
 
-    public void setPublisherId(Integer publisherId) {
-        this.publisherId = publisherId;
-    }
+
+	public List<Section> getSections() {
+		return sections;
+	}
+
+
+	public void setSections(List<Section> sections) {
+		this.sections = sections;
+	}
+
+   
 }
