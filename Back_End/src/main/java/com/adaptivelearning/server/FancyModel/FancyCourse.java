@@ -20,7 +20,7 @@ public class FancyCourse {
     private String description;
 
     // rate 0->5
-    private short rate;
+    private float rate;
 
     // privacy  1-> public  2-> secret (for classroom)
     private boolean isPublic;
@@ -37,6 +37,9 @@ public class FancyCourse {
     // number of students
     private Integer numberOfStudents=0;
 
+    // number of raters
+    private Integer numberOfRaters=0;
+
     // publisher id
     private Integer publisherId;
 
@@ -52,6 +55,7 @@ public class FancyCourse {
         this.level = course.getLevel();
         this.category = course.getCategory();
         this.numberOfStudents = course.getNumberOfStudents();
+        this.numberOfRaters = course.getNumberOfRaters();
         this.isPublic = course.isPublic();
         this.rate = course.getRate();
         this.publisherId = course.getPublisher().getUserId();
@@ -110,11 +114,11 @@ public class FancyCourse {
         this.description = description;
     }
 
-    public short getRate() {
+    public float getRate() {
         return rate;
     }
 
-    public void setRate(short rate) {
+    public void setRate(float rate) {
         this.rate = rate;
     }
 
@@ -156,6 +160,14 @@ public class FancyCourse {
 
     public void setNumberOfStudents(Integer numberOfStudents) {
         this.numberOfStudents = numberOfStudents;
+    }
+
+    public Integer getNumberOfRaters() {
+        return numberOfRaters;
+    }
+
+    public void setNumberOfRaters(Integer numberOfRaters) {
+        this.numberOfRaters = numberOfRaters;
     }
 
     public Integer getPublisherId() {

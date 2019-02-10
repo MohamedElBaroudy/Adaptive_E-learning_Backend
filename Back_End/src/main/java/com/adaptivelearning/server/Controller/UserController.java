@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
@@ -24,7 +23,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @RestController
-@RequestMapping(Mapping.AUTH)
+//@RequestMapping(Mapping.AUTH)
 public class UserController {
 
     @Autowired
@@ -75,7 +74,7 @@ public class UserController {
     }
 
     @GetMapping(Mapping.PROFILE)
-    public ResponseEntity<?> getUserProfile(@RequestParam(Param.ACCESSTOKEN) String token){
+    public ResponseEntity<?> getUserProfile(@RequestParam(Param.ACCESS_TOKEN) String token){
 
         User user = userRepository.findByToken(token);
 
@@ -94,7 +93,7 @@ public class UserController {
     }
 
     @GetMapping(Mapping.LOGOUT)
-    public ResponseEntity<?> kickOutUser(@RequestParam(Param.ACCESSTOKEN) String token){
+    public ResponseEntity<?> kickOutUser(@RequestParam(Param.ACCESS_TOKEN) String token){
 
         User user = userRepository.findByToken(token);
 
@@ -113,13 +112,13 @@ public class UserController {
 
 
     @PostMapping(Mapping.REGISTER)
-    public ResponseEntity<?> registerUser(@Valid @RequestParam(Param.FIRSTNAME) String fname,
-                             @Valid @RequestParam(Param.LASTNAME) String lname,
-                             @Valid @RequestParam(Param.DATEOFBIRTH) String dob,
+    public ResponseEntity<?> registerUser(@Valid @RequestParam(Param.FIRST_NAME) String fname,
+                             @Valid @RequestParam(Param.LAST_NAME) String lname,
+                             @Valid @RequestParam(Param.DATE_OF_BIRTH) String dob,
                              @Valid @RequestParam(Param.USERNAME) String username,
                              @Valid @RequestParam(Param.EMAIL) String email,
                              @Valid @RequestParam(Param.PASSWORD) String password,
-                             @Valid @RequestParam(Param.GENDRE) short gender){
+                             @Valid @RequestParam(Param.GENDER) short gender){
 
         if (userRepository.existsByEmail(email))
             return new ResponseEntity<>("Email is used",HttpStatus.CONFLICT);
@@ -142,6 +141,6 @@ public class UserController {
         FancyUser fancyUser = new FancyUser();
         fancyUser.toFancyUserMapper(user);
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(fancyUser,HttpStatus.OK);
     }
 }

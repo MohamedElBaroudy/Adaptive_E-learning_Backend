@@ -11,19 +11,15 @@ import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(Mapping.STUDENT)
+//@RequestMapping(Mapping.STUDENT)
 public class StudentController {
 
     @Autowired
@@ -39,8 +35,8 @@ public class StudentController {
     JwtTokenProvider jwtTokenChecker;
 
 
-    @PostMapping(Mapping.EnrollStudent)
-    public ResponseEntity<?> joinStudentIntoClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
+    @PostMapping(Mapping.JOIN_CLASSROOM)
+    public ResponseEntity<?> joinStudentIntoClassroom(@RequestParam(Param.ACCESS_TOKEN) String token,
                               @Valid @RequestParam(Param.PASSCODE) String passcode) {
 
         User user = userRepository.findByToken(token);
@@ -81,12 +77,12 @@ public class StudentController {
 
         FancyClassroom fancyClassroom = new FancyClassroom();
         fancyClassroom.toFancyClassroomMapping(classroom);
-        return new ResponseEntity<>(fancyClassroom ,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    @GetMapping(Mapping.CLASSROOMS)
-    public ResponseEntity<?> retrieveJoinedClassrooms(@RequestParam(Param.ACCESSTOKEN) String token) {
+    @GetMapping(Mapping.STUDENT_CLASSROOMS)
+    public ResponseEntity<?> retrieveJoinedClassrooms(@RequestParam(Param.ACCESS_TOKEN) String token) {
 
         User user = userRepository.findByToken(token);
 
@@ -97,12 +93,12 @@ public class StudentController {
         	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
         }
         FancyClassroom fancyClassroom = new FancyClassroom();
-        return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getClassrooms()),
+        return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getJoins()),
                 HttpStatus.OK);
     }
     
-    @GetMapping(Mapping.COURSES)
-    public ResponseEntity<?> retrieveEnrolledCourses(@RequestParam(Param.ACCESSTOKEN) String token) {
+    @GetMapping(Mapping.STUDENT_COURSES)
+    public ResponseEntity<?> retrieveEnrolledCourses(@RequestParam(Param.ACCESS_TOKEN) String token) {
 
         User user = userRepository.findByToken(token);
 
@@ -118,10 +114,9 @@ public class StudentController {
     }
     
 
-    @PostMapping(Mapping.EnrollCourse)
-    public ResponseEntity<?> EnrollCourse(@RequestParam(Param.ACCESSTOKEN) String token,
-                                   @Valid @RequestParam(Param.COURSE_ID) int courseId,
-                                   HttpServletResponse response) {
+    @PostMapping(Mapping.ENROLL_COURSE)
+    public ResponseEntity<?> EnrollCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                   @Valid @RequestParam(Param.COURSE_ID) int courseId) {
 
         User user = userRepository.findByToken(token);
         Course course=courseRepository.findByCourseId(courseId);
@@ -130,14 +125,14 @@ public class StudentController {
         	 return new ResponseEntity<>(" user is not present ",
                      HttpStatus.UNAUTHORIZED); 
         }
+        if (!jwtTokenChecker.validateToken(token)) {
+            return new ResponseEntity<>("invalid token ",
+                    HttpStatus.UNAUTHORIZED);
+        }
         if(course == null){
        	 return new ResponseEntity<>(" course with this id is not found ",
                     HttpStatus.NOT_FOUND); 
        }
-        if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>("invalid token ",
-                     HttpStatus.UNAUTHORIZED); 
-        }
 
         if(user.getParent() != null){
         	 return new ResponseEntity<>("user is child it's not allowed ",
@@ -155,6 +150,58 @@ public class StudentController {
         course.increamentStudents();
    
        courseRepository.save(course);
-        return new ResponseEntity<>("enrolled to course",HttpStatus.OK); 
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @PostMapping(Mapping.STUDENT_RATE_COURSE)
+    public ResponseEntity<?> studentRateCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                               @Valid @RequestParam(Param.COURSE_ID) int courseId,
+                                               @Valid @RequestParam(Param.Rate) short studentRate){
+
+        User user = userRepository.findByToken(token);
+        Course course=courseRepository.findByCourseId(courseId);
+
+        if(user == null){
+            return new ResponseEntity<>(" user is not present ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            return new ResponseEntity<>("invalid token ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if(course == null){
+            return new ResponseEntity<>(" course with this id is not found ",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if(user.getParent() != null){
+            return new ResponseEntity<>("user is child it's not allowed ",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        if(course.getPublisher().getUserId()==user.getUserId()) {
+            return new ResponseEntity<>("course publisher can't rate his courses",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        if(courseRepository.existsByRaters(user)){
+            return new ResponseEntity<>("user cannot rate again",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        /*
+
+        validate that the student has finished the course
+
+         */
+
+        int old_raters_num = course.getNumberOfRaters();
+        float new_rate =  ((course.getRate() * old_raters_num) + studentRate)/(old_raters_num + 1);
+        course.increamentRaters();
+        course.setRate(new_rate);
+        course.getRaters().add(user);
+        courseRepository.save(course);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

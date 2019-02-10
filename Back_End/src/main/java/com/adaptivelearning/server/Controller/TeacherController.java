@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(Mapping.TEACHER)
+//@RequestMapping(Mapping.TEACHER)
 public class TeacherController {
 	
 	@Autowired
@@ -43,9 +43,9 @@ public class TeacherController {
     JwtTokenProvider jwtTokenChecker;
 
 
-    @PostMapping(Mapping.CLASSROOMS)
-    public ResponseEntity<?> createClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
-                     @Valid @RequestParam(Param.CLASSROOMNAME) String classroomName) {
+    @PostMapping(Mapping.TEACHER_CLASSROOMS)
+    public ResponseEntity<?> createClassroom(@RequestParam(Param.ACCESS_TOKEN) String token,
+                     @Valid @RequestParam(Param.CLASSROOM_NAME) String classroomName) {
 
         User user = userRepository.findByToken(token);
 
@@ -82,8 +82,8 @@ public class TeacherController {
     }
 
 
-    @GetMapping(Mapping.CLASSROOMS)
-    public ResponseEntity<?>retrieveCreatedClassrooms(@RequestParam(Param.ACCESSTOKEN) String token) {
+    @GetMapping(Mapping.TEACHER_CLASSROOMS)
+    public ResponseEntity<?>retrieveCreatedClassrooms(@RequestParam(Param.ACCESS_TOKEN) String token) {
 
         User user = userRepository.findByToken(token);
 
@@ -102,8 +102,8 @@ public class TeacherController {
     }
 
 
-    @PutMapping(Mapping.CLASSROOM)
-    public ResponseEntity<?> updateClassroomPassCode(@RequestParam(Param.ACCESSTOKEN) String token,
+    @PutMapping(Mapping.TEACHER_CLASSROOM)
+    public ResponseEntity<?> updateClassroomPassCode(@RequestParam(Param.ACCESS_TOKEN) String token,
                                   @Valid @RequestParam(value = Param.CLASSROOM_ID,required = false) int classroomId) {
         User user = userRepository.findByToken(token);
 
@@ -140,8 +140,8 @@ public class TeacherController {
     }
 
 
-    @DeleteMapping(Mapping.CLASSROOM)
-    public ResponseEntity<?> deleteClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
+    @DeleteMapping(Mapping.TEACHER_CLASSROOM)
+    public ResponseEntity<?> deleteClassroom(@RequestParam(Param.ACCESS_TOKEN) String token,
                 @Valid @RequestParam(Param.CLASSROOM_ID) Integer classroomId) {
 
         User user = userRepository.findByToken(token);
@@ -168,14 +168,14 @@ public class TeacherController {
         }
 
         classroomRepository.deleteById(classroomId);
-        return new ResponseEntity<>("classroom deleted",HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     
     ////////////////////////////////////////////////////Courses Functions/////////////////////////////////////////////////////////////////////////
     
-    @PostMapping(Mapping.COURSES)
-    public ResponseEntity<?> createCourse(@RequestParam(Param.ACCESSTOKEN) String token,
+    @PostMapping(Mapping.TEACHER_COURSES)
+    public ResponseEntity<?> createCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
                                           @Valid @RequestParam(Param.Title) String courseTitle,
                                           @Valid @RequestParam(Param.Detailed_title) String detailed_title,
                                           @Valid @RequestParam(Param.Description) String description,
@@ -205,12 +205,12 @@ public class TeacherController {
         course.setPublisher(user);
         courseRepository.save(course);
 
-        return new ResponseEntity<>("successfully created",HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
-    @PostMapping(Mapping.CLASSROOM_COURSES)
-    public ResponseEntity<?> createClassroomCourse (@RequestParam(Param.ACCESSTOKEN) String token,
+    @PostMapping(Mapping.TEACHER_CLASSROOM_COURSES)
+    public ResponseEntity<?> createClassroomCourse (@RequestParam(Param.ACCESS_TOKEN) String token,
                                                     @Valid @RequestParam(Param.CLASSROOM_ID) int classroomId,
                                                     @Valid @RequestParam(Param.Title) String courseTitle,
                                                     @Valid @RequestParam(Param.Detailed_title) String detailed_title,
@@ -252,11 +252,11 @@ public class TeacherController {
         
         courseRepository.save(course);
 
-        return new ResponseEntity<>("successfully created",HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
    
-    @GetMapping(Mapping.COURSES)
-    public ResponseEntity<?>retrieveCreatedCourses(@RequestParam(Param.ACCESSTOKEN) String token) {
+    @GetMapping(Mapping.TEACHER_COURSES)
+    public ResponseEntity<?>retrieveCreatedCourses(@RequestParam(Param.ACCESS_TOKEN) String token) {
 
         User user = userRepository.findByToken(token);
 
@@ -274,8 +274,8 @@ public class TeacherController {
                user.getCourses()), HttpStatus.OK);
     }
    
-    @DeleteMapping(Mapping.COURSES)
-    public ResponseEntity<?> deleteCourse(@RequestParam(Param.ACCESSTOKEN) String token,
+    @DeleteMapping(Mapping.TEACHER_COURSES)
+    public ResponseEntity<?> deleteCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
             @Valid @RequestParam(Param.COURSE_ID) Integer courseId) {
 
     User user = userRepository.findByToken(token);
@@ -308,7 +308,7 @@ public class TeacherController {
 /////////////////////////////////////// FancySection Functions //////////////////////////////////////////////////////
     
     @PostMapping(Mapping.SECTION)
-    public ResponseEntity<?> createSection(@RequestParam(Param.ACCESSTOKEN) String token,
+    public ResponseEntity<?> createSection(@RequestParam(Param.ACCESS_TOKEN) String token,
           	         @Valid @RequestParam(Param.COURSE_ID) int courseId,
                      @Valid @RequestParam(Param.SECTION_TITLE) String sectionTitle) {
 
@@ -338,11 +338,11 @@ public class TeacherController {
         section.setCourse(course);
         sectionRepository.save(section);
 
-        return new ResponseEntity<>("section created",HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping(Mapping.SECTION)
-    public ResponseEntity<?> updateSectionInfo(@RequestParam(Param.ACCESSTOKEN) String token,
+    public ResponseEntity<?> updateSectionInfo(@RequestParam(Param.ACCESS_TOKEN) String token,
                                   @Valid @RequestParam(value = Param.SECTION_ID) int sectionId,
                                   @Valid @RequestParam(value = Param.SECTION_TITLE) String NewsectionTitle) {
                                    
@@ -372,12 +372,12 @@ public class TeacherController {
 
         section.setTitle(NewsectionTitle);
         sectionRepository.save(section);
-        return new ResponseEntity<>("title updated",HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     
 
     @DeleteMapping(Mapping.SECTION)
-    public ResponseEntity<?> deleteSection(@RequestParam(Param.ACCESSTOKEN) String token,
+    public ResponseEntity<?> deleteSection(@RequestParam(Param.ACCESS_TOKEN) String token,
                                  @Valid @RequestParam(value = Param.SECTION_ID) Integer sectionId){
         User user = userRepository.findByToken(token);
 

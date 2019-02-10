@@ -45,7 +45,7 @@ public class Course {
     // rate 0->5
     @NotNull
     @Column(name = "RATE")
-    private short rate;
+    private float rate;
 
     // privacy  1-> public  2-> secret (for classroom)
     @NotNull
@@ -72,6 +72,10 @@ public class Course {
     @Column(name = "NUMBER_OF_STUDENTS")
     private Integer numberOfStudents=0;
 
+    @NotNull
+    @Column(name = "NUMBER_OF_RATERS")
+    private Integer numberOfRaters=0;
+
     // Mapping
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.REFRESH})
@@ -83,9 +87,16 @@ public class Course {
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
     @JoinTable(name = "student_courses",
-            joinColumns = {@JoinColumn(name = "classroom_id")},
+            joinColumns = {@JoinColumn(name = "course_id")},
             inverseJoinColumns = {@JoinColumn(name = "student_id")})
     private List<User> learners;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
+    @JoinTable(name = "student_courses_rates",
+            joinColumns = {@JoinColumn(name = "course_id")},
+            inverseJoinColumns = {@JoinColumn(name = "student_id")})
+    private List<User> raters;
 
 
 
@@ -156,11 +167,11 @@ public class Course {
         this.description = description;
     }
 
-    public short getRate() {
+    public float getRate() {
         return rate;
     }
 
-    public void setRate(short rate) {
+    public void setRate(float rate) {
         this.rate = rate;
     }
 
@@ -196,6 +207,14 @@ public class Course {
         this.learners = learners;
     }
 
+    public List<User> getRaters() {
+        return raters;
+    }
+
+    public void setRaters(List<User> raters) {
+        this.raters = raters;
+    }
+
     public List<Classroom> getClassrooms() {
         return classrooms;
     }
@@ -228,7 +247,9 @@ public class Course {
         return numberOfStudents;
     }
 
-    public void increamentStudents() {
-        this.numberOfStudents += 1;
-    }
+    public void increamentStudents() { this.numberOfStudents += 1; }
+
+    public Integer getNumberOfRaters() { return numberOfRaters; }
+
+    public void increamentRaters() { this.numberOfRaters += 1; }
 }

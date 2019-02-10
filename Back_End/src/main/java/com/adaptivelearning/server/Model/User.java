@@ -133,6 +133,11 @@ public class User {
             mappedBy = "learners")
     private List<Course> enrolls;
 
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH},
+            mappedBy = "raters")
+    private List<Course> rates;
+
     // end of mapping
 
 
@@ -282,6 +287,14 @@ public class User {
 
     public List<Course> getEnrolls() {
         return enrolls;
+    }
+
+    public List<Course> getRates() {
+        return rates;
+    }
+
+    public void setRates(List<Course> rates) {
+        this.rates = rates;
     }
 
     public boolean isTeacher() {

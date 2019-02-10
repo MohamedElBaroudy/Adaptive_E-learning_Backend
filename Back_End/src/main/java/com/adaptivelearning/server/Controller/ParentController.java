@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(Mapping.PARENT)
+//@RequestMapping(Mapping.PARENT)
 public class ParentController {
 
     @Autowired
@@ -46,14 +46,14 @@ public class ParentController {
     JwtTokenProvider jwtTokenChecker;
 
 
-    @PostMapping(Mapping.AddChild)
-    public ResponseEntity<?> addChild(@RequestParam(Param.ACCESSTOKEN) String token,
-                         @Valid @RequestParam(Param.FIRSTNAME) String name,
-                         @Valid @RequestParam(Param.DATEOFBIRTH) String dob,
+    @PostMapping(Mapping.ADD_CHILD)
+    public ResponseEntity<?> addChild(@RequestParam(Param.ACCESS_TOKEN) String token,
+                         @Valid @RequestParam(Param.FIRST_NAME) String name,
+                         @Valid @RequestParam(Param.DATE_OF_BIRTH) String dob,
                          @Valid @RequestParam(Param.USERNAME) String username,
                          @Valid @RequestParam(Param.EMAIL) String email,
                          @Valid @RequestParam(Param.PASSWORD) String password,
-                         @Valid @RequestParam(Param.GENDRE) short gender,
+                         @Valid @RequestParam(Param.GENDER) short gender,
                          @Valid @RequestParam(Param.GRADE) String grade){
 
         User user = userRepository.findByToken(token);
@@ -91,13 +91,13 @@ public class ParentController {
         child.setPassword(passwordEncoder.encode(child.getPassword()));
         child.setParent(user);
         userRepository.save(child);
-        return new ResponseEntity<>("child added",HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
-    @PostMapping(Mapping.ENROLLCHILD)
-     public ResponseEntity<?> joinChildIntoClassroom(@RequestParam(Param.ACCESSTOKEN) String token,
-                        @Valid @RequestParam(Param.FIRSTNAME) String childName,
+    @PostMapping(Mapping.JOIN_CHILD_IN_CLASSROOM)
+     public ResponseEntity<?> joinChildIntoClassroom(@RequestParam(Param.ACCESS_TOKEN) String token,
+                        @Valid @RequestParam(Param.FIRST_NAME) String childName,
                         @Valid @RequestParam(Param.PASSCODE) String passCode) {
 
         User user = userRepository.findByToken(token);
@@ -126,13 +126,13 @@ public class ParentController {
         }
         classroom.getStudents().add(enrollChild);
         classroomRepository.save(classroom);
-       return new ResponseEntity<>("child enrolled to classroom",HttpStatus.CREATED);
+       return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
-    @PostMapping(Mapping.ENROLLCHILDInCourse)
-    public ResponseEntity<?> enrollChildIntoCourse(@RequestParam(Param.ACCESSTOKEN) String token,
-                       @Valid @RequestParam(Param.FIRSTNAME) String childName,
+    @PostMapping(Mapping.ENROLL_CHILD_IN_COURSE)
+    public ResponseEntity<?> enrollChildIntoCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
+                       @Valid @RequestParam(Param.FIRST_NAME) String childName,
                        @Valid @RequestParam(Param.COURSE_ID) int courseId) {
 
        User user = userRepository.findByToken(token);
@@ -161,14 +161,14 @@ public class ParentController {
       }
      
       course.getLearners().add(enrollChild);
-      
+      course.increamentStudents();
       courseRepository.save(course);
-      return new ResponseEntity<>("child enrolled to course",HttpStatus.OK);
+      return new ResponseEntity<>(HttpStatus.OK);
    }
 
 
     @GetMapping(Mapping.CHILDREN)
-    ResponseEntity<?> retrieveChildren(@RequestParam(Param.ACCESSTOKEN) String token) {
+    ResponseEntity<?> retrieveChildren(@RequestParam(Param.ACCESS_TOKEN) String token) {
 
         User user = userRepository.findByToken(token);
 
@@ -185,8 +185,8 @@ public class ParentController {
     }
 
     @GetMapping(Mapping.CHILD)
-    ResponseEntity<?> retrieveChild(@RequestParam(Param.ACCESSTOKEN) String token,
-                                    @Valid @RequestParam(Param.USERID) Integer childId) {
+    ResponseEntity<?> retrieveChild(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                    @Valid @RequestParam(Param.USER_ID) Integer childId) {
 
         User user = userRepository.findByToken(token);
 
@@ -210,5 +210,69 @@ public class ParentController {
         fancyUserChild.toFancyUserMapper(child);
 
         return new ResponseEntity<>(fancyUserChild ,HttpStatus.OK);
+    }
+
+
+    @PostMapping(Mapping.PARENT_RATE_COURSE)
+    public ResponseEntity<?> parentRateCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                               @Valid @RequestParam(Param.COURSE_ID) int courseId,
+                                               @Valid @RequestParam(Param.FIRST_NAME) String childName,
+                                               @Valid @RequestParam(Param.Rate) short parentRate){
+
+        User user = userRepository.findByToken(token);
+        Course course = courseRepository.findByCourseId(courseId);
+        User child = userRepository.findByFirstNameAndParent(childName,user);
+
+        if(user == null){
+            return new ResponseEntity<>(" user is not present ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            return new ResponseEntity<>("invalid token ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+
+        if(course == null){
+            return new ResponseEntity<>(" course with this id is not found ",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if(user.getParent() != null){
+            return new ResponseEntity<>("user is child it's not allowed ",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        if(course.getPublisher().getUserId()==user.getUserId()) {
+            return new ResponseEntity<>("course publisher can't rate his courses",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        if(child == null){
+            return new ResponseEntity<>(" child with this name is not found ",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if(!courseRepository.existsByLearners(child)){
+            return new ResponseEntity<>("Your child isn't enrolled in this course",
+                    HttpStatus.FORBIDDEN);
+        }
+        if(courseRepository.existsByRaters(user)){
+            return new ResponseEntity<>("user cannot rate again",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        /*
+
+        validate that the child has finished the course
+
+         */
+
+        int old_raters_num = course.getNumberOfRaters();
+        float new_rate = ((course.getRate() * old_raters_num) + parentRate)/(old_raters_num + 1);
+        course.increamentRaters();
+        course.setRate(new_rate);
+        course.getRaters().add(user);
+        courseRepository.save(course);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

@@ -25,80 +25,105 @@ Graduation project about adaptive e-learning. This repo is the backend of the ap
 ### 201 Created
 >post or put functions
 
+
+
 ## API Samples
-### Login example (GET method)
->http://localhost:8080/auth/login?email=muhammed@gmail.com&password=12345678
+
+### user APIs
+#### Register example (POST method)
+>http://localhost:8080/auth/register?first_name=mohamed&last_name=adel&email=user1@gmail.com&username=keloi1&password=12345678&gender=1&date_of_birth=2006-07-27
+
+#### Login example (GET method)
+>http://localhost:8080/auth/login?email=user1@gmail.com&password=12345678
 or
 >http://localhost:8080/auth/login?username=keloi&password=12345678
 
-### Register example (POST method)
->http://localhost:8080/auth/register?firstname=mohamed&lastname=adel&email=user2@gmail.com&username=keloi&password=12345678&gender=1&date_of_birth=2001-07-27
+#### Logout example (GET method)
+>http://localhost:8080/auth/logout?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaW....vc8kPCvCrCrk9LJEw
 
-### Retrieve user data (GET method)
->http://localhost:8080/auth/profile?token=eyJhbGciOiJIUzUxMiJ9....Na5P8wg
+#### Retrieve user data (GET method)
+>http://localhost:8080/profile?token=eyJhbGciOiJIUzUxMiJ9.eyJzd....WO-OSbvxAlG9n1li-pGnA
 
-### Logout example (GET method)
->http://localhost:8080/auth/logout?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...
 
-### Create classroom (POST method)
->http://localhost:8080/teacher/classrooms?token=eyJhbGciOiJIUzUxMiJ9....Na5P8wg&classroom_name=CSE19 ComputerNetworks
 
-### Retrieve classrooms for teacher (GET method)
->http://localhost:8080/teacher/classrooms?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}
+### general APIs
+#### Get new courses (max 20 course if we have more and all courses if less) (GET method)
+>http://localhost:8080/new_courses
 
-### Retrieve classrooms for students (GET method)
->http://localhost:8080/student/classrooms?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}
+#### Get hot courses (max 20 course if we have more and all courses if less) (GET method)
+>http://localhost:8080/hot_courses
 
-### Retrieve courses for teacher (GET method)
->http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9.YhyWPZfgKqbdUf9ofy2157lEYM3tlIZkYsNV37EtRnS78C1AvwSC1VSHJFdiNNFedcLDwxHzQ6ZJgI17icUx9w
 
-### Retrieve courses for students (GET method)
->http://localhost:8080/student/courses?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQ5MjQ4ODI5LCJleHAiOjE1NDk4NTM2Mjl9.Enpd_wlGv3aoUq0hb-eleNyjXE4F1SSegW9Pb5SDQgkvvXHSp6fxf3qQs4leXISeo2UMCyOM9IQ2Jcjj1P8-Rg
 
-### Update the classroom passcode by it's Id (PUT method)
->http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_id=2
+### parent APIs
+#### Add child for a parent (POST method)
+>http://localhost:8080/parent/add_child?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&first_name=habebbaba&date_of_birth=2001-02-05&email=child21@hotmail.com&password=12345678&username=keloi21&gender=1&grade=1'st grade
 
-### Delete classroom by it's Id (DELETE method)
->http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzU....VsOq8BNQ&classroom_id=1
+#### Join child into classroom (POST method)
+>http://localhost:8080/parent/join_child_classroom?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&first_name=habebbaba&passcode=Jb6xHKK
 
-### Delete course by it's Id (DELETE method)
->http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ5MjQ0MjUyLCJleHAiOjE1NDk4NDkwNTJ9.LYczc5lPxhEcdZ_dYJrQwuYcb7iPBTduB7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ&course_id=2
+#### Enroll Child into course (POST method)
+>http://localhost:8080/parent/enroll_child_course?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&first_name=Habebbaba&course_id=1
 
-### Find classroom by it's id (GET method)
->http://localhost:8080/classroom?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}&classroom_id=2
+#### Retrieve children (GET method)
+>http://localhost:8080/parent/children?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 
-### Enroll student in classroom with it's Passcode (POST method)
->http://localhost:8080/student/enroll?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&passcode=SsfNioz
+#### Retrieve child (GET method)
+>http://localhost:8080/parent/child?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&user_id=4
 
-### Add child for a parent (POST method)
->http://localhost:8080/parent/addchild?token={eyJhbGciOiJIUzUxMiJ9.eyJzdWIi...}&firstname=habebbaba&date_of_birth=2001-02-05&email=child1@hotmail.com&password=12345678&username=kelo1&gender=1&grade=1'st grade
+#### Rate course for parent (POST method)
+>http://localhost:8080/parent/rate_course?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=1&first_name=Habebbaba&rate=4
 
-### Join child into classroom (POST method)
->http://localhost:8080/parent/enrollchild?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&firstname=habebbaba&passcode=SsfNioz
 
-### Retrieve children (GET method)
->http://localhost:8080/parent/children?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ
 
-### Retrieve child (GET method)
->http://localhost:8080/parent/child?token=eyJhbGciOiJIUzU....V53Cqglc8dsUiAgZdrQSEBkA0KZnnhHcUumFQcg-EQ&user_id=4
+### teacher APIs
+#### Create classroom (POST method)
+>http://localhost:8080/teacher/classrooms?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&classroom_name=CSE19 ComputerNetworks
 
-### Create course (POST method)
->http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUxMi...gI17icUx9w&title=java&detailed_title=spring&description=it'sjavaspringcourse&category=it_and_software&level=1
+#### Create course (POST method)
+>http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&title=java&detailed_title=spring&description=it'sjavaspringcourse&category=it_and_software&level=1
 
-### Create course in a classroom (POST method)
->http://localhost:8080/teacher/classroom_course?token=eyJhbGciOiJIUzUxMi...gI17icUx9w&classroom_id=1&title=c++&detailed_title=datastructure&description=it's datastructure and algorithm course&category=it_and_software&level=2
+#### Retrieve classrooms for teacher (GET method)
+>http://localhost:8080/teacher/classrooms?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 
-### Enroll Child into course (POST method)
->http://localhost:8080/parent/enrollchild_course?token=eyJhbGciOiJIUzUxMiJ9eyJ....17icUx9w&firstname=Habebbaba&course_id=2
+#### Retrieve courses for teacher (GET method)
+>http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 
-### Enroll Student into course (POST method)
->http://localhost:8080/student/enroll_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ4NjEwODA4LCJleHAiOjE1NDkyMTU2MDh9....ZJgI17icUx9w&course_id=1
+#### Update the classroom passcode by it's Id (PUT method)
+>http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&classroom_id=1
 
-### Create section in a course (POST method)
->http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQ5MDMxNTk2LCJleHAiOjE1NDk2MzYzOTV9....E5ubI3S7ARVtGA&course_id=1&section_title=Introduction
+#### Delete classroom by it's Id (DELETE method)
+>http://localhost:8080/teacher/classroom?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&classroom_id=2
 
-### Update the section info by it's id (PUT method)
->http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQ5MDMxNTk2LCJleHAiOjE1NDk2MzYzOTV9....QMfE5ubI3S7ARVtGA&section_id=2&section_title=INTRODUCTION
+#### Create course in a classroom (POST method)
+>http://localhost:8080/teacher/classroom_courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&classroom_id=1&title=c++&detailed_title=datastructure&description=it's datastructure and algorithm course&category=it_and_software&level=2
 
-### Delete section by it's id (DELETE method)
->http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOi....1bgLQMfE5ubI3S7ARVtGA&section_id=3
+#### Delete course by it's Id (DELETE method)
+>http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=2
+
+#### Create section in a course (POST method)
+>http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=1&section_title=Introduction
+
+#### Update the section info by it's id (PUT method)
+>http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&section_id=1&section_title=COURSE_INTRO
+
+#### Delete section by it's id (DELETE method)
+>http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&section_id=2
+
+
+
+### student APIs
+#### Join student in classroom with it's Passcode (POST method)
+>http://localhost:8080/student/join_classroom?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&passcode=Jb6xHKK
+
+#### Retrieve classrooms for students (GET method)
+>http://localhost:8080/student/classrooms?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
+
+#### Enroll Student into course (POST method)
+>http://localhost:8080/student/enroll_course?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=1
+
+#### Retrieve courses for students (GET method)
+>http://localhost:8080/student/courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
+
+#### Rate course for student (post method)
+>http://localhost:8080/student/rate_course?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=1&rate=4
