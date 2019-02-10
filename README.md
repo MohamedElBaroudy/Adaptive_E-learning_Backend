@@ -2,28 +2,33 @@
 Graduation project about adaptive e-learning. This repo is the backend of the app.
 
 
-## ERROR Codes
-### 401 Unauthorized
+## Codes
+### Error codes
+#### 401 Unauthorized
 > user isn't logged in.
-### 409 Conflict
+#### 409 Conflict
 >unique name is token like username, email, classroom name, etc.
 
-### 403 Forbidden
+#### 403 Forbidden
 >this functionallity is not allowed to this user.
 
-### 400 Bad Request
+#### 400 Bad Request
 >the data stream sent by the client to the server didn't follow the rules.
 
-### 304 Not Modified
+#### 304 Not Modified
 >redirect without doing the request.
 
-### 404 Not Found
+#### 404 Not Found
 
-### 204 No Content
+### Success codes
+#### 204 No Content
 >success without showing content. in delete functions.
 
-### 201 Created
+#### 201 Created
 >post or put functions
+
+#### 200 Ok
+>get functions
 
 
 
