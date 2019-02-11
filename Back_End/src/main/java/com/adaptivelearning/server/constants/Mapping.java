@@ -20,6 +20,7 @@ public class Mapping {
     //For courses
     public static final String NEW_COURSES = "/new_courses";
     public static final String HOT_COURSES = "/hot_courses";
+    public static final String CATEGORY_COURSES = "/category_courses";
     public static final String SHOW_COURSE = "/show_course";
 
 

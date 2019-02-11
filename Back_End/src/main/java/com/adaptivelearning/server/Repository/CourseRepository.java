@@ -15,6 +15,8 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 	Boolean existsByLearners(User user);
 
 	Boolean existsByRaters(User user);
+	
+	List<Course> findByCategoryAndIsPublic(String category,boolean isPublic);
 
 	@Query("SELECT a FROM Course a " +
 			"ORDER BY a.numberOfStudents DESC")
