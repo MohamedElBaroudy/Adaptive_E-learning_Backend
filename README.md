@@ -58,7 +58,7 @@ or
 #### Get hot courses (max 20 course if we have more and all courses if less) (GET method)
 >http://localhost:8080/hot_courses
 
-### Get courses by category (GET method)
+#### Get courses by category (GET method)
 >http://localhost:8080/category_courses?category=it_and_software
 
 ### Course APIs
