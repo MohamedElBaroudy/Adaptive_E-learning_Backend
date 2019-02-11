@@ -44,10 +44,10 @@ public class CourseController {
          	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         
-//        if (!jwtTokenChecker.validateToken(token)) {
-//       	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
-//        }
-//        
+        if (!jwtTokenChecker.validateToken(token)) {
+       	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+        }
+        
         if(course == null){
             return new ResponseEntity<>(" course with this id is not found ",
                     HttpStatus.NOT_FOUND);

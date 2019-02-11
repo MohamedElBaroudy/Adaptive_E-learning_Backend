@@ -42,9 +42,9 @@ public class ClassRoomController {
          	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
 
-//        if (!jwtTokenChecker.validateToken(token)) {
-//        	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
-//        }
+         if (!jwtTokenChecker.validateToken(token)) {
+        	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+        }
         if(classroom == null){
             return new ResponseEntity<>(" classroom with this id is not found ",
                     HttpStatus.NOT_FOUND);
