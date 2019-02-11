@@ -63,11 +63,11 @@ or
 
 ### Course APIs
 #### Get Course by id (GET method)
->http://localhost:8080/show_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ5MjQ0MjUyLCJleHAiOjE1NDk4NDkwNTJ9.LYczc5lPxhEcdZ_dYJrQwuYcb7iPBTduB7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ&course_id=1
+>http://localhost:8080/course/show_course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ5MjQ0MjUyLCJleHAiOjE1NDk4NDkwNTJ9.LYczc5lPxhEcdZ_dYJrQwuYcb7iPBTduB7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ&course_id=1
 
 ### Classroom APIs
 #### Get classroom by id (GET method)
->http://localhost:8080/show_classroom?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ5MjQ0MjUyLCJleHAiOjE1NDk4NDkwNTJ9.LYczc5lPxhEcdZ_dYJrQwuYcb7iPBTduB7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ&classroom_id=1
+>http://localhost:8080/classroom/show_classroom?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ5MjQ0MjUyLCJleHAiOjE1NDk4NDkwNTJ9.LYczc5lPxhEcdZ_dYJrQwuYcb7iPBTduB7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ&classroom_id=1
 
 ### parent APIs
 #### Add child for a parent (POST method)
