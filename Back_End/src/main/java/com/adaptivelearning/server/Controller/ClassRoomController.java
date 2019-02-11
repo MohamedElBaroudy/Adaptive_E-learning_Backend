@@ -39,16 +39,22 @@ public class ClassRoomController {
         Classroom classroom = classroomRepository.findByClassroomId(classroomId);
 
         if(user == null){
-         	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.BAD_REQUEST);
+         	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
+
+//        if (!jwtTokenChecker.validateToken(token)) {
+//        	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+//        }
         if(classroom == null){
             return new ResponseEntity<>(" classroom with this id is not found ",
                     HttpStatus.NOT_FOUND);
         }
-
-        if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
+        if(classroom.getCreator()!=user && !classroomRepository.existsByStudents(user)) {
+        	 return new ResponseEntity<>("you are not allowed to see this classroom",
+        			 HttpStatus.UNAUTHORIZED);
         }
+        
+
         FancyClassroom fancyClassroom = new FancyClassroom();
         return new ResponseEntity<>(fancyClassroom.toFancyClassroomMapping(classroom),
                 HttpStatus.OK);

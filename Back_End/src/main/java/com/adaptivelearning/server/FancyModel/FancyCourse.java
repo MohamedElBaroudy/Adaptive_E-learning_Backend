@@ -48,7 +48,7 @@ public class FancyCourse {
     private FancyUser publisher;
     
     // sections
-    private List<Section> sections;
+    private List<FancySection> sections;
     
     
     public FancyCourse() {
@@ -57,6 +57,7 @@ public class FancyCourse {
    
 	public FancyCourse toFancyCourseMapping(Course course){
 		FancyUser user= new FancyUser();
+		FancySection sections=new FancySection();
         this.courseId = course.getCourseId();
         this.title = course.getTitle();
         this.detailedTitle = course.getDetailedTitle();
@@ -69,7 +70,7 @@ public class FancyCourse {
         this.isPublic = course.isPublic();
         this.rate = course.getRate();
         this.publisher = user.toTeacherMapper(course.getPublisher());
-        this.sections=course.getSections();
+        this.sections=sections.toFancySectionListMapping(course.getSections());
         return this;
     }
 	
@@ -189,14 +190,16 @@ public class FancyCourse {
 	}
 
 
-	public List<Section> getSections() {
+	public List<FancySection> getSections() {
 		return sections;
 	}
 
 
-	public void setSections(List<Section> sections) {
+	public void setSections(List<FancySection> sections) {
 		this.sections = sections;
 	}
 
+
+	
    
 }

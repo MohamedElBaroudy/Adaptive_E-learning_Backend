@@ -41,16 +41,19 @@ public class CourseController {
         Course course = courseRepository.findByCourseId(courseId);
 
         if(user == null){
-         	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.BAD_REQUEST);
+         	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
+        
+//        if (!jwtTokenChecker.validateToken(token)) {
+//       	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+//        }
+//        
         if(course == null){
             return new ResponseEntity<>(" course with this id is not found ",
                     HttpStatus.NOT_FOUND);
         }
 
-        if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
-        }
+        
         FancyCourse fancyCourse = new FancyCourse();
         return new ResponseEntity<>(fancyCourse.toFancyCourseMapping(course),
                 HttpStatus.OK);

@@ -1,5 +1,6 @@
 package com.adaptivelearning.server.FancyModel;
 
+import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.Section;
 import com.adaptivelearning.server.Model.User;
 
@@ -37,6 +38,16 @@ public class FancySection {
             ((LinkedList<Integer>) sectionIdList).addLast(section.getSectionId());
         }
         return sectionIdList;
+    }
+
+    public List<FancySection> toFancySectionListMapping(List<Section> sections){
+        List<FancySection> FancySectionList = new LinkedList<>();
+        for (Section section:
+                sections) {
+        	FancySection fancySection = new FancySection();
+            ((LinkedList<FancySection>) FancySectionList).addLast(fancySection.toFancySectionMapping(section));
+        }
+        return FancySectionList;
     }
 
     public int getSectionId() {
