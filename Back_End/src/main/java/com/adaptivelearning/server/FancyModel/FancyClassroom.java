@@ -27,7 +27,7 @@ public class FancyClassroom {
     private short coursesNumber;
 
     // classroom's courses 
-    private List<Integer> courses;
+    private List<FancyCourse> courses;
     
     public FancyClassroom() {
     }
@@ -41,7 +41,7 @@ public class FancyClassroom {
         this.creator = user.toTeacherMapper(classroom.getCreator());
         this.studentsNumber = classroom.getStudents().size();
         this.coursesNumber = (short) classroom.getCourses().size();
-        this.courses=courses.toCourseIdListMapping(classroom.getCourses());
+        this.courses=courses.toFancyCourseListMapping(classroom.getCourses());
         return this;
     }
 
@@ -114,13 +114,15 @@ public class FancyClassroom {
         this.coursesNumber = coursesNumber;
     }
 
-	public List<Integer> getCourses() {
+	public List<FancyCourse> getCourses() {
 		return courses;
 	}
 
-	public void setCourses(List<Integer> courses) {
+	public void setCourses(List<FancyCourse> courses) {
 		this.courses = courses;
 	}
+
+	
 
 	
 }
