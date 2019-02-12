@@ -68,7 +68,7 @@ public class ParentController {
         }
 
 
-        if (userRepository.existsByEmail(email)  ||  userRepository.existsByUsername(username)) {
+        if ((email!=null && !email.isEmpty()&&userRepository.existsByEmail(email))  ||  userRepository.existsByUsername(username)) {
        	 return new ResponseEntity<>("FancyUser, Email or both of them are in use",
                  HttpStatus.CONFLICT);
         }

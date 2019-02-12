@@ -3,6 +3,7 @@ package com.adaptivelearning.server.FancyModel;
 import com.adaptivelearning.server.Model.User;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class FancyUser {
     private String username;
 
     // DOB
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
 
     // age
     private short age;
@@ -69,7 +70,7 @@ public class FancyUser {
         this.lastName = user.getLastName();
         this.email = user.getEmail();
         this.username = user.getUsername();
-        this.dateOfBirth = user.getDateOfBirth();
+        this.dateOfBirth = user.getDateOfBirth().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.age = userAge;
         this.token = user.getToken();
         this.gender = userGender;
@@ -100,7 +101,7 @@ public class FancyUser {
         this.lastName = user.getLastName();
         this.email = user.getEmail();
         this.username = user.getUsername();
-        this.dateOfBirth = user.getDateOfBirth();
+        this.dateOfBirth = user.getDateOfBirth().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.age = userAge;
         this.gender = userGender;
 
@@ -169,11 +170,11 @@ public class FancyUser {
         this.username = username;
     }
 
-    public LocalDate getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
