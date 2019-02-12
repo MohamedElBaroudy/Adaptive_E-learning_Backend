@@ -26,22 +26,28 @@ public class GenerallController {
     @GetMapping(Mapping.NEW_COURSES)
     public ResponseEntity<?> retrieveNewestCourses(){
         List<Course> courses = courseRepository.findNewestCourses();
+        FancyCourse fancyCourse = new FancyCourse();
         if(courses.size()>20)
-            return new ResponseEntity<>(courses.subList(0,20),
+            return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
+                    courses.subList(0,20)),
                     HttpStatus.OK);
         else
-            return new ResponseEntity<>(courses,
+            return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
+                    courses),
                     HttpStatus.OK);
     }
 
     @GetMapping(Mapping.HOT_COURSES)
     public ResponseEntity<?> retrieveHotestCourses(){
         List<Course> courses = courseRepository.findHotestCourses();
+        FancyCourse fancyCourse = new FancyCourse();
         if(courses.size()>20)
-            return new ResponseEntity<>(courses.subList(0,20),
+            return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
+                    courses.subList(0,20)),
                     HttpStatus.OK);
         else
-            return new ResponseEntity<>(courses,
+            return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
+                    courses),
                     HttpStatus.OK);
     }
     

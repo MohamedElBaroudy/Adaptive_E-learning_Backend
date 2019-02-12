@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "Course",uniqueConstraints = {
         @UniqueConstraint(columnNames = "ID")})
 @JsonIdentityInfo(
-        scope=Classroom.class,
+        scope=Course.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "courseId")
 public class Course {

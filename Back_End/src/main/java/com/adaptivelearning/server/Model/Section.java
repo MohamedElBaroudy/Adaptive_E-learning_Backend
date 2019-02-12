@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @Table(name = "Section",uniqueConstraints = {
         @UniqueConstraint(columnNames = "ID")})
 @JsonIdentityInfo(
-        scope=Classroom.class,
+        scope=Section.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "sectionId")
 public class Section {
