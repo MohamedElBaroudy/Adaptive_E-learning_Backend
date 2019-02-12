@@ -38,7 +38,7 @@ public class FancyClassroom {
         this.classroomId = classroom.getClassroomId();
         this.classroomName = classroom.getClassroomName();
         this.passCode = classroom.getPassCode();
-        this.creator = user.toTeacherMapper(classroom.getCreator());
+        this.creator = user.toFancyUserMapper(classroom.getCreator());
         this.studentsNumber = classroom.getStudents().size();
         this.coursesNumber = (short) classroom.getCourses().size();
         this.courses=courses.toFancyCourseListMapping(classroom.getCourses());

@@ -18,16 +18,17 @@ public class FancySection {
     private int courseId;
 
     // editor 
-    private User editor;
+    private FancyUser editor;
 
     public FancySection() {
     }
 
     public FancySection toFancySectionMapping(Section section){
+        FancyUser fancyUser= new FancyUser();
         this.sectionId = section.getSectionId();
         this.title = section.getTitle();
         this.courseId = section.getCourse().getCourseId();
-        this.editor = section.getCourse().getPublisher();
+        this.editor = fancyUser.toFancyUserMapper(section.getCourse().getPublisher());
         return this;
     }
 
@@ -74,11 +75,11 @@ public class FancySection {
         this.courseId = courseId;
     }
 
-	public User getEditor() {
+	public FancyUser getEditor() {
 		return editor;
 	}
 
-	public void setEditor(User editor) {
+	public void setEditor(FancyUser editor) {
 		this.editor = editor;
 	}
 

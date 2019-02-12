@@ -43,7 +43,6 @@ public class User {
 
     // email
     @NaturalId
-    @NotBlank
     @Size(max = 40)
     @Email
     @Column(name = "EMAIL")

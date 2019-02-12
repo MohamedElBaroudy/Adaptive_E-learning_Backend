@@ -51,10 +51,10 @@ public class ParentController {
                          @Valid @RequestParam(Param.FIRST_NAME) String name,
                          @Valid @RequestParam(Param.DATE_OF_BIRTH) String dob,
                          @Valid @RequestParam(Param.USERNAME) String username,
-                         @Valid @RequestParam(Param.EMAIL) String email,
+                         @Valid @RequestParam(value = Param.EMAIL,required = false) String email,
                          @Valid @RequestParam(Param.PASSWORD) String password,
                          @Valid @RequestParam(Param.GENDER) short gender,
-                         @Valid @RequestParam(Param.GRADE) String grade){
+                         @Valid @RequestParam(value = Param.GRADE,required = false) String grade){
 
         User user = userRepository.findByToken(token);
 
