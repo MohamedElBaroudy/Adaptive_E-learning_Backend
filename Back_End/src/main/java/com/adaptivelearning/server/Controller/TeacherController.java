@@ -393,7 +393,7 @@ public class TeacherController {
         Section section = sectionRepository.findBySectionId(sectionId);
 
         if (section == null) {
-        	 return new ResponseEntity<>(" FancySection Is Not Present ",
+        	 return new ResponseEntity<>("Section Is Not Present ",
                      HttpStatus.NOT_FOUND);
         }
 

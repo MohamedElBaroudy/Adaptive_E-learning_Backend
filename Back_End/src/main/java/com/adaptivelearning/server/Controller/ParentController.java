@@ -140,7 +140,7 @@ public class ParentController {
        User enrollChild = userRepository.findByFirstNameAndParent(childName,user);
        
        if(user == null){
-      	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
+      	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
        }
        if (!jwtTokenChecker.validateToken(token)) {
          	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
@@ -173,7 +173,7 @@ public class ParentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-          	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
+          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
          	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
@@ -191,7 +191,7 @@ public class ParentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
             return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
@@ -203,7 +203,7 @@ public class ParentController {
             return new ResponseEntity<>("Child is not found",
                     HttpStatus.NOT_FOUND);
         if (!user.equals(child.getParent()))
-            return new ResponseEntity<>("FancyUser is not your child",
+            return new ResponseEntity<>("User is not your child",
                     HttpStatus.FORBIDDEN);
 
         FancyUser fancyUserChild = new FancyUser();
@@ -224,7 +224,7 @@ public class ParentController {
         User child = userRepository.findByFirstNameAndParent(childName,user);
 
         if(user == null){
-            return new ResponseEntity<>(" user is not present ",
+            return new ResponseEntity<>("user is not present ",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -233,7 +233,7 @@ public class ParentController {
         }
 
         if(course == null){
-            return new ResponseEntity<>(" course with this id is not found ",
+            return new ResponseEntity<>("course with this id is not found ",
                     HttpStatus.NOT_FOUND);
         }
 
@@ -248,7 +248,7 @@ public class ParentController {
         }
 
         if(child == null){
-            return new ResponseEntity<>(" child with this name is not found ",
+            return new ResponseEntity<>("child with this name is not found ",
                     HttpStatus.NOT_FOUND);
         }
 
@@ -257,7 +257,7 @@ public class ParentController {
                     HttpStatus.FORBIDDEN);
         }
         if(courseRepository.existsByRaters(user)){
-            return new ResponseEntity<>("user cannot rate again",
+            return new ResponseEntity<>("User cannot rate again",
                     HttpStatus.FORBIDDEN);
         }
 

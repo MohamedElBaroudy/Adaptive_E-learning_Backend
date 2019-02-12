@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 import javax.validation.Valid;
 
 @RestController
@@ -42,10 +41,12 @@ public class StudentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-          	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.UNAUTHORIZED);
+          	 return new ResponseEntity<>("User Is Not Valid",
+                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-         	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+         	 return new ResponseEntity<>("Session Expired",
+                     HttpStatus.UNAUTHORIZED);
         }
 
         if(user.getParent() != null){
@@ -87,10 +88,12 @@ public class StudentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-         	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.BAD_REQUEST);
+         	 return new ResponseEntity<>("User Is Not Valid",
+                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
+        	 return new ResponseEntity<>("Session Expired",
+                     HttpStatus.UNAUTHORIZED);
         }
         FancyClassroom fancyClassroom = new FancyClassroom();
         return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getJoins()),
@@ -103,10 +106,12 @@ public class StudentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-         	 return new ResponseEntity<>("FancyUser Is Not Valid",HttpStatus.BAD_REQUEST);
+         	 return new ResponseEntity<>("User Is Not Valid",
+                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>("Session Expired",HttpStatus.BAD_REQUEST);
+        	 return new ResponseEntity<>("Session Expired",
+                     HttpStatus.UNAUTHORIZED);
         }
         FancyCourse fancyCourse = new FancyCourse();
         return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(user.getEnrolls()),
@@ -122,11 +127,11 @@ public class StudentController {
         Course course=courseRepository.findByCourseId(courseId);
         
         if(user == null){
-        	 return new ResponseEntity<>(" user is not present ",
+        	 return new ResponseEntity<>("User is not present ",
                      HttpStatus.UNAUTHORIZED); 
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("invalid token ",
+            return new ResponseEntity<>("Invalid token ",
                     HttpStatus.UNAUTHORIZED);
         }
         if(course == null){
@@ -163,30 +168,30 @@ public class StudentController {
         Course course=courseRepository.findByCourseId(courseId);
 
         if(user == null){
-            return new ResponseEntity<>(" user is not present ",
+            return new ResponseEntity<>("User is not present ",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("invalid token ",
+            return new ResponseEntity<>("Invalid token ",
                     HttpStatus.UNAUTHORIZED);
         }
         if(course == null){
-            return new ResponseEntity<>(" course with this id is not found ",
+            return new ResponseEntity<>("Course with this id is not found ",
                     HttpStatus.NOT_FOUND);
         }
 
         if(user.getParent() != null){
-            return new ResponseEntity<>("user is child it's not allowed ",
+            return new ResponseEntity<>("User is child it's not allowed ",
                     HttpStatus.FORBIDDEN);
         }
 
         if(course.getPublisher().getUserId()==user.getUserId()) {
-            return new ResponseEntity<>("course publisher can't rate his courses",
+            return new ResponseEntity<>("Course publisher can't rate his courses",
                     HttpStatus.FORBIDDEN);
         }
 
         if(courseRepository.existsByRaters(user)){
-            return new ResponseEntity<>("user cannot rate again",
+            return new ResponseEntity<>("User cannot rate again",
                     HttpStatus.FORBIDDEN);
         }
 

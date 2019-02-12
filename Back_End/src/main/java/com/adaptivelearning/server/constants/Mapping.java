@@ -7,7 +7,7 @@ public class Mapping {
     private static final String PARENT = "/parent";
     public static final String COURSE = "/course";
     private static final String AUTH = "/auth";
-    private static final String CLASSROOM = "/classroom";
+    public static final String CLASSROOM = "/classroom";
 
     //Authentication
     public static final String LOGIN = AUTH + "/login";
@@ -22,7 +22,6 @@ public class Mapping {
     public static final String NEW_COURSES = "/new_courses";
     public static final String HOT_COURSES = "/hot_courses";
     public static final String CATEGORY_COURSES = "/category_courses";
-    public static final String SHOW_COURSE = COURSE+"/show_course";
 
 
     //Teacher
@@ -51,8 +50,4 @@ public class Mapping {
     
     //For sections
     public static final String SECTION = TEACHER + "/section";
-
-    //classrooms
-    public static final String SHOW_CLASSROOM = CLASSROOM+"/show_classroom";
-
 }

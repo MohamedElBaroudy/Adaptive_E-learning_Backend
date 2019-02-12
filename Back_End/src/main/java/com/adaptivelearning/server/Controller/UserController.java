@@ -70,7 +70,7 @@ public class UserController {
 
         userRepository.save(user);
 
-        return new ResponseEntity<>("user logged in and token is : "+user.getToken(),HttpStatus.OK);
+        return new ResponseEntity<>(user.getToken(),HttpStatus.OK);
     }
 
     @GetMapping(Mapping.PROFILE)
@@ -107,7 +107,7 @@ public class UserController {
 
         user.setToken(null);
         userRepository.save(user);
-        return new ResponseEntity<>("user logged out",HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
