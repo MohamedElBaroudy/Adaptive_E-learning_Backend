@@ -45,7 +45,7 @@ public class ClassRoomController {
             return new ResponseEntity<>("classroom with this id is not found ",
                     HttpStatus.NOT_FOUND);
         }
-        if(classroom.getCreator()!=user && !classroomRepository.existsByStudents(user)) {
+        if(classroom.getCreator()!=user && !classroom.getStudents().contains(user)) {
         	 return new ResponseEntity<>("you are not allowed to see this classroom",
         			 HttpStatus.FORBIDDEN);
         }

@@ -13,9 +13,8 @@ public interface ClassroomRepository extends JpaRepository<Classroom, Integer> {
     Iterable<Classroom> findByCreator(Integer creatorId);
 
     Classroom findByClassroomName(String classroomName);
-
-    Boolean existsByClassroomName(String classroomName);
+    
     Boolean existsByPassCode (String passCode);
-    Boolean existsByStudents (User student);
+
     Classroom findByPassCode(String passCode);
 }

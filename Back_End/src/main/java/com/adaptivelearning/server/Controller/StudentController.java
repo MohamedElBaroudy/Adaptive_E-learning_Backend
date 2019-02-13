@@ -61,7 +61,7 @@ public class StudentController {
                      HttpStatus.NOT_FOUND);
         }
         
-        if(classroomRepository.existsByStudents(user)) {
+        if(classroom.getStudents().contains(user)) {
         	 return new ResponseEntity<>("Already Joined ",
                      HttpStatus.FORBIDDEN); 
         }
@@ -147,7 +147,7 @@ public class StudentController {
         	 return new ResponseEntity<>("course publisher can't enroll in his courses",
                      HttpStatus.FORBIDDEN); 
         }
-        if(courseRepository.existsByLearners(user)) {
+        if(course.getLearners().contains(user)) {
         	 return new ResponseEntity<>("Already Enrolled ",
                      HttpStatus.FORBIDDEN); 
         }
@@ -190,7 +190,7 @@ public class StudentController {
                     HttpStatus.FORBIDDEN);
         }
 
-        if(courseRepository.existsByRaters(user)){
+        if(course.getRaters().contains(user)){
             return new ResponseEntity<>("User cannot rate again",
                     HttpStatus.FORBIDDEN);
         }

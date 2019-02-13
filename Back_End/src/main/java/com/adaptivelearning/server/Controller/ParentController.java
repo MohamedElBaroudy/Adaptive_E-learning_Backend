@@ -120,7 +120,7 @@ public class ParentController {
          	 return new ResponseEntity<>("FancyClassroom Is Not Found",
                      HttpStatus.NOT_FOUND);
         }
-        if (classroomRepository.existsByStudents(enrollChild)) {
+        if (classroom.getStudents().contains(enrollChild)) {
         	 return new ResponseEntity<>("this child already enrolled to this classroom ",
                     HttpStatus.FORBIDDEN);
         }
@@ -155,7 +155,7 @@ public class ParentController {
         	 return new ResponseEntity<>("course Is Not Found",
                     HttpStatus.NOT_FOUND);
        }
-       if(courseRepository.existsByLearners(enrollChild)) {
+       if(course.getLearners().contains(enrollChild)) {
       	 return new ResponseEntity<>("Already Enrolled ",
                    HttpStatus.FORBIDDEN); 
       }
@@ -252,11 +252,11 @@ public class ParentController {
                     HttpStatus.NOT_FOUND);
         }
 
-        if(!courseRepository.existsByLearners(child)){
+        if(!course.getLearners().contains(child)){
             return new ResponseEntity<>("Your child isn't enrolled in this course",
                     HttpStatus.FORBIDDEN);
         }
-        if(courseRepository.existsByRaters(user)){
+        if(course.getRaters().contains(user)){
             return new ResponseEntity<>("User cannot rate again",
                     HttpStatus.FORBIDDEN);
         }

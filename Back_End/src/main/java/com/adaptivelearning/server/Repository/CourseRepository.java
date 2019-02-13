@@ -11,10 +11,6 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
 	Course findByCourseId(Integer courseId);
-
-	Boolean existsByLearners(User user);
-
-	Boolean existsByRaters(User user);
 	
 	List<Course> findByCategoryAndIsPublic(String category,boolean isPublic);
 
