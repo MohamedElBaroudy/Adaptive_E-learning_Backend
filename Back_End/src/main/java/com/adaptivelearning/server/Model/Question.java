@@ -38,7 +38,7 @@ public class Question {
     // mapping
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "SECTION")
+    @JoinColumn(name = "QUIZ")
     private Quiz quiz;
 
     @OneToMany(fetch = FetchType.EAGER,
