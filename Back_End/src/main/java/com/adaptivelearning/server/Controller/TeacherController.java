@@ -325,12 +325,6 @@ public class TeacherController {
         course.setLevel(newLevel);
         courseRepository.save(course);
 
-        
-      /*  Course updatedCourse = courseRepository.updateCourseInfo(requiredCourseId , newTitle, newDetailedtilte, newDescription, newLevel, newCategory) ;
-       // Course course=new Course(courseTitle, detailed_title, description, true, level,category);
-       // course.setPublisher(user);
-        courseRepository.save(updatedCourse); */
-
         return new ResponseEntity<>("The Course Is Updated" ,HttpStatus.CREATED);
     }
 
