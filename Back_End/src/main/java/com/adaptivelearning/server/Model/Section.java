@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "Section",uniqueConstraints = {
@@ -34,6 +35,11 @@ public class Section {
             cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "COURSE")
     private Course course;
+
+    @OneToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.ALL},
+            mappedBy = "section")
+    private List<Quiz> quizzes;
 
     // end of mapping
 
