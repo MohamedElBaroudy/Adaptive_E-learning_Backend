@@ -231,7 +231,7 @@ public class TeacherController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-
+    
     @PostMapping(Mapping.TEACHER_CLASSROOM_COURSES)
     public ResponseEntity<?> createClassroomCourse (@RequestParam(Param.ACCESS_TOKEN) String token,
                                                     @Valid @RequestParam(Param.CLASSROOM_ID) int classroomId,
@@ -278,6 +278,63 @@ public class TeacherController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
    
+    @PutMapping(Mapping.TEACHER_COURSES)
+    public ResponseEntity<?> updateCourseInformation(@RequestParam(Param.ACCESS_TOKEN) String token,
+    		                              @RequestParam(Param.COURSE_ID) int requiredCourseId , 
+                                          @Valid @RequestParam(Param.Title) String newTitle,
+                                          @Valid @RequestParam(Param.Detailed_title ) String newDetailedtilte,
+                                          @Valid @RequestParam(Param.Description) String newDescription,
+                                          @Valid @RequestParam(Param.CATEGORY ) String newCategory,
+                                          @Valid @RequestParam(Param.Level) short newLevel) {
+
+        User user = userRepository.findByToken(token);
+        Course course = courseRepository.findByCourseId(requiredCourseId);
+
+        if(user == null){
+        	  return new ResponseEntity<>("user is not present",
+                      HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+        	  return new ResponseEntity<>("invalid token",
+                      HttpStatus.UNAUTHORIZED);
+        }
+
+        if(user.getParent() != null){
+        	 return new ResponseEntity<>("user is child it's not allowed ",
+                     HttpStatus.FORBIDDEN);
+        }
+
+        if(!user.isTeacher())
+            return new ResponseEntity<>("user is not a teacher yet please make a request to be teacher",
+                    HttpStatus.FORBIDDEN);
+        
+        if (course == null) {
+            return new ResponseEntity<>(" course is not present ",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if(course.getPublisher().getUserId() != user.getUserId()) {
+            return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your course to update",
+                    HttpStatus.FORBIDDEN);
+        }
+        
+        course.setTitle(newTitle);
+        course.setDetailedTitle(newDetailedtilte);
+        course.setDescription(newDescription);
+        course.setCategory(newCategory);
+        course.setLevel(newLevel);
+        courseRepository.save(course);
+
+        
+      /*  Course updatedCourse = courseRepository.updateCourseInfo(requiredCourseId , newTitle, newDetailedtilte, newDescription, newLevel, newCategory) ;
+       // Course course=new Course(courseTitle, detailed_title, description, true, level,category);
+       // course.setPublisher(user);
+        courseRepository.save(updatedCourse); */
+
+        return new ResponseEntity<>("The Course Is Updated" ,HttpStatus.CREATED);
+    }
+
+    
     @GetMapping(Mapping.TEACHER_COURSES)
     public ResponseEntity<?>retrieveCreatedCourses(@RequestParam(Param.ACCESS_TOKEN) String token) {
 
@@ -320,7 +377,7 @@ public class TeacherController {
     }
 
     if(course.getPublisher().getUserId() != user.getUserId()) {
-        return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your course to update",
+        return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your course to delete",
                 HttpStatus.FORBIDDEN);
     }
 
@@ -328,7 +385,7 @@ public class TeacherController {
     return new ResponseEntity<>("deleted",HttpStatus.NO_CONTENT);
 }
 
-/////////////////////////////////////// FancySection Functions //////////////////////////////////////////////////////
+/////////////////////////////////////// Sections Functions //////////////////////////////////////////////////////
     
     @PostMapping(Mapping.SECTION)
     public ResponseEntity<?> createSection(@RequestParam(Param.ACCESS_TOKEN) String token,

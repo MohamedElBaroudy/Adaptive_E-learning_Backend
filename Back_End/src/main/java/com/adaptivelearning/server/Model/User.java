@@ -136,6 +136,11 @@ public class User {
             cascade = {CascadeType.REFRESH},
             mappedBy = "raters")
     private List<Course> rates;
+    
+   @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH},
+            mappedBy = "savedBy")
+    private List<Course> savedCourses; 
 
     // end of mapping
 
@@ -319,4 +324,12 @@ public class User {
     public void setParent(boolean parent) {
         isParent = parent;
     }
+
+    public List<Course> getSavedCourses() {
+		return savedCourses;
+	}
+
+	public void setSavedCourses(List<Course> savedCourses) {
+		this.savedCourses = savedCourses;
+	}
 }

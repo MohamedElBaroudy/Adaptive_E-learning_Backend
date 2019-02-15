@@ -100,6 +100,13 @@ public class Course {
 
 
 
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
+    @JoinTable(name = "user_courses_saved",
+            joinColumns = {@JoinColumn(name = "course_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private List<User> savedBy ; 
+
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH},
@@ -252,4 +259,12 @@ public class Course {
     public Integer getNumberOfRaters() { return numberOfRaters; }
 
     public void increamentRaters() { this.numberOfRaters += 1; }
+
+	public List<User> getSavedBy() {
+		return savedBy;
+	}
+
+	public void setSavedBy(List<User> savedBy) {
+		this.savedBy = savedBy;
+	}
 }
