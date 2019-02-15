@@ -8,6 +8,7 @@ public class Mapping {
     public static final String COURSE = "/course";
     private static final String AUTH = "/auth";
     public static final String CLASSROOM = "/classroom";
+    public static final String ADMIN = "/admin";
 
     //Authentication
     public static final String LOGIN = AUTH + "/login";
@@ -17,6 +18,9 @@ public class Mapping {
     //General user
     public static final String PROFILE = "/profile";
 
+    //Admin
+    public static final String REQUESTS = ADMIN + "/requests";
+    public static final String APPROVE = ADMIN + "/approve";
 
     //For courses
     public static final String NEW_COURSES = "/new_courses";
@@ -29,7 +33,7 @@ public class Mapping {
     public static final String TEACHER_CLASSROOM = TEACHER + "/classroom";
     public static final String TEACHER_COURSES = TEACHER + "/courses";
     public static final String TEACHER_CLASSROOM_COURSES = TEACHER + "/classroom_courses";
-
+    public static final String REQUEST = TEACHER + "/request";
 
 
     //Student

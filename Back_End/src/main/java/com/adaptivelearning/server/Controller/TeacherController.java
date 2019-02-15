@@ -2,14 +2,8 @@ package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.FancyModel.FancyClassroom;
 import com.adaptivelearning.server.FancyModel.FancyCourse;
-import com.adaptivelearning.server.Model.Classroom;
-import com.adaptivelearning.server.Model.Course;
-import com.adaptivelearning.server.Model.Section;
-import com.adaptivelearning.server.Model.User;
-import com.adaptivelearning.server.Repository.ClassroomRepository;
-import com.adaptivelearning.server.Repository.CourseRepository;
-import com.adaptivelearning.server.Repository.SectionRepository;
-import com.adaptivelearning.server.Repository.UserRepository;
+import com.adaptivelearning.server.Model.*;
+import com.adaptivelearning.server.Repository.*;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
@@ -34,14 +28,41 @@ public class TeacherController {
     @Autowired
     CourseRepository courseRepository;
 
-    
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    TeachingRequestRepository teachingRequestRepository;
 
     @Autowired
     JwtTokenProvider jwtTokenChecker;
 
+    @PostMapping(Mapping.REQUEST)
+    public  ResponseEntity<?> requestToTeach(@RequestParam(Param.ACCESS_TOKEN) String token){
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+            return new ResponseEntity<>(" user is not present ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            return new ResponseEntity<>("invalid token ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+
+        if(user.isChild()){
+            return new ResponseEntity<>("user is child it's not allowed ",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        if(user.isTeacher())
+            return new ResponseEntity<>("user is already a teacher",
+                    HttpStatus.NOT_MODIFIED);
+
+        TeachingRequest teachingRequest = new TeachingRequest(user.getUserId());
+        teachingRequestRepository.save(teachingRequest);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @PostMapping(Mapping.TEACHER_CLASSROOMS)
     public ResponseEntity<?> createClassroom(@RequestParam(Param.ACCESS_TOKEN) String token,
@@ -64,7 +85,8 @@ public class TeacherController {
         }
 
         if(!user.isTeacher())
-            user.setTeacher(true);
+            return new ResponseEntity<>("user is not a teacher yet please make a request to be teacher",
+                    HttpStatus.FORBIDDEN);
         
         //generate random passcode
         String passcode = RandomStringUtils.randomAlphanumeric(6, 8);
@@ -78,7 +100,7 @@ public class TeacherController {
 //        classRoom.setPassCode(passwordEncoder.encode(classRoom.getPassCode()));
         classroomRepository.save(classRoom);
         
-        return new ResponseEntity<>("successfully created with passcode "+classRoom.getPassCode(),HttpStatus.CREATED);
+        return new ResponseEntity<>(classRoom.getPassCode(),HttpStatus.CREATED);
     }
 
 
@@ -199,7 +221,8 @@ public class TeacherController {
         }
 
         if(!user.isTeacher())
-            user.setTeacher(true);
+            return new ResponseEntity<>("user is not a teacher yet please make a request to be teacher",
+                    HttpStatus.FORBIDDEN);
 
         Course course=new Course(courseTitle, detailed_title, description, true, level,category);
         course.setPublisher(user);

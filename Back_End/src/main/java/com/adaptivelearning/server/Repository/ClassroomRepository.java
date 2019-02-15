@@ -13,7 +13,7 @@ public interface ClassroomRepository extends JpaRepository<Classroom, Integer> {
     Iterable<Classroom> findByCreator(Integer creatorId);
 
     Classroom findByClassroomName(String classroomName);
-    
+
     Boolean existsByPassCode (String passCode);
 
     Classroom findByPassCode(String passCode);

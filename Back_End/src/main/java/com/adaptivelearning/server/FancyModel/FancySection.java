@@ -1,9 +1,6 @@
 package com.adaptivelearning.server.FancyModel;
 
-import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.Section;
-import com.adaptivelearning.server.Model.User;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -82,8 +79,4 @@ public class FancySection {
 	public void setEditor(FancyUser editor) {
 		this.editor = editor;
 	}
-
-
-
-   
 }

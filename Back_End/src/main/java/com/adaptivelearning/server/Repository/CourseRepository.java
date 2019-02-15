@@ -14,11 +14,15 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 	
 	List<Course> findByCategoryAndIsPublic(String category,boolean isPublic);
 
-	@Query("SELECT a FROM Course a " +
-			"ORDER BY a.numberOfStudents DESC")
+	@Query("SELECT a FROM Course a WHERE isPublic=true " +
+			"ORDER BY numberOfStudents DESC ")
 	List<Course> findHotestCourses();
 
-	@Query("SELECT a FROM Course a " +
-			"ORDER BY a.publishDate DESC")
+	@Query("SELECT a FROM Course a WHERE isPublic=true " +
+			"ORDER BY publishDate DESC")
 	List<Course> findNewestCourses();
+
+	@Query("SELECT a FROM Course a WHERE isPublic=true " +
+			"ORDER BY rate DESC")
+	List<Course> findTopRatedCourses();
 }
