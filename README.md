@@ -49,6 +49,13 @@ or
 #### Retrieve user data (GET method)
 >http://localhost:8080/profile?token=eyJhbGciOiJIUzUxMiJ9.eyJzd....WO-OSbvxAlG9n1li-pGnA
 
+#### Get saved courses (GET method)
+>http://localhost:8080/saved_courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
+
+#### Add course to saved courses by course_id (POST method)
+>http://localhost:8080/saved_courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=26
+
+
 
 
 ### general APIs
@@ -58,6 +65,9 @@ or
 #### Get hot courses (max 20 course if we have more and all courses if less) (GET method)
 >http://localhost:8080/hot_courses
 
+#### Get top rated courses (max 20 course if we have more and all courses if less) (GET method)
+>http://localhost:8080/top_rated_courses
+
 #### Get courses by category (GET method)
 >http://localhost:8080/category_courses?category=it_and_software
 
@@ -65,7 +75,7 @@ or
 
 ### Course APIs
 #### Get Course by id (GET method)
->http://localhost:8080/course?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ5MjQ0MjUyLCJleHAiOjE1NDk4NDkwNTJ9.LYczc5lPxhEcdZ_dYJrQwuYcb7iPBTduB7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ&course_id=1
+>http://localhost:8080/course?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=1
 
 
 
@@ -102,7 +112,10 @@ or
 >http://localhost:8080/teacher/classrooms?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&classroom_name=CSE19 ComputerNetworks
 
 #### Create course (POST method)
->http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&title=java&detailed_title=spring&description=it'sjavaspringcourse&category=it_and_software&level=1
+>http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&title=java&detailed_title=spring&description=itsjavaspringcourse&category=it_and_software&level=1
+
+#### Update course (optional parameters)(PUT method)
+>http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=22&title=test_update&detailed_title=test_test_update&description=blablablablabla&category=software&level=2
 
 #### Retrieve classrooms for teacher (GET method)
 >http://localhost:8080/teacher/classrooms?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
