@@ -25,8 +25,9 @@ public class Mapping {
     //For courses
     public static final String NEW_COURSES = "/new_courses";
     public static final String HOT_COURSES = "/hot_courses";
+    public static final String TOP_RATED_COURSES = "/top_rated_courses";
     public static final String CATEGORY_COURSES = "/category_courses";
-    public static final String SAVE_COURSE = "/save_course";
+    public static final String SAVED_COURSES = "/saved_courses";
 
 
     //Teacher

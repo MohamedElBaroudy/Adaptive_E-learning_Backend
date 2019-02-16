@@ -280,12 +280,12 @@ public class TeacherController {
    
     @PutMapping(Mapping.TEACHER_COURSES)
     public ResponseEntity<?> updateCourseInformation(@RequestParam(Param.ACCESS_TOKEN) String token,
-    		                              @RequestParam(Param.COURSE_ID) int requiredCourseId , 
-                                          @Valid @RequestParam(Param.Title) String newTitle,
-                                          @Valid @RequestParam(Param.Detailed_title ) String newDetailedtilte,
-                                          @Valid @RequestParam(Param.Description) String newDescription,
-                                          @Valid @RequestParam(Param.CATEGORY ) String newCategory,
-                                          @Valid @RequestParam(Param.Level) short newLevel) {
+                                                     @Valid @RequestParam(Param.COURSE_ID) int requiredCourseId ,
+                                                     @Valid @RequestParam(value = Param.Title,required = false) String newTitle,
+                                                     @Valid @RequestParam(value = Param.Detailed_title,required = false) String newDetailedtilte,
+                                                     @Valid @RequestParam(value = Param.Description,required = false) String newDescription,
+                                                     @Valid @RequestParam(value = Param.CATEGORY,required = false) String newCategory,
+                                                     @Valid @RequestParam(value = Param.Level,required = false) Short newLevel) {
 
         User user = userRepository.findByToken(token);
         Course course = courseRepository.findByCourseId(requiredCourseId);
@@ -317,20 +317,24 @@ public class TeacherController {
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your course to update",
                     HttpStatus.FORBIDDEN);
         }
-        
-        course.setTitle(newTitle);
-        course.setDetailedTitle(newDetailedtilte);
-        course.setDescription(newDescription);
-        course.setCategory(newCategory);
-        course.setLevel(newLevel);
+        if(newTitle != null && !newTitle.isEmpty())
+            course.setTitle(newTitle);
+        if(newDetailedtilte != null && !newDetailedtilte.isEmpty())
+            course.setDetailedTitle(newDetailedtilte);
+        if(newDescription != null && !newDescription.isEmpty())
+            course.setDescription(newDescription);
+        if(newCategory != null && !newCategory.isEmpty())
+            course.setCategory(newCategory);
+        if(newLevel != null)
+            course.setLevel(newLevel);
         courseRepository.save(course);
 
-        return new ResponseEntity<>("The Course Is Updated" ,HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     
     @GetMapping(Mapping.TEACHER_COURSES)
-    public ResponseEntity<?>retrieveCreatedCourses(@RequestParam(Param.ACCESS_TOKEN) String token) {
+    public ResponseEntity<?> retrieveCreatedCourses(@RequestParam(Param.ACCESS_TOKEN) String token) {
 
         User user = userRepository.findByToken(token);
 
