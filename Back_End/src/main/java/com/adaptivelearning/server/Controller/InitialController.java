@@ -19,6 +19,7 @@ public class InitialController implements CommandLineRunner {
 
     @Override
     public void run(String... args){
+//        userRepository.clearTokens();
         User user = userRepository.findByUsername("Admin");
         if(user != null)
             return;

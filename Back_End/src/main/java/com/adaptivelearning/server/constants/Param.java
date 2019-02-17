@@ -32,7 +32,23 @@ public class Param {
     public static final String SECTION_ID = "section_id";
     public static final String SECTION_TITLE = "section_title";
 
-    
 
-    
+    //for quizzes
+    public static final String QUIZ_ID = "quiz_id";
+    public static final String QUIZ_TITLE = "quiz_title";
+    public static final String QUIZ_INSTRUCTIONS = "quiz_instructions";
+    public static final String QUIZ_TIME = "quiz_time";
+
+
+    //for questions
+    public static final String QUESTION_ID = "question_id";
+    public static final String QUESTION_BODY = "question_body";
+    public static final String QUESTION_IS_MULTIPLE_CHOICE = "is_multiple_choice";
+    public static final String QUESTION_MARK = "question_mark";
+
+
+    //for answers
+    public static final String ANSWER_ID = "answer_id";
+    public static final String ANSWER_BODY = "answer_body";
+    public static final String ANSWER_IS_CORRECT = "is_correct";
 }

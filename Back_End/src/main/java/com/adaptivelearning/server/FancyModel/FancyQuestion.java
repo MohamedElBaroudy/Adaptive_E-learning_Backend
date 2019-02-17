@@ -15,6 +15,9 @@ public class FancyQuestion {
     // is multiple choice
     private boolean isMultipleChoice;
 
+    // mark
+    private short mark;
+
     // answers
     private List<FancyAnswer> fancyAnswers;
 
@@ -26,6 +29,7 @@ public class FancyQuestion {
         this.questionId = question.getQuestionId();
         this.body = question.getBody();
         this.isMultipleChoice = question.isMultipleChoice();
+        this.mark = question.getMark();
         this.fancyAnswers = fancyAnswer.toFancyAnswerListMapping(question.getAnswers());
         return this;
     }
@@ -62,6 +66,14 @@ public class FancyQuestion {
 
     public void setMultipleChoice(boolean multipleChoice) {
         isMultipleChoice = multipleChoice;
+    }
+
+    public short getMark() {
+        return mark;
+    }
+
+    public void setMark(short mark) {
+        this.mark = mark;
     }
 
     public List<FancyAnswer> getFancyAnswers() {

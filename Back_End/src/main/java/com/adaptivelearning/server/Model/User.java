@@ -98,7 +98,7 @@ public class User {
 
     // Mapping
     @OneToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL},
+            cascade = {CascadeType.REMOVE},
             mappedBy = "parent")
     private List<User> children;
 
@@ -111,12 +111,12 @@ public class User {
 
 
     @OneToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL},
+            cascade = {CascadeType.REMOVE},
             mappedBy = "creator")
     private List<Classroom> classrooms;
 
     @OneToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL},
+            cascade = {CascadeType.REMOVE},
             mappedBy = "publisher")
     private List<Course> courses;
 

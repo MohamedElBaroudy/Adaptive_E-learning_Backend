@@ -7,7 +7,6 @@ import com.adaptivelearning.server.Repository.*;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -483,5 +482,4 @@ public class TeacherController {
         sectionRepository.deleteById(section.getSectionId());
         return new ResponseEntity<>("section deleted",HttpStatus.NO_CONTENT);
     }
-
 }

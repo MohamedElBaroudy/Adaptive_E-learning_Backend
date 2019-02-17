@@ -15,6 +15,12 @@ public class FancyQuiz {
     // instructions
     private String instructions;
 
+    // time
+    private short time;
+
+    // total mark
+    private short totalMark;
+
     // questions
     private List<FancyQuestion> fancyQuestions;
 
@@ -26,6 +32,8 @@ public class FancyQuiz {
         this.quizId = quiz.getQuizId();
         this.title = quiz.getTitle();
         this.instructions = quiz.getInstructions();
+        this.time= quiz.getTime();
+        this.totalMark = quiz.getTotalMark();
         this.fancyQuestions = fancyQuestion.toFancyQuestionListMapping(quiz.getQuestions());
         return this;
     }
@@ -62,6 +70,22 @@ public class FancyQuiz {
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
+    }
+
+    public short getTime() {
+        return time;
+    }
+
+    public void setTime(short time) {
+        this.time = time;
+    }
+
+    public short getTotalMark() {
+        return totalMark;
+    }
+
+    public void setTotalMark(short totalMark) {
+        this.totalMark = totalMark;
     }
 
     public List<FancyQuestion> getFancyQuestions() {

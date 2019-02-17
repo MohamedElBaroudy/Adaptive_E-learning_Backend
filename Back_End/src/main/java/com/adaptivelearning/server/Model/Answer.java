@@ -43,8 +43,10 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(@NotBlank @Size(max = 1000) String body) {
+    public Answer(@NotBlank @Size(max = 1000) String body,
+                  boolean isCorrect) {
         this.body = body;
+        this.isCorrect = isCorrect;
     }
 
     public int getAnswerId() {

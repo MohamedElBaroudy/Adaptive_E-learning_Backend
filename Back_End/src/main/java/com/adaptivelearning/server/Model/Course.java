@@ -117,7 +117,7 @@ public class Course {
 
 
     @OneToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL},
+            cascade = {CascadeType.REMOVE},
             mappedBy = "course")
     private List<Section> sections;
     // end of mapping

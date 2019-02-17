@@ -37,7 +37,7 @@ public class Section {
     private Course course;
 
     @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL},
+            cascade = {CascadeType.REMOVE},
             mappedBy = "section")
     private List<Quiz> quizzes;
 
@@ -73,5 +73,13 @@ public class Section {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public List<Quiz> getQuizzes() {
+        return quizzes;
+    }
+
+    public void setQuizzes(List<Quiz> quizzes) {
+        this.quizzes = quizzes;
     }
 }

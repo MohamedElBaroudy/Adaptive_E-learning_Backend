@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -36,6 +37,14 @@ public class Quiz {
     @Column(name = "INSTRUCTIONS")
     private String instructions;
 
+    // time in secs
+    @NotNull
+    @Column(name = "TIME")
+    private short time;
+
+    @NotNull
+    @Column(name = "TOTAL_MARK")
+    private Short totalMark=0;
 
 
 
@@ -46,7 +55,7 @@ public class Quiz {
     private Section section;
 
     @OneToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.ALL},
+            cascade = {CascadeType.REMOVE},
             mappedBy = "quiz")
     private List<Question> questions;
     // end of mapping
@@ -56,9 +65,11 @@ public class Quiz {
     }
 
     public Quiz(@NotBlank @Size(max = 40) String title,
-                @NotBlank @Size(max = 1000) String instructions) {
+                @NotBlank @Size(max = 1000) String instructions,
+                @NotNull short time) {
         this.title = title;
         this.instructions = instructions;
+        this.time = time;
     }
 
     public int getQuizId() {
@@ -83,6 +94,22 @@ public class Quiz {
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
+    }
+
+    public short getTime() {
+        return time;
+    }
+
+    public void setTime(short time) {
+        this.time = time;
+    }
+
+    public Short getTotalMark() {
+        return totalMark;
+    }
+
+    public void setTotalMark(Short totalMark) {
+        this.totalMark = totalMark;
     }
 
     public Section getSection() {
