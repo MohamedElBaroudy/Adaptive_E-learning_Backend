@@ -55,6 +55,8 @@ or
 #### Add course to saved courses by course_id (POST method)
 >http://localhost:8080/saved_courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=26
 
+#### Add profile picture(POST method)
+>http://localhost:8080/profilePic?token=eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ
 
 
 
@@ -77,13 +79,17 @@ or
 #### Get Course by id (GET method)
 >http://localhost:8080/course?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=1
 
+#### Add picture to course(POST method)
+>http://localhost:8080/coursePic?token=eyJhbGciOi....B7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ&course_id=1
+
 
 
 ### Classroom APIs
 #### Get classroom by id (GET method)
 >http://localhost:8080/classroom?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ5MjQ0MjUyLCJleHAiOjE1NDk4NDkwNTJ9.LYczc5lPxhEcdZ_dYJrQwuYcb7iPBTduB7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ&classroom_id=1
 
-
+#### Add picture to classroom(POST method)
+>http://localhost:8080/classroomPic?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiw.....JrQwuYcb7iPBTduB7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ&classroom_id=1
 
 
 ### parent APIs
