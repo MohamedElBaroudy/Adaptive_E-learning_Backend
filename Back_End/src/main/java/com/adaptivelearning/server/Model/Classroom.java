@@ -62,7 +62,14 @@ public class Classroom {
             joinColumns = {@JoinColumn(name = "classroom_id")},
             inverseJoinColumns = {@JoinColumn(name = "course_id")})
     private List<Course> courses;
+    
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "pic_id")
+    private MediaFile classroom_picture;
+	
     // end of mapping
+    
+    
     public Classroom() {
     }
 
@@ -119,4 +126,12 @@ public class Classroom {
     public void setCourses(List<Course> courses) {
         this.courses = courses;
     }
+
+	public MediaFile getClassroom_picture() {
+		return classroom_picture;
+	}
+
+	public void setClassroom_picture(MediaFile classroom_picture) {
+		this.classroom_picture = classroom_picture;
+	}
 }

@@ -1,24 +1,34 @@
 package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.FancyModel.FancyUser;
+import com.adaptivelearning.server.Model.MediaFile;
 import com.adaptivelearning.server.Model.User;
+import com.adaptivelearning.server.Repository.MediafileRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.Valid;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -32,6 +42,8 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+	MediafileRepository MediaFileRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -144,5 +156,37 @@ public class UserController {
         return new ResponseEntity<>(fancyUser,HttpStatus.OK);
     }
     
+    @PostMapping("/profilePic")
+    public ResponseEntity<?> SetProfilePicture(@RequestParam(Param.ACCESS_TOKEN) String token,
+    		                                   @RequestParam("file") MultipartFile file) throws IOException {
+    	
+      
+      User user = userRepository.findByToken(token);
+
+      if (user == null)
+          return new ResponseEntity<>("user isn't logged in",
+                  HttpStatus.UNAUTHORIZED);
+
+      if (!tokenProvider.validateToken(token))
+    	  return new ResponseEntity<>("session expired",
+                  HttpStatus.UNAUTHORIZED);
+      
+      // Normalize file name
+      String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+      
+      if(fileName.contains("..")) {
+      	return new ResponseEntity("Sorry! Filename contains invalid path sequence ",HttpStatus.BAD_REQUEST);
+      }
+      MediaFile image = new MediaFile(fileName, file.getContentType(), file.getBytes());
+
+      MediaFileRepository.save(image);
+      user.setProfile_picture(image);
+      image.setProfile(user);
+      userRepository.save(user);
+      return ResponseEntity.ok()
+              .contentType(MediaType.parseMediaType(image.getFileType()))
+              .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
+              .body(new ByteArrayResource(image.getData()));
+    }
     
 }

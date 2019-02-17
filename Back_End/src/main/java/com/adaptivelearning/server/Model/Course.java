@@ -113,13 +113,16 @@ public class Course {
             mappedBy = "courses")
     private List<Classroom> classrooms=new ArrayList<Classroom>();
 
-
-
-
     @OneToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REMOVE},
             mappedBy = "course")
     private List<Section> sections;
+    
+    
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "pic_id")
+    private MediaFile course_picture;
+	
     // end of mapping
 
 
@@ -266,5 +269,13 @@ public class Course {
 
 	public void setSavedBy(List<User> savedBy) {
 		this.savedBy = savedBy;
+	}
+
+	public MediaFile getCourse_picture() {
+		return course_picture;
+	}
+
+	public void setCourse_picture(MediaFile course_picture) {
+		this.course_picture = course_picture;
 	}
 }

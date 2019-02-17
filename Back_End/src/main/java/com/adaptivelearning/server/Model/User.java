@@ -142,6 +142,9 @@ public class User {
             mappedBy = "savedBy")
     private List<Course> savedCourses; 
 
+   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   @JoinColumn(name = "pic_id")
+   private MediaFile profile_picture;
     // end of mapping
 
 
@@ -331,5 +334,13 @@ public class User {
 
 	public void setSavedCourses(List<Course> savedCourses) {
 		this.savedCourses = savedCourses;
+	}
+
+	public MediaFile getProfile_picture() {
+		return profile_picture;
+	}
+
+	public void setProfile_picture(MediaFile profile_picture) {
+		this.profile_picture = profile_picture;
 	}
 }
