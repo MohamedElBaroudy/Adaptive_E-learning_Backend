@@ -26,6 +26,9 @@ public class QuizController {
     SectionRepository sectionRepository;
 
     @Autowired
+    LectureRepository lectureRepository;
+
+    @Autowired
     QuestionRepository questionRepository;
 
     @Autowired
@@ -38,7 +41,7 @@ public class QuizController {
 
     @PostMapping(Mapping.TEACHER_QUIZ)
     public ResponseEntity<?> createQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                        @Valid @RequestParam(Param.SECTION_ID) Integer sectionId,
+                                        @Valid @RequestParam(Param.SECTION_ID) Long sectionId,
                                         @Valid @RequestParam(Param.QUIZ_TITLE) String title,
                                         @Valid @RequestParam(Param.QUIZ_INSTRUCTIONS) String instructions,
                                         @Valid @RequestParam(Param.QUIZ_TIME) Short time){
@@ -65,16 +68,18 @@ public class QuizController {
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your section to add quiz in",
                     HttpStatus.FORBIDDEN);
         }
+        Lecture lecture = new Lecture(true,false,false);
+        lecture.setSection(section);
         Quiz quiz = new Quiz(title,instructions,time,(short)0);
-        quiz.setSection(section);
+        quiz.setLecture(lecture);
+        lectureRepository.save(lecture);
         quizRepository.save(quiz);
-
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping(Mapping.TEACHER_QUIZ)
     public ResponseEntity<?> updateQuizInfo(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                            @Valid @RequestParam(Param.QUIZ_ID) Integer quizId,
+                                            @Valid @RequestParam(Param.QUIZ_ID) Long quizId,
                                             @Valid @RequestParam(value = Param.QUIZ_TITLE,required = false) String title,
                                             @Valid @RequestParam(value = Param.QUIZ_TIME,required = false) Short time,
                                             @Valid @RequestParam(value = Param.QUIZ_INSTRUCTIONS,required = false) String instructions){
@@ -94,8 +99,8 @@ public class QuizController {
         if (quiz == null)
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
-        if (quiz.getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()))
+        if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
+        .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to update",
                     HttpStatus.FORBIDDEN);
 
@@ -116,7 +121,7 @@ public class QuizController {
 
     @DeleteMapping(Mapping.TEACHER_QUIZ)
     public ResponseEntity<?> deleteQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                        @Valid @RequestParam(Param.QUIZ_ID) Integer quizId){
+                                        @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
         User user = userRepository.findByToken(token);
 
         if(user == null){
@@ -133,8 +138,8 @@ public class QuizController {
         if (quiz == null)
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
-        if (quiz.getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()))
+        if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
+                .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to delete",
                     HttpStatus.FORBIDDEN);
 
@@ -145,7 +150,7 @@ public class QuizController {
 
     @GetMapping(Mapping.QUIZ)
     public ResponseEntity<?> retrieveQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                          @Valid @RequestParam(Param.QUIZ_ID) Integer quizId){
+                                          @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
         User user = userRepository.findByToken(token);
 
         if(user == null){
@@ -162,8 +167,8 @@ public class QuizController {
         if (quiz == null)
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
-        if (quiz.getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()) && !quiz.getSection().getCourse().getLearners().contains(user))
+        if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
+                .equals(user.getUserId()) && !quiz.getLecture().getSection().getCourse().getLearners().contains(user))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz or a student of this course",
                     HttpStatus.FORBIDDEN);
 
@@ -173,7 +178,7 @@ public class QuizController {
 
     @PostMapping(Mapping.QUIZ_QUESTION)
     public ResponseEntity<?> addQuestion(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                          @Valid @RequestParam(Param.QUIZ_ID) Integer quizId,
+                                          @Valid @RequestParam(Param.QUIZ_ID) Long quizId,
                                           @Valid @RequestParam(Param.QUESTION_BODY) String body,
                                           @Valid @RequestParam(Param.QUESTION_IS_MULTIPLE_CHOICE) Boolean isMultipleChoice,
                                           @Valid @RequestParam(Param.QUESTION_MARK) Short mark){
@@ -193,8 +198,8 @@ public class QuizController {
         if (quiz == null)
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
-        if (quiz.getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()))
+        if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
+                .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz",
                     HttpStatus.FORBIDDEN);
 
@@ -208,7 +213,7 @@ public class QuizController {
 
     @GetMapping(Mapping.QUESTION)
     public ResponseEntity<?> retrieveQuestion(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                              @Valid @RequestParam(Param.QUESTION_ID) Integer questionId){
+                                              @Valid @RequestParam(Param.QUESTION_ID) Long questionId){
         User user = userRepository.findByToken(token);
 
         if(user == null){
@@ -225,8 +230,8 @@ public class QuizController {
         if (question == null)
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
-        if (question.getQuiz().getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()) && !question.getQuiz().getSection().getCourse().getLearners().contains(user))
+        if (!question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
+                .equals(user.getUserId()) && !question.getQuiz().getLecture().getSection().getCourse().getLearners().contains(user))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz or a student of this course",
                     HttpStatus.FORBIDDEN);
 
@@ -237,7 +242,7 @@ public class QuizController {
 
     @PutMapping(Mapping.QUIZ_QUESTION)
     public ResponseEntity<?> updateQuestion(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                              @Valid @RequestParam(Param.QUESTION_ID) Integer questionId,
+                                              @Valid @RequestParam(Param.QUESTION_ID) Long questionId,
                                             @Valid @RequestParam(value = Param.QUESTION_BODY,required = false) String body,
                                             @Valid @RequestParam(value = Param.QUESTION_IS_MULTIPLE_CHOICE,required = false) Boolean isMultipleChoice,
                                             @Valid @RequestParam(value = Param.QUESTION_MARK,required = false) Short mark){
@@ -257,7 +262,7 @@ public class QuizController {
         if (question == null)
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
-        if (question.getQuiz().getSection().getCourse().getPublisher().getUserId()!=
+        if (question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()!=
                 (user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz to update it's content",
                     HttpStatus.FORBIDDEN);
@@ -278,7 +283,7 @@ public class QuizController {
 
     @DeleteMapping(Mapping.QUIZ_QUESTION)
     public ResponseEntity<?> deleteQuestion(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                        @Valid @RequestParam(Param.QUESTION_ID) Integer questionId){
+                                        @Valid @RequestParam(Param.QUESTION_ID) Long questionId){
         User user = userRepository.findByToken(token);
 
         if(user == null){
@@ -295,8 +300,8 @@ public class QuizController {
         if (question == null)
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
-        if (question.getQuiz().getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()))
+        if (!question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
+                .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to delete it's content",
                     HttpStatus.FORBIDDEN);
 
@@ -310,7 +315,7 @@ public class QuizController {
 
     @PostMapping(Mapping.QUeSTION_ANSWER)
     public ResponseEntity<?> addAnswer(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                       @Valid @RequestParam(Param.QUESTION_ID) Integer questionId,
+                                       @Valid @RequestParam(Param.QUESTION_ID) Long questionId,
                                        @Valid @RequestParam(Param.ANSWER_BODY) String body,
                                        @Valid @RequestParam(Param.ANSWER_IS_CORRECT) Boolean isCorrect){
         User user = userRepository.findByToken(token);
@@ -329,8 +334,8 @@ public class QuizController {
         if (question == null)
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
-        if (question.getQuiz().getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()))
+        if (!question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
+                .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz",
                     HttpStatus.FORBIDDEN);
 
@@ -351,7 +356,7 @@ public class QuizController {
 
     @PutMapping(Mapping.QUeSTION_ANSWER)
     public ResponseEntity<?> updateAnswer(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                            @Valid @RequestParam(Param.ANSWER_ID) Integer answerId,
+                                            @Valid @RequestParam(Param.ANSWER_ID) Long answerId,
                                             @Valid @RequestParam(value = Param.ANSWER_BODY,required = false) String body,
                                             @Valid @RequestParam(value = Param.ANSWER_IS_CORRECT,required = false) Boolean isCorrect){
         User user = userRepository.findByToken(token);
@@ -370,8 +375,8 @@ public class QuizController {
         if (answer == null)
             return new ResponseEntity<>("Not found answer",HttpStatus.NOT_FOUND);
 
-        if (answer.getQuestion().getQuiz().getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()))
+        if (!answer.getQuestion().getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
+                .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz to update it's content",
                     HttpStatus.FORBIDDEN);
 
@@ -410,7 +415,7 @@ public class QuizController {
 
     @DeleteMapping(Mapping.QUeSTION_ANSWER)
     public ResponseEntity<?> deleteAnswer(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                            @Valid @RequestParam(Param.ANSWER_ID) Integer answerId){
+                                            @Valid @RequestParam(Param.ANSWER_ID) Long answerId){
         User user = userRepository.findByToken(token);
 
         if(user == null){
@@ -427,8 +432,8 @@ public class QuizController {
         if (answer == null)
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
-        if (answer.getQuestion().getQuiz().getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()))
+        if (!answer.getQuestion().getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
+                .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to delete it's content",
                     HttpStatus.FORBIDDEN);
 

@@ -133,7 +133,7 @@ public class ParentController {
     @PostMapping(Mapping.ENROLL_CHILD_IN_COURSE)
     public ResponseEntity<?> enrollChildIntoCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
                        @Valid @RequestParam(Param.FIRST_NAME) String childName,
-                       @Valid @RequestParam(Param.COURSE_ID) int courseId) {
+                       @Valid @RequestParam(Param.COURSE_ID) Long courseId) {
 
        User user = userRepository.findByToken(token);
        Course course = courseRepository.findByCourseId(courseId);
@@ -186,7 +186,7 @@ public class ParentController {
 
     @GetMapping(Mapping.CHILD)
     ResponseEntity<?> retrieveChild(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                    @Valid @RequestParam(Param.USER_ID) Integer childId) {
+                                    @Valid @RequestParam(Param.USER_ID) Long childId) {
 
         User user = userRepository.findByToken(token);
 
@@ -215,7 +215,7 @@ public class ParentController {
 
     @PostMapping(Mapping.PARENT_RATE_COURSE)
     public ResponseEntity<?> parentRateCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                               @Valid @RequestParam(Param.COURSE_ID) int courseId,
+                                               @Valid @RequestParam(Param.COURSE_ID) Long courseId,
                                                @Valid @RequestParam(Param.FIRST_NAME) String childName,
                                                @Valid @RequestParam(Param.Rate) short parentRate){
 

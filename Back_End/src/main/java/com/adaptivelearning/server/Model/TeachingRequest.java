@@ -23,7 +23,7 @@ public class TeachingRequest {
     // claimer id
     @NotNull
     @Column(name = "claimerId", unique = true)
-    private Integer claimerId;
+    private Long claimerId;
 
     // approved?
     @Column(name = "IS_APPROVED")
@@ -32,7 +32,7 @@ public class TeachingRequest {
     public TeachingRequest() {
     }
 
-    public TeachingRequest(@NotNull Integer claimerId) {
+    public TeachingRequest(@NotNull Long claimerId) {
         this.claimerId = claimerId;
     }
 
@@ -44,11 +44,11 @@ public class TeachingRequest {
         this.requestId = requestId;
     }
 
-    public Integer getClaimerId() {
+    public Long getClaimerId() {
         return claimerId;
     }
 
-    public void setClaimerId(Integer claimerId) {
+    public void setClaimerId(Long claimerId) {
         this.claimerId = claimerId;
     }
 

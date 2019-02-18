@@ -7,7 +7,7 @@ import java.util.List;
 
 public class FancyQuiz {
     // id
-    private int quizId;
+    private Long quizId;
 
     // title
     private String title;
@@ -48,11 +48,11 @@ public class FancyQuiz {
         return fancyQuizList;
     }
 
-    public int getQuizId() {
+    public Long getQuizId() {
         return quizId;
     }
 
-    public void setQuizId(int quizId) {
+    public void setQuizId(Long quizId) {
         this.quizId = quizId;
     }
 

@@ -22,7 +22,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", unique = true, nullable = false)
-    private int courseId;
+    private Long courseId;
 
     // title
     @NotBlank
@@ -140,11 +140,11 @@ public class Course {
         this.publishDate = LocalDate.now();
     }
 
-    public int getCourseId() {
+    public Long getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(int courseId) {
+    public void setCourseId(Long courseId) {
         this.courseId = courseId;
     }
 

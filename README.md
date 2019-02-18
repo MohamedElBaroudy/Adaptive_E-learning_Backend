@@ -209,11 +209,14 @@ or
 #### Delete section by it's id (DELETE method)
 >http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&section_id=2
 
+#### Retrieve section by it's id (GET method)
+>http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&section_id=2
+
 #### Create quiz by section id (POST method)
->http://localhost:8080/teacher/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&section_id=1&quiz_title=Introduction&quiz_instructions=don't forget your calculator&quiz_time=30&quiz_total_mark=10
+>http://localhost:8080/teacher/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&section_id=1&quiz_title=Introduction&quiz_instructions=don't forget your calculator&quiz_time=30
 
 #### Update the quiz info by it's id (optional parameters)(PUT method)
->http://localhost:8080/teacher/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1&quiz_title=Introduction2&quiz_instructions=don't forget your calculator2&quiz_time=45&quiz_total_mark=20
+>http://localhost:8080/teacher/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1&quiz_title=Introduction2&quiz_instructions=don't forget your calculator2&quiz_time=45
 
 #### Delete quiz by it's id (DELETE method)
 >http://localhost:8080/teacher/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=2

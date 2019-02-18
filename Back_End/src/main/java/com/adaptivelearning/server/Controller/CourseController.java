@@ -47,7 +47,7 @@ public class CourseController {
 
     @GetMapping(Mapping.COURSE)
     public ResponseEntity<?> retrieveCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
-    		                                  @Valid @RequestParam(Param.COURSE_ID) int courseId) {
+    		                                  @Valid @RequestParam(Param.COURSE_ID) Long courseId) {
 
         User user = userRepository.findByToken(token);
         Course course = courseRepository.findByCourseId(courseId);
@@ -73,7 +73,7 @@ public class CourseController {
 
     @GetMapping(Mapping.COURSE_STUDENTS)
     public ResponseEntity<?> retrieveCourseStudents(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                            @Valid @RequestParam(Param.COURSE_ID) int courseId) {
+                                            @Valid @RequestParam(Param.COURSE_ID) Long courseId) {
 
         User user = userRepository.findByToken(token);
         Course course = courseRepository.findByCourseId(courseId);
@@ -102,7 +102,7 @@ public class CourseController {
 
     @PostMapping(Mapping.SAVED_COURSES)
     public ResponseEntity<?> saveCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                        @Valid @RequestParam(Param.COURSE_ID) int courseId) {
+                                        @Valid @RequestParam(Param.COURSE_ID) Long courseId) {
 
         User user = userRepository.findByToken(token);
         Course course=courseRepository.findByCourseId(courseId);
@@ -159,7 +159,7 @@ public class CourseController {
     
     @PostMapping("/coursePic")
     public ResponseEntity<?> SetProfilePicture(@RequestParam(Param.ACCESS_TOKEN) String token,
-    		                            @Valid @RequestParam(Param.COURSE_ID) int courseId,
+    		                            @Valid @RequestParam(Param.COURSE_ID) Long courseId,
     		                                   @RequestParam("file") MultipartFile file) throws IOException {
     	
       

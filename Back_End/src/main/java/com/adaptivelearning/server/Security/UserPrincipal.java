@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class UserPrincipal implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private Long id;
 
     private String name;
 
@@ -28,7 +28,7 @@ public class UserPrincipal implements UserDetails {
     private String password;
 
 
-    public UserPrincipal(Integer id, String name, String email, String password, int gender) {
+    public UserPrincipal(Long id, String name, String email, String password, int gender) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -53,7 +53,7 @@ public class UserPrincipal implements UserDetails {
         );
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

@@ -22,7 +22,7 @@ public class Quiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", unique = true, nullable = false)
-    private int quizId;
+    private Long quizId;
 
     // title
     @NotBlank
@@ -49,10 +49,10 @@ public class Quiz {
 
 
     // mapping
-    @ManyToOne(fetch = FetchType.EAGER,
-            cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "SECTION")
-    private Section section;
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.REMOVE})
+    @JoinColumn(name = "LECTURE")
+    private Lecture lecture;
 
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.REMOVE},
@@ -74,11 +74,11 @@ public class Quiz {
         this.totalMark = totalMark;
     }
 
-    public int getQuizId() {
+    public Long getQuizId() {
         return quizId;
     }
 
-    public void setQuizId(int quizId) {
+    public void setQuizId(Long quizId) {
         this.quizId = quizId;
     }
 
@@ -114,12 +114,12 @@ public class Quiz {
         this.totalMark = totalMark;
     }
 
-    public Section getSection() {
-        return section;
+    public Lecture getLecture() {
+        return lecture;
     }
 
-    public void setSection(Section section) {
-        this.section = section;
+    public void setLecture(Lecture lecture) {
+        this.lecture = lecture;
     }
 
     public List<Question> getQuestions() {

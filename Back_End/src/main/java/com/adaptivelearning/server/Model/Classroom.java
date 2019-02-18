@@ -22,7 +22,7 @@ public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", unique = true, nullable = false)
-    private int classroomId;
+    private Long classroomId;
 
     // classroom name   for searching purpose
     @NotBlank
@@ -79,11 +79,11 @@ public class Classroom {
         this.passCode = passCode;
     }
 
-    public int getClassroomId() {
+    public Long getClassroomId() {
         return classroomId;
     }
 
-    public void setClassroomId(int classroomId) {
+    public void setClassroomId(Long classroomId) {
         this.classroomId = classroomId;
     }
 

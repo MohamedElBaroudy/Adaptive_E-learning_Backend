@@ -20,13 +20,14 @@ public class Section {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", unique = true, nullable = false)
-    private int sectionId;
+    private Long sectionId;
 
     // title
     @NotBlank
     @Size(max = 40)
     @Column(name = "TITLE")
     private String title;
+
 
 
 
@@ -39,7 +40,7 @@ public class Section {
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.REMOVE},
             mappedBy = "section")
-    private List<Quiz> quizzes;
+    private List<Lecture> lectures;
 
     // end of mapping
 
@@ -51,11 +52,11 @@ public class Section {
         this.title = title;
     }
 
-    public int getSectionId() {
+    public Long getSectionId() {
         return sectionId;
     }
 
-    public void setSectionId(int sectionId) {
+    public void setSectionId(Long sectionId) {
         this.sectionId = sectionId;
     }
 
@@ -75,11 +76,11 @@ public class Section {
         this.course = course;
     }
 
-    public List<Quiz> getQuizzes() {
-        return quizzes;
+    public List<Lecture> getLectures() {
+        return lectures;
     }
 
-    public void setQuizzes(List<Quiz> quizzes) {
-        this.quizzes = quizzes;
+    public void setLectures(List<Lecture> lectures) {
+        this.lectures = lectures;
     }
 }

@@ -12,9 +12,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface CourseRepository extends JpaRepository<Course, Integer> {
+public interface CourseRepository extends JpaRepository<Course, Long> {
 
-	Course findByCourseId(Integer courseId);
+	Course findByCourseId(Long courseId);
 	
 	List<Course> findByCategoryAndIsPublic(Category category, boolean isPublic);
 

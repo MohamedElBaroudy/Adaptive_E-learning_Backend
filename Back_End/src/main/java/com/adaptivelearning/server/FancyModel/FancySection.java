@@ -6,53 +6,49 @@ import java.util.List;
 
 public class FancySection {
     // id
-    private int sectionId;
+    private Long sectionId;
 
     // title
     private String title;
 
     // course id
-    private int courseId;
+    private Long courseId;
 
     // editor 
     private FancyUser editor;
+
+    // lectures
+    private List<FancyLecture> fancyLectures;
 
     public FancySection() {
     }
 
     public FancySection toFancySectionMapping(Section section){
         FancyUser fancyUser= new FancyUser();
+        FancyLecture fancyLecture = new FancyLecture();
         this.sectionId = section.getSectionId();
         this.title = section.getTitle();
         this.courseId = section.getCourse().getCourseId();
         this.editor = fancyUser.toFancyUserMapper(section.getCourse().getPublisher());
+        this.fancyLectures = fancyLecture.toFancyLectureListMapping(section.getLectures());
         return this;
     }
 
-    public List<Integer> toSectionIdListMapping(List<Section> sections){
-        List<Integer> sectionIdList = new LinkedList<>();
-        for (Section section:
-                sections) {
-            ((LinkedList<Integer>) sectionIdList).addLast(section.getSectionId());
-        }
-        return sectionIdList;
-    }
-
     public List<FancySection> toFancySectionListMapping(List<Section> sections){
-        List<FancySection> FancySectionList = new LinkedList<>();
+        LinkedList<FancySection> fancySectionList = new LinkedList<>();
         for (Section section:
                 sections) {
         	FancySection fancySection = new FancySection();
-            ((LinkedList<FancySection>) FancySectionList).addLast(fancySection.toFancySectionMapping(section));
+            fancySectionList.addLast(fancySection.toFancySectionMapping(section));
         }
-        return FancySectionList;
+        return fancySectionList;
     }
 
-    public int getSectionId() {
+    public Long getSectionId() {
         return sectionId;
     }
 
-    public void setSectionId(int sectionId) {
+    public void setSectionId(Long sectionId) {
         this.sectionId = sectionId;
     }
 
@@ -64,11 +60,11 @@ public class FancySection {
         this.title = title;
     }
 
-    public int getCourseId() {
+    public Long getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(int courseId) {
+    public void setCourseId(Long courseId) {
         this.courseId = courseId;
     }
 
@@ -79,4 +75,12 @@ public class FancySection {
 	public void setEditor(FancyUser editor) {
 		this.editor = editor;
 	}
+
+    public List<FancyLecture> getFancyLectures() {
+        return fancyLectures;
+    }
+
+    public void setFancyLectures(List<FancyLecture> fancyLectures) {
+        this.fancyLectures = fancyLectures;
+    }
 }

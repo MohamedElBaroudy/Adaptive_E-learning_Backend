@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FancyClassroom {
     // id
-    private int classroomId;
+    private Long classroomId;
 
     // creator
     private FancyUser creator;
@@ -45,15 +45,6 @@ public class FancyClassroom {
         return this;
     }
 
-    public List<Integer> toClassroomIdListMapping(List<Classroom> classrooms){
-        List<Integer> classroomIdList = new LinkedList<>();
-        for (Classroom classroom:
-             classrooms) {
-           ((LinkedList<Integer>) classroomIdList).addLast(classroom.getClassroomId());
-        }
-        return classroomIdList;
-    }
-
     public List<FancyClassroom> toFancyClassroomListMapping(List<Classroom> classrooms){
         List<FancyClassroom> FancyClassroomList = new LinkedList<>();
         for (Classroom classroom:
@@ -65,11 +56,11 @@ public class FancyClassroom {
         return FancyClassroomList;
     }
 
-    public int getClassroomId() {
+    public Long getClassroomId() {
         return classroomId;
     }
 
-    public void setClassroomId(int classroomId) {
+    public void setClassroomId(Long classroomId) {
         this.classroomId = classroomId;
     }
 

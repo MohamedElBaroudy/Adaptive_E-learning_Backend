@@ -7,10 +7,10 @@ import java.util.List;
 
 public class FancyTeachingRequest {
     // id
-    private int requestId;
+    private Integer requestId;
 
     // claimer id
-    private int claimerId;
+    private Long claimerId;
 
     // is approved
     boolean isApproved;
@@ -44,11 +44,11 @@ public class FancyTeachingRequest {
         this.requestId = requestId;
     }
 
-    public int getClaimerId() {
+    public Long getClaimerId() {
         return claimerId;
     }
 
-    public void setClaimerId(int claimerId) {
+    public void setClaimerId(Long claimerId) {
         this.claimerId = claimerId;
     }
 

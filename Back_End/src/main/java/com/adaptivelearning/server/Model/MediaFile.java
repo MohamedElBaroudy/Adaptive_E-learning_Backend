@@ -1,28 +1,42 @@
 package com.adaptivelearning.server.Model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "files")
+@Table(name = "File",uniqueConstraints = {
+		@UniqueConstraint(columnNames = "ID")})
+@JsonIdentityInfo(
+		scope= MediaFile.class,
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "fileId")
 public class MediaFile {
 
 	@Id
-	 @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID",unique = true,nullable = false)
+    private Long fileId;
 
+	@NotBlank
+	@Column(name = "NAME")
     private String fileName;
 
+	@NotBlank
+	@Column(name = "TYPE")
     private String fileType;
 
 	@Lob
     private byte[] data;
 
-     @OneToOne(mappedBy = "profile_picture",
-			 cascade = {CascadeType.REFRESH})
+	@OneToOne(mappedBy = "profile_picture",
+			cascade = {CascadeType.REFRESH})
     private User profile;
      
-     @OneToOne(mappedBy = "course_picture",
-			 cascade = {CascadeType.REFRESH})
+	@OneToOne(mappedBy = "course_picture",
+			cascade = {CascadeType.REFRESH})
     private Course course;
     
     @OneToOne(mappedBy = "classroom_picture",
@@ -33,18 +47,20 @@ public class MediaFile {
 
     }
 
-    public MediaFile(String fileName, String fileType, byte[] data) {
-        this.fileName = fileName;
-        this.fileType = fileType;
-        this.data = data;
-    }
-
-	public int getId() {
-		return id;
+	public MediaFile(@NotBlank String fileName,
+					 @NotBlank String fileType,
+					 byte[] data) {
+		this.fileName = fileName;
+		this.fileType = fileType;
+		this.data = data;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public Long getFileId() {
+		return fileId;
+	}
+
+	public void setFileId(Long fileId) {
+		this.fileId = fileId;
 	}
 
 	public String getFileName() {

@@ -42,9 +42,9 @@ public class MediafileController {
    
 
     @GetMapping("/downloadFile/{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable int fileId) {
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
         // Load file from database
-    	 MediaFile dbFile =dbFileRepository.findById(fileId);
+    	 MediaFile dbFile =dbFileRepository.findByFileId(fileId);
        if(dbFile==null){
     	   return new ResponseEntity("file not found",HttpStatus.NOT_FOUND);
        }

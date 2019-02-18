@@ -20,7 +20,7 @@ public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", unique = true, nullable = false)
-    private int answerId;
+    private Long answerId;
 
     // body
     @NotBlank
@@ -49,11 +49,11 @@ public class Answer {
         this.isCorrect = isCorrect;
     }
 
-    public int getAnswerId() {
+    public Long getAnswerId() {
         return answerId;
     }
 
-    public void setAnswerId(int answerId) {
+    public void setAnswerId(Long answerId) {
         this.answerId = answerId;
     }
 

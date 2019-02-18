@@ -7,10 +7,10 @@ import com.adaptivelearning.server.Model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface ClassroomRepository extends JpaRepository<Classroom, Integer> {
-    Classroom findByClassroomId(Integer classroomId);
+public interface ClassroomRepository extends JpaRepository<Classroom, Long> {
+    Classroom findByClassroomId(Long classroomId);
 
-    Iterable<Classroom> findByCreator(Integer creatorId);
+    Iterable<Classroom> findByCreator(Long creatorId);
 
     Classroom findByClassroomName(String classroomName);
 

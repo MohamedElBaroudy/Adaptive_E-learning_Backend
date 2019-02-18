@@ -42,7 +42,7 @@ public class ClassRoomController {
 
     @GetMapping(Mapping.CLASSROOM)
     public ResponseEntity<?> retrieveEnrolledCourses(@RequestParam(Param.ACCESS_TOKEN) String token,
-    		                                  @Valid @RequestParam(Param.CLASSROOM_ID) int classroomId) {
+    		                                  @Valid @RequestParam(Param.CLASSROOM_ID) Long classroomId) {
 
         User user = userRepository.findByToken(token);
         Classroom classroom = classroomRepository.findByClassroomId(classroomId);
@@ -70,7 +70,7 @@ public class ClassRoomController {
     }
     @PostMapping("/classroomPic")
     public ResponseEntity<?> SetProfilePicture(@RequestParam(Param.ACCESS_TOKEN) String token,
-    		                            @Valid @RequestParam(Param.CLASSROOM_ID) int classroomId,
+    		                            @Valid @RequestParam(Param.CLASSROOM_ID) Long classroomId,
     		                                   @RequestParam("file") MultipartFile file) throws IOException {
     	
       

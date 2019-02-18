@@ -7,7 +7,7 @@ import java.util.List;
 
 public class FancyAnswer {
     // id
-    private int answerId;
+    private Long answerId;
 
     // body
     private String body;
@@ -34,11 +34,11 @@ public class FancyAnswer {
         }
         return fancyAnswerList;
     }
-    public int getAnswerId() {
+    public Long getAnswerId() {
         return answerId;
     }
 
-    public void setAnswerId(int answerId) {
+    public void setAnswerId(Long answerId) {
         this.answerId = answerId;
     }
 

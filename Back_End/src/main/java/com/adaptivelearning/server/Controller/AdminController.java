@@ -57,7 +57,7 @@ public class AdminController {
 
     @PutMapping(Mapping.APPROVE_TEACHING_REQUEST)
     public ResponseEntity<?> approveRequest(@Valid @RequestParam(Param.ACCESS_TOKEN) String token,
-                                            @Valid @RequestParam(Param.USER_ID) Integer claimerId) {
+                                            @Valid @RequestParam(Param.USER_ID) Long claimerId) {
         User user = userRepository.findByToken(token);
         TeachingRequest teachingRequest = teachingRequestRepository.findByClaimerId(claimerId);
         if(user == null){

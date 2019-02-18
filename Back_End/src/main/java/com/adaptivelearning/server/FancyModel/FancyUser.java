@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FancyUser {
     // id
-    private int userId;
+    private Long userId;
 
     // fname
     private String firstName;
@@ -109,16 +109,6 @@ public class FancyUser {
 
     }
 
-
-    public List<Integer> toUserIdListMapping(List<User> users){
-        List<Integer> userIdList = new LinkedList<>();
-        for (User user:
-                users) {
-            ((LinkedList<Integer>) userIdList).addLast(user.getUserId());
-        }
-        return userIdList;
-    }
-
     public List<FancyUser> toFancyUserListMapping(List<User> users){
         List<FancyUser> fancyUserList = new LinkedList<>();
         for (User user:
@@ -130,11 +120,11 @@ public class FancyUser {
         return fancyUserList;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

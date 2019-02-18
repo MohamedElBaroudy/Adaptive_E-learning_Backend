@@ -4,7 +4,7 @@ import com.adaptivelearning.server.Model.TeachingRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TeachingRequestRepository extends JpaRepository<TeachingRequest,Integer> {
-    boolean existsByClaimerId(Integer claimerId);
+    boolean existsByClaimerId(Long claimerId);
 
-    TeachingRequest findByClaimerId(Integer claimerId);
+    TeachingRequest findByClaimerId(Long claimerId);
 }

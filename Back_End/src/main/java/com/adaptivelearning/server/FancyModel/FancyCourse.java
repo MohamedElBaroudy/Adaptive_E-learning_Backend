@@ -12,7 +12,7 @@ import java.util.List;
 
 public class FancyCourse {
     // id
-    private int courseId;
+    private Long courseId;
 
     // title
     private String title;
@@ -73,15 +73,6 @@ public class FancyCourse {
         this.sections=sections.toFancySectionListMapping(course.getSections());
         return this;
     }
-	
-    public List<Integer> toCourseIdListMapping(List<Course> courses){
-        List<Integer> courseIdList = new LinkedList<>();
-        for (Course course:
-                courses) {
-            ((LinkedList<Integer>) courseIdList).addLast(course.getCourseId());
-        }
-        return courseIdList;
-    }
 
     public List<FancyCourse> toFancyCourseListMapping(List<Course> courses){
         List<FancyCourse> FancyCourseList = new LinkedList<>();
@@ -94,11 +85,11 @@ public class FancyCourse {
     }
 
 
-    public int getCourseId() {
+    public Long getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(int courseId) {
+    public void setCourseId(Long courseId) {
         this.courseId = courseId;
     }
 

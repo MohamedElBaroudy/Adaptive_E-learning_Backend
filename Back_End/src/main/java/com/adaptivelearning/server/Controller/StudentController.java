@@ -121,7 +121,7 @@ public class StudentController {
 
     @PostMapping(Mapping.ENROLL_COURSE)
     public ResponseEntity<?> EnrollCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                   @Valid @RequestParam(Param.COURSE_ID) int courseId) {
+                                   @Valid @RequestParam(Param.COURSE_ID) Long courseId) {
 
         User user = userRepository.findByToken(token);
         Course course=courseRepository.findByCourseId(courseId);
@@ -161,7 +161,7 @@ public class StudentController {
 
     @PostMapping(Mapping.STUDENT_RATE_COURSE)
     public ResponseEntity<?> studentRateCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                               @Valid @RequestParam(Param.COURSE_ID) int courseId,
+                                               @Valid @RequestParam(Param.COURSE_ID) Long courseId,
                                                @Valid @RequestParam(Param.Rate) short studentRate){
 
         User user = userRepository.findByToken(token);

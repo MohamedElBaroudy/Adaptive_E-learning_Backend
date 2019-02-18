@@ -21,7 +21,7 @@ public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", unique = true, nullable = false)
-    private int questionId;
+    private Long questionId;
 
 
     // body
@@ -46,7 +46,7 @@ public class Question {
     @JoinColumn(name = "QUIZ")
     private Quiz quiz;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REMOVE},
             mappedBy = "question")
     private List<Answer> answers;
@@ -64,11 +64,11 @@ public class Question {
         this.mark = mark;
     }
 
-    public int getQuestionId() {
+    public Long getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(int questionId) {
+    public void setQuestionId(Long questionId) {
         this.questionId = questionId;
     }
 
