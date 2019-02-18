@@ -34,7 +34,7 @@ Graduation project about adaptive e-learning. This repo is the backend of the ap
 
 ## Categories
 >Development
->IT&Software
+>IT and Software
 >Personal Development
 >Design
 >Marketing
