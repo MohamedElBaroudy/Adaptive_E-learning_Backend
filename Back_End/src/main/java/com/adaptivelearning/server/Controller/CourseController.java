@@ -1,6 +1,7 @@
 package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.FancyModel.FancyCourse;
+import com.adaptivelearning.server.FancyModel.FancyUser;
 import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.MediaFile;
 import com.adaptivelearning.server.Model.User;
@@ -45,7 +46,7 @@ public class CourseController {
     JwtTokenProvider jwtTokenChecker;
 
     @GetMapping(Mapping.COURSE)
-    public ResponseEntity<?> retrieveEnrolledCourses(@RequestParam(Param.ACCESS_TOKEN) String token,
+    public ResponseEntity<?> retrieveCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
     		                                  @Valid @RequestParam(Param.COURSE_ID) int courseId) {
 
         User user = userRepository.findByToken(token);
@@ -67,6 +68,35 @@ public class CourseController {
         
         FancyCourse fancyCourse = new FancyCourse();
         return new ResponseEntity<>(fancyCourse.toFancyCourseMapping(course),
+                HttpStatus.OK);
+    }
+
+    @GetMapping(Mapping.COURSE_STUDENTS)
+    public ResponseEntity<?> retrieveCourseStudents(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                            @Valid @RequestParam(Param.COURSE_ID) int courseId) {
+
+        User user = userRepository.findByToken(token);
+        Course course = courseRepository.findByCourseId(courseId);
+
+        if(user == null){
+            return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+        }
+
+        if (!jwtTokenChecker.validateToken(token)) {
+            return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+        }
+
+        if(course == null){
+            return new ResponseEntity<>("course with this id is not found ",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if(course.getPublisher() != user)
+            return new ResponseEntity<>("This is not your course to show students",
+                    HttpStatus.FORBIDDEN);
+
+        FancyUser fancyUser = new FancyUser();
+        return new ResponseEntity<>(fancyUser.toFancyUserListMapping(course.getLearners()),
                 HttpStatus.OK);
     }
 

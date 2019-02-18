@@ -64,7 +64,7 @@ public class FancyCourse {
         this.description = course.getDescription();
         this.publishDate = course.getPublishDate();
         this.level = course.getLevel();
-        this.category = course.getCategory();
+        this.category = course.getCategory().getName();
         this.numberOfStudents = course.getNumberOfStudents();
         this.numberOfRaters = course.getNumberOfRaters();
         this.isPublic = course.isPublic();

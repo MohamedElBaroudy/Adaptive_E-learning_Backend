@@ -12,6 +12,7 @@ public class Mapping {
     public static final String QUIZ = "/quiz";
     public static final String QUESTION = "/question";
     public static final String ANSWER = "/answer";
+    public static final String CATEGORIES = "/categories";
 
     //Authentication
     public static final String LOGIN = AUTH + "/login";
@@ -23,7 +24,9 @@ public class Mapping {
 
     //Admin
     public static final String REQUESTS = ADMIN + "/requests";
-    public static final String APPROVE = ADMIN + "/approve";
+    public static final String APPROVE_TEACHING_REQUEST = ADMIN + "/approve_teaching";
+    public static final String ALL_CATEGORIES = ADMIN + "/categories";
+    public static final String APPROVE_CATEGORY = ADMIN + "/approve_category";
 
     //For courses
     public static final String NEW_COURSES = "/new_courses";
@@ -31,6 +34,7 @@ public class Mapping {
     public static final String TOP_RATED_COURSES = "/top_rated_courses";
     public static final String CATEGORY_COURSES = "/category_courses";
     public static final String SAVED_COURSES = "/saved_courses";
+    public static final String COURSE_STUDENTS = TEACHER + COURSE + "/students";
 
 
     //Teacher
@@ -38,7 +42,8 @@ public class Mapping {
     public static final String TEACHER_CLASSROOM = TEACHER + "/classroom";
     public static final String TEACHER_COURSES = TEACHER + "/courses";
     public static final String TEACHER_CLASSROOM_COURSES = TEACHER + "/classroom_courses";
-    public static final String REQUEST = TEACHER + "/request";
+    public static final String REQUEST_TEACHING = TEACHER + "/request_teaching";
+    public static final String REQUEST_CATEGORY = TEACHER + "/request_category";
 
 
     //Student
@@ -65,6 +70,6 @@ public class Mapping {
     public static final String QUIZ_QUESTION = TEACHER + QUESTION;
 
     //For Question
-    public static final String QUSTION_ANSWER = TEACHER + ANSWER;
+    public static final String QUeSTION_ANSWER = TEACHER + ANSWER;
 
 }

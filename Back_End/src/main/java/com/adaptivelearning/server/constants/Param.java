@@ -27,6 +27,9 @@ public class Param {
     public static final String Level = "level";
     public static final String Rate = "rate";
 
+    //for categories
+    public static final String CATEGORY_ID = "category_id";
+
 
     //for sections
     public static final String SECTION_ID = "section_id";
@@ -38,6 +41,7 @@ public class Param {
     public static final String QUIZ_TITLE = "quiz_title";
     public static final String QUIZ_INSTRUCTIONS = "quiz_instructions";
     public static final String QUIZ_TIME = "quiz_time";
+    public static final String QUIZ_TOTAL_MARK = "quiz_total_mark";
 
 
     //for questions

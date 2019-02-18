@@ -19,7 +19,7 @@ public class FancyQuestion {
     private short mark;
 
     // answers
-    private List<FancyAnswer> fancyAnswers;
+    private List<FancyAnswer> answers;
 
     public FancyQuestion() {
     }
@@ -30,7 +30,7 @@ public class FancyQuestion {
         this.body = question.getBody();
         this.isMultipleChoice = question.isMultipleChoice();
         this.mark = question.getMark();
-        this.fancyAnswers = fancyAnswer.toFancyAnswerListMapping(question.getAnswers());
+        this.answers = fancyAnswer.toFancyAnswerListMapping(question.getAnswers());
         return this;
     }
 
@@ -76,11 +76,11 @@ public class FancyQuestion {
         this.mark = mark;
     }
 
-    public List<FancyAnswer> getFancyAnswers() {
-        return fancyAnswers;
+    public List<FancyAnswer> getAnswers() {
+        return answers;
     }
 
-    public void setFancyAnswers(List<FancyAnswer> fancyAnswers) {
-        this.fancyAnswers = fancyAnswers;
+    public void setAnswers(List<FancyAnswer> answers) {
+        this.answers = answers;
     }
 }

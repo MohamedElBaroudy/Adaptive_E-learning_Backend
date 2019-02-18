@@ -1,12 +1,6 @@
 package com.adaptivelearning.server.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "files")
@@ -23,13 +17,16 @@ public class MediaFile {
 	@Lob
     private byte[] data;
 
-     @OneToOne(mappedBy = "profile_picture")
+     @OneToOne(mappedBy = "profile_picture",
+			 cascade = {CascadeType.REFRESH})
     private User profile;
      
-     @OneToOne(mappedBy = "course_picture")
+     @OneToOne(mappedBy = "course_picture",
+			 cascade = {CascadeType.REFRESH})
     private Course course;
     
-    @OneToOne(mappedBy = "classroom_picture")
+    @OneToOne(mappedBy = "classroom_picture",
+			cascade = {CascadeType.REFRESH})
     private Classroom classroom;
 
 	public MediaFile() {

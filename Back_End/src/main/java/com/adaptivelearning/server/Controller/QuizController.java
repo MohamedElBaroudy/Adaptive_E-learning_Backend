@@ -65,7 +65,7 @@ public class QuizController {
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your section to add quiz in",
                     HttpStatus.FORBIDDEN);
         }
-        Quiz quiz = new Quiz(title,instructions,time);
+        Quiz quiz = new Quiz(title,instructions,time,(short)0);
         quiz.setSection(section);
         quizRepository.save(quiz);
 
@@ -163,7 +163,7 @@ public class QuizController {
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
         if (quiz.getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()) || !quiz.getSection().getCourse().getLearners().contains(user))
+                (user.getUserId()) && !quiz.getSection().getCourse().getLearners().contains(user))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz or a student of this course",
                     HttpStatus.FORBIDDEN);
 
@@ -176,7 +176,7 @@ public class QuizController {
                                           @Valid @RequestParam(Param.QUIZ_ID) Integer quizId,
                                           @Valid @RequestParam(Param.QUESTION_BODY) String body,
                                           @Valid @RequestParam(Param.QUESTION_IS_MULTIPLE_CHOICE) Boolean isMultipleChoice,
-                                          @Valid @RequestParam(Param.QUIZ_ID) Short mark){
+                                          @Valid @RequestParam(Param.QUESTION_MARK) Short mark){
         User user = userRepository.findByToken(token);
 
         if(user == null){
@@ -226,7 +226,7 @@ public class QuizController {
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
         if (question.getQuiz().getSection().getCourse().getPublisher().getUserId()!=
-                (user.getUserId()) || !question.getQuiz().getSection().getCourse().getLearners().contains(user))
+                (user.getUserId()) && !question.getQuiz().getSection().getCourse().getLearners().contains(user))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz or a student of this course",
                     HttpStatus.FORBIDDEN);
 
@@ -240,7 +240,7 @@ public class QuizController {
                                               @Valid @RequestParam(Param.QUESTION_ID) Integer questionId,
                                             @Valid @RequestParam(value = Param.QUESTION_BODY,required = false) String body,
                                             @Valid @RequestParam(value = Param.QUESTION_IS_MULTIPLE_CHOICE,required = false) Boolean isMultipleChoice,
-                                            @Valid @RequestParam(value = Param.QUIZ_ID,required = false) Short mark){
+                                            @Valid @RequestParam(value = Param.QUESTION_MARK,required = false) Short mark){
         User user = userRepository.findByToken(token);
 
         if(user == null){
@@ -266,8 +266,12 @@ public class QuizController {
             question.setBody(body);
         if(isMultipleChoice != null)
             question.setMultipleChoice(isMultipleChoice);
-        if (mark != null)
+        if (mark != null) {
+            Quiz quiz = question.getQuiz();
+            quiz.setTotalMark((short) (quiz.getTotalMark()-question.getMark()+mark));
+            quizRepository.save(quiz);
             question.setMark(mark);
+        }
         questionRepository.save(question);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -296,12 +300,15 @@ public class QuizController {
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to delete it's content",
                     HttpStatus.FORBIDDEN);
 
+        Quiz quiz = question.getQuiz();
+        quiz.setTotalMark((short) (quiz.getTotalMark()-question.getMark()));
+
         questionRepository.deleteById(questionId);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    @PostMapping(Mapping.QUSTION_ANSWER)
+    @PostMapping(Mapping.QUeSTION_ANSWER)
     public ResponseEntity<?> addAnswer(@RequestParam(Param.ACCESS_TOKEN) String token,
                                        @Valid @RequestParam(Param.QUESTION_ID) Integer questionId,
                                        @Valid @RequestParam(Param.ANSWER_BODY) String body,
@@ -342,7 +349,7 @@ public class QuizController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping(Mapping.QUSTION_ANSWER)
+    @PutMapping(Mapping.QUeSTION_ANSWER)
     public ResponseEntity<?> updateAnswer(@RequestParam(Param.ACCESS_TOKEN) String token,
                                             @Valid @RequestParam(Param.ANSWER_ID) Integer answerId,
                                             @Valid @RequestParam(value = Param.ANSWER_BODY,required = false) String body,
@@ -371,7 +378,7 @@ public class QuizController {
         if (isCorrect != null && isCorrect && !answer.isCorrect() && !answer.getQuestion().isMultipleChoice()){
             for (Answer existAnswer: answer.getQuestion().getAnswers()){
                 if (existAnswer.isCorrect())
-                    return new ResponseEntity<>("Cannot have more than 1 correct answer update your question to multiple choice first or delete the other correct answer",
+                    return new ResponseEntity<>("Cannot have more than 1 correct answer update your question to multiple choice first or update the other correct answer body",
                             HttpStatus.BAD_REQUEST);
             }
         }
@@ -386,9 +393,11 @@ public class QuizController {
                 }
             }
         }
+        else
+            doesQuestionHasAnotherCorrectAnswer = true;
 
         if (!doesQuestionHasAnotherCorrectAnswer)
-            return new ResponseEntity<>("Cannot change the only correct answer. add another correct answer first",
+            return new ResponseEntity<>("Cannot make the only correct answer incorrect. change the body to be correct",
                     HttpStatus.BAD_REQUEST);
 
         if(body != null && !body.isEmpty())
@@ -399,7 +408,7 @@ public class QuizController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(Mapping.QUSTION_ANSWER)
+    @DeleteMapping(Mapping.QUeSTION_ANSWER)
     public ResponseEntity<?> deleteAnswer(@RequestParam(Param.ACCESS_TOKEN) String token,
                                             @Valid @RequestParam(Param.ANSWER_ID) Integer answerId){
         User user = userRepository.findByToken(token);
@@ -437,6 +446,8 @@ public class QuizController {
                 }
             }
         }
+        else
+            doesQuestionHasAnotherCorrectAnswer = true;
 
         if (!doesQuestionHasAnotherCorrectAnswer)
             return new ResponseEntity<>("Cannot remove the only correct answer. add another correct answer first",

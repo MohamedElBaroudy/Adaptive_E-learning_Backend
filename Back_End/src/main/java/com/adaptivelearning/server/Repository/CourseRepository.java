@@ -1,5 +1,6 @@
 package com.adaptivelearning.server.Repository;
 
+import com.adaptivelearning.server.Model.Category;
 import com.adaptivelearning.server.constants.Repos;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,7 +16,7 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
 	Course findByCourseId(Integer courseId);
 	
-	List<Course> findByCategoryAndIsPublic(String category,boolean isPublic);
+	List<Course> findByCategoryAndIsPublic(Category category, boolean isPublic);
 
 	@Query("SELECT a FROM Course a WHERE isPublic=true " +
 			"ORDER BY numberOfStudents DESC ")

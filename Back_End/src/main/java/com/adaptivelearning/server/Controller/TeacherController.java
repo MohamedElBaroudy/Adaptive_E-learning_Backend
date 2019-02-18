@@ -28,6 +28,9 @@ public class TeacherController {
     CourseRepository courseRepository;
 
     @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
     UserRepository userRepository;
 
     @Autowired
@@ -36,7 +39,7 @@ public class TeacherController {
     @Autowired
     JwtTokenProvider jwtTokenChecker;
 
-    @PostMapping(Mapping.REQUEST)
+    @PostMapping(Mapping.REQUEST_TEACHING)
     public  ResponseEntity<?> requestToTeach(@RequestParam(Param.ACCESS_TOKEN) String token){
         User user = userRepository.findByToken(token);
 
@@ -61,6 +64,41 @@ public class TeacherController {
         TeachingRequest teachingRequest = new TeachingRequest(user.getUserId());
         teachingRequestRepository.save(teachingRequest);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping(Mapping.REQUEST_CATEGORY)
+    public  ResponseEntity<?> requestCategory(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                              @Valid @RequestParam(Param.CATEGORY) String categoryStr){
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+            return new ResponseEntity<>(" user is not present ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            return new ResponseEntity<>("invalid token ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+
+        if(!user.isTeacher()){
+            return new ResponseEntity<>("user is not a teacher it's not allowed ",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        Category foundCategory = categoryRepository.findByName(categoryStr);
+
+        if (foundCategory != null){
+            if (foundCategory.isApproved())
+                return new ResponseEntity<>("Already found and approved",
+                        HttpStatus.FORBIDDEN);
+            else
+                return new ResponseEntity<>("Already requested for approval",
+                        HttpStatus.NOT_MODIFIED);
+        }
+
+        Category category = new Category(categoryStr,false);
+        categoryRepository.save(category);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping(Mapping.TEACHER_CLASSROOMS)
@@ -200,7 +238,7 @@ public class TeacherController {
                                           @Valid @RequestParam(Param.Title) String courseTitle,
                                           @Valid @RequestParam(Param.Detailed_title) String detailed_title,
                                           @Valid @RequestParam(Param.Description) String description,
-                                          @Valid @RequestParam(Param.CATEGORY) String category,
+                                          @Valid @RequestParam(Param.CATEGORY) String categoryName,
                                           @Valid @RequestParam(Param.Level) short level) {
 
         User user = userRepository.findByToken(token);
@@ -223,8 +261,19 @@ public class TeacherController {
             return new ResponseEntity<>("user is not a teacher yet please make a request to be teacher",
                     HttpStatus.FORBIDDEN);
 
-        Course course=new Course(courseTitle, detailed_title, description, true, level,category);
+        Category category = categoryRepository.findByName(categoryName);
+
+        if (category == null)
+            return new ResponseEntity<>("Category is not found",
+                    HttpStatus.NOT_FOUND);
+
+        if (!category.isApproved())
+            return new ResponseEntity<>("Category is not approved yet",
+                    HttpStatus.BAD_REQUEST);
+
+        Course course=new Course(courseTitle, detailed_title, description, true, level);
         course.setPublisher(user);
+        course.setCategory(category);
         courseRepository.save(course);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -237,7 +286,7 @@ public class TeacherController {
                                                     @Valid @RequestParam(Param.Title) String courseTitle,
                                                     @Valid @RequestParam(Param.Detailed_title) String detailed_title,
                                                     @Valid @RequestParam(Param.Description) String description,
-                                                    @Valid @RequestParam(Param.CATEGORY) String category,
+                                                    @Valid @RequestParam(Param.CATEGORY) String categoryName,
                                                     @Valid @RequestParam(Param.Level) short level) {
 
         User user = userRepository.findByToken(token);
@@ -266,8 +315,18 @@ public class TeacherController {
                      HttpStatus.FORBIDDEN);
         }
 
-        Course course=new Course(courseTitle, detailed_title, description, false , level,category);
+        Category category = categoryRepository.findByName(categoryName);
+
+        if (category == null)
+            return new ResponseEntity<>("Category is not found",
+                    HttpStatus.NOT_FOUND);
+        if (!category.isApproved())
+            return new ResponseEntity<>("Category is not approved yet",
+                    HttpStatus.BAD_REQUEST);
+
+        Course course=new Course(courseTitle, detailed_title, description, false , level);
         course.setPublisher(user);
+        course.setCategory(category);
         
  //       course.getClassrooms().add(classroom);
         classroom.getCourses().add(course); // the mapping will do it automatically
@@ -322,8 +381,16 @@ public class TeacherController {
             course.setDetailedTitle(newDetailedtilte);
         if(newDescription != null && !newDescription.isEmpty())
             course.setDescription(newDescription);
-        if(newCategory != null && !newCategory.isEmpty())
-            course.setCategory(newCategory);
+        if(newCategory != null && !newCategory.isEmpty()) {
+            Category category = categoryRepository.findByName(newCategory);
+            if (category == null)
+                return new ResponseEntity<>("Category is not found",
+                        HttpStatus.NOT_FOUND);
+            if (!category.isApproved())
+                return new ResponseEntity<>("Category is not approved yet",
+                        HttpStatus.BAD_REQUEST);
+            course.setCategory(category);
+        }
         if(newLevel != null)
             course.setLevel(newLevel);
         courseRepository.save(course);

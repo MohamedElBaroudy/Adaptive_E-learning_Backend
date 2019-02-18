@@ -1,8 +1,11 @@
 package com.adaptivelearning.server.Controller;
 
+import com.adaptivelearning.server.FancyModel.FancyCategory;
 import com.adaptivelearning.server.FancyModel.FancyCourse;
+import com.adaptivelearning.server.Model.Category;
 import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.User;
+import com.adaptivelearning.server.Repository.CategoryRepository;
 import com.adaptivelearning.server.Repository.CourseRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
@@ -29,6 +32,9 @@ public class GenerallController {
     
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
     
     @Autowired
     JwtTokenProvider jwtTokenChecker;
@@ -76,10 +82,28 @@ public class GenerallController {
                     courses),
                     HttpStatus.OK);
     }
+
+    @GetMapping(Mapping.CATEGORIES)
+    public ResponseEntity<?> retrieveCategories(){
+        List<Category> categories = categoryRepository.findByIsApproved(true);
+        FancyCategory fancyCategory = new FancyCategory();
+
+        return new ResponseEntity<>(fancyCategory.toFancyCategoryListMapping(categories),
+                HttpStatus.OK);
+    }
     
     @GetMapping(Mapping.CATEGORY_COURSES)
-    public ResponseEntity<?> retrieveCategoryCourses( @Valid @RequestParam(Param.CATEGORY) String category){
-        
+    public ResponseEntity<?> retrieveCategoryCourses( @Valid @RequestParam(Param.CATEGORY_ID) Integer categoryid){
+
+        Category category = categoryRepository.findByCategoryId(categoryid);
+
+        if (category == null)
+            return new ResponseEntity<>("Not found Category",
+                    HttpStatus.NOT_FOUND);
+
+        if (!category.isApproved())
+            return new ResponseEntity<>("Not approved Category yet",
+                    HttpStatus.BAD_REQUEST);
     	//get public courses
     	List<Course> courses = courseRepository.findByCategoryAndIsPublic(category,true); 
     	

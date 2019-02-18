@@ -63,7 +63,7 @@ public class Classroom {
             inverseJoinColumns = {@JoinColumn(name = "course_id")})
     private List<Course> courses;
     
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "pic_id")
     private MediaFile classroom_picture;
 	

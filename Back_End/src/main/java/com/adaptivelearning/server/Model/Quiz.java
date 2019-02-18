@@ -66,10 +66,12 @@ public class Quiz {
 
     public Quiz(@NotBlank @Size(max = 40) String title,
                 @NotBlank @Size(max = 1000) String instructions,
-                @NotNull short time) {
+                @NotNull short time,
+                @NotNull Short totalMark) {
         this.title = title;
         this.instructions = instructions;
         this.time = time;
+        this.totalMark = totalMark;
     }
 
     public int getQuizId() {

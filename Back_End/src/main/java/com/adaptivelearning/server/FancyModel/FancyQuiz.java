@@ -22,7 +22,7 @@ public class FancyQuiz {
     private short totalMark;
 
     // questions
-    private List<FancyQuestion> fancyQuestions;
+    private List<FancyQuestion> questions;
 
     public FancyQuiz() {
     }
@@ -34,7 +34,7 @@ public class FancyQuiz {
         this.instructions = quiz.getInstructions();
         this.time= quiz.getTime();
         this.totalMark = quiz.getTotalMark();
-        this.fancyQuestions = fancyQuestion.toFancyQuestionListMapping(quiz.getQuestions());
+        this.questions = fancyQuestion.toFancyQuestionListMapping(quiz.getQuestions());
         return this;
     }
 
@@ -88,11 +88,11 @@ public class FancyQuiz {
         this.totalMark = totalMark;
     }
 
-    public List<FancyQuestion> getFancyQuestions() {
-        return fancyQuestions;
+    public List<FancyQuestion> getQuestions() {
+        return questions;
     }
 
-    public void setFancyQuestions(List<FancyQuestion> fancyQuestions) {
-        this.fancyQuestions = fancyQuestions;
+    public void setQuestions(List<FancyQuestion> questions) {
+        this.questions = questions;
     }
 }

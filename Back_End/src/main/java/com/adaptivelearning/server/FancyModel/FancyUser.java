@@ -30,7 +30,7 @@ public class FancyUser {
     private short age;
 
     // token for rest api purpose
-    private String token;
+//    private String token;
 
     // gender 1-> male , 2-> female 3-> other
     private String gender;
@@ -72,7 +72,7 @@ public class FancyUser {
         this.username = user.getUsername();
         this.dateOfBirth = user.getDateOfBirth().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.age = userAge;
-        this.token = user.getToken();
+//        this.token = user.getToken();
         this.gender = userGender;
         this.grade = user.getGrade();
         this.isTeacher = user.isTeacher();
@@ -186,13 +186,13 @@ public class FancyUser {
         this.age = age;
     }
 
-    public String getToken() {
-        return token;
-    }
+//    public String getToken() {
+//        return token;
+//    }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+//    public void setToken(String token) {
+//        this.token = token;
+//    }
 
     public String getGender() {
         return gender;

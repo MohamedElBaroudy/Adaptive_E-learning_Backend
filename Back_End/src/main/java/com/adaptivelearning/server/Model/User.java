@@ -142,7 +142,7 @@ public class User {
             mappedBy = "savedBy")
     private List<Course> savedCourses; 
 
-   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
    @JoinColumn(name = "pic_id")
    private MediaFile profile_picture;
     // end of mapping

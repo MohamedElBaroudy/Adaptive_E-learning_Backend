@@ -57,12 +57,6 @@ public class Course {
     @Column(name = "LEVEL")
     private short level;
 
-    // category
-    @NotBlank
-    @Size(max = 40)
-    @Column(name = "CATEGORY")
-    private String category;
-
     // publish date
     @NotNull
     @Column(name = "PUBLISH_DATE")
@@ -82,7 +76,10 @@ public class Course {
     @JoinColumn(name = "PUBLISHER")
     private User publisher;
 
-
+    @ManyToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "CATEGORY")
+    private Category category;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
@@ -119,7 +116,7 @@ public class Course {
     private List<Section> sections;
     
     
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "pic_id")
     private MediaFile course_picture;
 	
@@ -134,14 +131,12 @@ public class Course {
                   @NotBlank @Size(max = 100) String detailedTitle,
                   @NotBlank @Size(max = 1000) String description,
                   @NotNull boolean isPublic,
-                  @NotNull short level,
-                  @NotBlank @Size(max = 40) String category) {
+                  @NotNull short level) {
         this.title = title;
         this.detailedTitle = detailedTitle;
         this.description = description;
         this.isPublic = isPublic;
         this.level = level;
-        this.category = category;
         this.publishDate = LocalDate.now();
     }
 
@@ -241,11 +236,11 @@ public class Course {
         this.sections = sections;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
