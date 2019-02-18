@@ -84,6 +84,9 @@ or
 #### Add course to saved courses by course_id (POST method)
 >http://localhost:8080/saved_courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=26
 
+#### Remove course from saved courses bt course's id (DELETE method)
+>http://localhost:8080/saved_courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=26
+
 #### Add profile picture(POST method)
 >http://localhost:8080/profilePic?token=eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ
 

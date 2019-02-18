@@ -20,10 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.adaptivelearning.server.constants.Mapping;
@@ -105,6 +102,44 @@ public class CourseController {
                                         @Valid @RequestParam(Param.COURSE_ID) Long courseId) {
 
         User user = userRepository.findByToken(token);
+        Course course = courseRepository.findByCourseId(courseId);
+
+        if (user == null) {
+            return new ResponseEntity<>("User is not present ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            return new ResponseEntity<>("Invalid token ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (course == null) {
+            return new ResponseEntity<>(" course with this id is not found ",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        /*if(user.getParent() != null){
+        	 return new ResponseEntity<>("user is child it's not allowed ",
+                     HttpStatus.FORBIDDEN);
+        } */ // assuming that the child can save course
+
+        if (course.getPublisher().getUserId() == user.getUserId()) {
+            return new ResponseEntity<>("course publisher can't save his courses",
+                    HttpStatus.FORBIDDEN);
+        }
+        if (user.getSavedCourses().contains(course)) {
+            return new ResponseEntity<>("Already Saved ",
+                    HttpStatus.FORBIDDEN);
+        }
+        course.getSavedBy().add(user);
+        courseRepository.save(course);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping(Mapping.SAVED_COURSES)
+    public ResponseEntity<?> removeSavedCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                        @Valid @RequestParam(Param.COURSE_ID) Long courseId) {
+
+        User user = userRepository.findByToken(token);
         Course course=courseRepository.findByCourseId(courseId);
 
         if(user == null){
@@ -129,12 +164,12 @@ public class CourseController {
             return new ResponseEntity<>("course publisher can't save his courses",
                     HttpStatus.FORBIDDEN);
         }
-        if(user.getSavedCourses().contains(course)) {
-            return new ResponseEntity<>("Already Saved ",
+        if(!user.getSavedCourses().contains(course)) {
+            return new ResponseEntity<>("Already removed",
                     HttpStatus.FORBIDDEN);
         }
-        course.getSavedBy().add(user);
 
+        course.getSavedBy().remove(user);
         courseRepository.save(course);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
