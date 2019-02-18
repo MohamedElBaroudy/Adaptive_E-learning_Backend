@@ -62,7 +62,9 @@ public class TeacherController {
             return new ResponseEntity<>("user is already a teacher",
                     HttpStatus.NOT_MODIFIED);
 
-        TeachingRequest teachingRequest = new TeachingRequest(user.getUserId());
+        TeachingRequest teachingRequest = new TeachingRequest(user.getUserId(),
+                user.getFirstName()+" "+user.getLastName(),
+                user.getEmail());
         teachingRequestRepository.save(teachingRequest);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

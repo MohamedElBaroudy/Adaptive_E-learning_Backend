@@ -1,6 +1,7 @@
 package com.adaptivelearning.server.FancyModel;
 
 import com.adaptivelearning.server.Model.TeachingRequest;
+import com.adaptivelearning.server.Model.User;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +13,12 @@ public class FancyTeachingRequest {
     // claimer id
     private Long claimerId;
 
+    // claimer name
+    private String claimerName;
+
+    // claimer email
+    private String claimerEmail;
+
     // is approved
     boolean isApproved;
 
@@ -22,6 +29,8 @@ public class FancyTeachingRequest {
         this.requestId = teachingRequest.getRequestId();
         this.claimerId = teachingRequest.getClaimerId();
         this.isApproved = teachingRequest.isApproved();
+        this.claimerName = teachingRequest.getName();
+        this.claimerEmail = teachingRequest.getEmail();
         return this;
     }
 
@@ -40,7 +49,7 @@ public class FancyTeachingRequest {
         return requestId;
     }
 
-    public void setRequestId(int requestId) {
+    public void setRequestId(Integer requestId) {
         this.requestId = requestId;
     }
 
@@ -58,5 +67,21 @@ public class FancyTeachingRequest {
 
     public void setApproved(boolean approved) {
         isApproved = approved;
+    }
+
+    public String getClaimerName() {
+        return claimerName;
+    }
+
+    public void setClaimerName(String claimerName) {
+        this.claimerName = claimerName;
+    }
+
+    public String getClaimerEmail() {
+        return claimerEmail;
+    }
+
+    public void setClaimerEmail(String claimerEmail) {
+        this.claimerEmail = claimerEmail;
     }
 }
