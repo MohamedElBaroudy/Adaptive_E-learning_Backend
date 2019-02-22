@@ -32,35 +32,6 @@ Graduation project about adaptive e-learning. This repo is the backend of the ap
 
 
 
-## Categories
->Development
->IT and Software
->Personal Development
->Design
->Marketing
->Music
->Math
->Science
->Social Science
->Language
->Engineering
->Business
->History
->Health&fitness
->Physics
->Chemistry
->Economics
->Communication
->Architecture
->Biology
-
-
-## Admin user
->email = admin@gmail.com
->username = Admin
->password = 123456789123456789
-
-
 ## API Samples
 
 ### user APIs
@@ -84,33 +55,12 @@ or
 #### Add course to saved courses by course_id (POST method)
 >http://localhost:8080/saved_courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=26
 
-#### Remove course from saved courses bt course's id (DELETE method)
->http://localhost:8080/saved_courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=26
-
 #### Add profile picture(POST method)
 >http://localhost:8080/profilePic?token=eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ
 
 
 
-### Admin APIs
-#### Retrieve teaching request (GET method)
->http://localhost:8080/admin/requests?token=eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ
-
-#### Approve teaching request (PUT method)
->http://localhost:8080/admin/approve_teaching?token=eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ&user_id=2
-
-#### Retrieve All categories (GET method)
->http://localhost:8080/admin/categories?token=eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ
-
-#### Add new category (POST method)
->http://localhost:8080/admin/categories?token=eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ&category=Test Category
-
-#### Approve category by it's id
->http://localhost:8080/admin/approve_category?token=eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ&category_id=21
-
-
-
-### General APIs
+### general APIs
 #### Get new courses (max 20 course if we have more and all courses if less) (GET method)
 >http://localhost:8080/new_courses
 
@@ -120,11 +70,8 @@ or
 #### Get top rated courses (max 20 course if we have more and all courses if less) (GET method)
 >http://localhost:8080/top_rated_courses
 
-#### Get courses by category_id (GET method)
->http://localhost:8080/category_courses?category_id=3
-
-#### Retrieve approved categories
->http://localhost:8080/categories
+#### Get courses by category (GET method)
+>http://localhost:8080/category_courses?category=it_and_software
 
 
 
@@ -167,12 +114,6 @@ or
 
 
 ### teacher APIs
-#### Request teaching (POST method)
->http://localhost:8080/teacher/request_teaching?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
-
-#### Request category (POST method)
->http://localhost:8080/teacher/request_category?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&category=Test Category 2
-
 #### Create classroom (POST method)
 >http://localhost:8080/teacher/classrooms?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&classroom_name=CSE19 ComputerNetworks
 
@@ -181,9 +122,6 @@ or
 
 #### Update course (optional parameters)(PUT method)
 >http://localhost:8080/teacher/courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=22&title=test_update&detailed_title=test_test_update&description=blablablablabla&category=software&level=2
-
-#### Retrieve course students by course's id (GET method)
->http://localhost:8080/teacher/course/students?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=2
 
 #### Retrieve classrooms for teacher (GET method)
 >http://localhost:8080/teacher/classrooms?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
@@ -212,43 +150,14 @@ or
 #### Delete section by it's id (DELETE method)
 >http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&section_id=2
 
-#### Retrieve section by it's id (GET method)
->http://localhost:8080/teacher/section?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&section_id=2
+#### upload lecture content (POST method)
+>http://localhost:8080/teacher/file?token=eyJhbGciOiJIUzUxMiJ9.eyJzd...0iDEz7_E6hsYeVwJe7_FCnfMzUHxe9GNOPHRv-J731kO91lepTvn_pRplVnxawGcw&section_id=1
 
-#### Create quiz by section id (POST method)
->http://localhost:8080/teacher/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&section_id=1&quiz_title=Introduction&quiz_instructions=don't forget your calculator&quiz_time=30
+#### get lecture by file id (GET method)
+>http://localhost:8080/teacher/file?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyI0IjoxNTUwNzY2NDg2LCJleHAiO......C_24VswUN1EXZ2FLLw81Pz5eMom4S84Ug&file_id=4
 
-#### Update the quiz info by it's id (optional parameters)(PUT method)
->http://localhost:8080/teacher/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1&quiz_title=Introduction2&quiz_instructions=don't forget your calculator2&quiz_time=45
-
-#### Delete quiz by it's id (DELETE method)
->http://localhost:8080/teacher/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=2
-
-#### Retrieve quiz by it's id (GET method)
->http://localhost:8080/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1
-
-#### Add question to quiz by quiz's id (POST method)
->http://localhost:8080/teacher/question?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1&question_body=question1&is_multiple_choice=false&question_mark=2
-
-#### Retrieve question by it's id (GET method)
->http://localhost:8080/question?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&question_id=1
-
-#### Update question by it's id (PUT method)
->http://localhost:8080/teacher/question?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&question_id=1&question_body=question1&is_multiple_choice=false&question_mark=3
-
-#### Delete question by it's id (DELETE method)
->http://localhost:8080/teacher/question?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&question_id=3
-
-#### Add answer to question by question's id (POST method)
->http://localhost:8080/teacher/answer?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&question_id=1&answer_body=answer 1a&is_correct=false
-
-#### Update answer by it's id (PUT method)
->http://localhost:8080/teacher/answer?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&answer_id=2&answer_body=answer 1b&is_correct=true
-
-#### Delete answer by it's id (DELETE method)
->http://localhost:8080/teacher/answer?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&answer_id=2
-
-
+#### delete lectue content (DELETE method)
+>http://localhost:8080/teacher/file?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWFTUwNzY2NDg2LCJleHA....VSpeC_24VswUN1EXZ2FLLw81Pz5eMom4S84Ug&file_id=4
 
 ### student APIs
 #### Join student in classroom with it's Passcode (POST method)
@@ -265,6 +174,3 @@ or
 
 #### Rate course for student (post method)
 >http://localhost:8080/student/rate_course?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=1&rate=4
-
-#### Retrieve quiz by it's id (GET method)
->http://localhost:8080/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1
