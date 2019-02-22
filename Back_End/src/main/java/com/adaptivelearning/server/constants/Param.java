@@ -55,4 +55,7 @@ public class Param {
     public static final String ANSWER_ID = "answer_id";
     public static final String ANSWER_BODY = "answer_body";
     public static final String ANSWER_IS_CORRECT = "is_correct";
+    
+    //for Media files
+    public static final String FILE_ID = "file_id";
 }

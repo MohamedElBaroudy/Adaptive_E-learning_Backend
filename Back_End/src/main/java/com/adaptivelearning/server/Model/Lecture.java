@@ -42,6 +42,12 @@ public class Lecture {
             cascade = {CascadeType.REMOVE},
             mappedBy = "lecture")
     private Quiz quiz;
+    
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.REMOVE},
+            mappedBy = "lecture")
+    private MediaFile media;
+    
     // end of the mapping
 
 
@@ -103,4 +109,12 @@ public class Lecture {
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
     }
+
+	public MediaFile getMedia() {
+		return media;
+	}
+
+	public void setMedia(MediaFile media) {
+		this.media = media;
+	}
 }

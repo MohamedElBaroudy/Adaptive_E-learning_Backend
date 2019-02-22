@@ -6,8 +6,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -60,7 +63,7 @@ public class Course {
     // publish date
     @NotNull
     @Column(name = "PUBLISH_DATE")
-    private LocalDate publishDate;
+    private Date publishDate;
 
     @NotNull
     @Column(name = "NUMBER_OF_STUDENTS")
@@ -137,7 +140,10 @@ public class Course {
         this.description = description;
         this.isPublic = isPublic;
         this.level = level;
-        this.publishDate = LocalDate.now();
+        DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+        Date localdate = new Date();
+        System.out.println(df.format(localdate));
+        this.publishDate = localdate;
     }
 
     public Long getCourseId() {
@@ -244,7 +250,7 @@ public class Course {
         this.category = category;
     }
 
-    public LocalDate getPublishDate() {
+    public Date getPublishDate() {
         return publishDate;
     }
 

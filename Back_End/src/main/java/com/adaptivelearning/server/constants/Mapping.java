@@ -10,6 +10,7 @@ public class Mapping {
     public static final String CLASSROOM = "/classroom";
     private static final String ADMIN = "/admin";
     public static final String QUIZ = "/quiz";
+    public static final String FILE = "/file";
     public static final String QUESTION = "/question";
     public static final String ANSWER = "/answer";
     public static final String CATEGORIES = "/categories";
@@ -65,6 +66,7 @@ public class Mapping {
     //For sections
     public static final String SECTION = TEACHER + "/section";
     public static final String TEACHER_QUIZ = TEACHER + QUIZ;
+    public static final String TEACHER_MEDIA = TEACHER + FILE;
 
     //For quiz
     public static final String QUIZ_QUESTION = TEACHER + QUESTION;

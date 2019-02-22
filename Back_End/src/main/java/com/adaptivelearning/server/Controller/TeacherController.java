@@ -260,9 +260,9 @@ public class TeacherController {
                      HttpStatus.FORBIDDEN);
         }
 
-        if(!user.isTeacher())
-            return new ResponseEntity<>("user is not a teacher yet please make a request to be teacher",
-                    HttpStatus.FORBIDDEN);
+//        if(!user.isTeacher())
+//            return new ResponseEntity<>("user is not a teacher yet please make a request to be teacher",
+//                    HttpStatus.FORBIDDEN);
 
         Category category = categoryRepository.findByName(categoryName);
 

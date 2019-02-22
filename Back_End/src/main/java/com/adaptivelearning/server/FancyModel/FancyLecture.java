@@ -42,6 +42,15 @@ public class FancyLecture {
             this.name = "Quiz :" + lecture.getQuiz().getTitle();
             this.lectureContentId = lecture.getQuiz().getQuizId();
         }
+        else if (lecture.isVideo()){
+        	// not sure can be changed later
+                this.name = "video :" + lecture.getMedia().getFileName();
+                this.lectureContentId = lecture.getMedia().getFileId();
+        }
+        else if(lecture.isReadFile()) {
+        	this.name = "Read file :" + lecture.getMedia().getFileName();
+            this.lectureContentId = lecture.getMedia().getFileId();	
+        }
         return this;
     }
 

@@ -7,6 +7,7 @@ import com.adaptivelearning.server.Model.User;
 import javassist.compiler.ast.NewExpr;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class FancyCourse {
     private String category;
 
     // publish date
-    private LocalDate publishDate;
+    private Date publishDate;
 
     // number of students
     private Integer numberOfStudents=0;
@@ -149,11 +150,11 @@ public class FancyCourse {
         this.category = category;
     }
 
-    public LocalDate getPublishDate() {
+    public Date getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(LocalDate publishDate) {
+    public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
     }
 

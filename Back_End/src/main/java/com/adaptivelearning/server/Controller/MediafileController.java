@@ -33,9 +33,8 @@ public class MediafileController {
         	return new ResponseEntity<>("Sorry! Filename contains invalid path sequence ",HttpStatus.BAD_REQUEST);
       }
         MediaFile dbFile = new MediaFile(fileName, file.getContentType(), file.getBytes());
-
         dbFileRepository.save(dbFile);
-    	
+        
         return new ResponseEntity<>("success",HttpStatus.OK);
     }
 

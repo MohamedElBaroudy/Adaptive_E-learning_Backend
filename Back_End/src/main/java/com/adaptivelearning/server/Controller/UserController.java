@@ -167,9 +167,9 @@ public class UserController {
           return new ResponseEntity<>("user isn't logged in",
                   HttpStatus.UNAUTHORIZED);
 
-      if (!tokenProvider.validateToken(token))
-    	  return new ResponseEntity<>("session expired",
-                  HttpStatus.UNAUTHORIZED);
+//      if (!tokenProvider.validateToken(token))
+//    	  return new ResponseEntity<>("session expired",
+//                  HttpStatus.UNAUTHORIZED);
       
       // Normalize file name
       String fileName = StringUtils.cleanPath(file.getOriginalFilename());

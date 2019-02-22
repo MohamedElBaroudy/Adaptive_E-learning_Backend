@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 @Table(name = "File",uniqueConstraints = {
 		@UniqueConstraint(columnNames = "ID")})
@@ -28,9 +30,10 @@ public class MediaFile {
 	@Column(name = "TYPE")
     private String fileType;
 
-	@Lob
+	//@Lob
     private byte[] data;
 
+    //Mapping
 	@OneToOne(mappedBy = "profile_picture",
 			cascade = {CascadeType.REFRESH})
     private User profile;
@@ -42,7 +45,14 @@ public class MediaFile {
     @OneToOne(mappedBy = "classroom_picture",
 			cascade = {CascadeType.REFRESH})
     private Classroom classroom;
+    
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.REMOVE})
+    @JoinColumn(name = "LECTURE")
+    private Lecture lecture;
 
+    //end of mapping
+    
 	public MediaFile() {
 
     }
@@ -109,6 +119,14 @@ public class MediaFile {
 
 	public void setClassroom(Classroom classroom) {
 		this.classroom = classroom;
+	}
+
+	public Lecture getLecture() {
+		return lecture;
+	}
+
+	public void setLecture(Lecture lecture) {
+		this.lecture = lecture;
 	}
 
 }
