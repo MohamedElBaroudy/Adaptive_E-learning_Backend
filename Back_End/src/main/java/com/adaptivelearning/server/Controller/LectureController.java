@@ -112,7 +112,7 @@ public class LectureController {
 	       
 	    }
 	    @GetMapping(Mapping.TEACHER_MEDIA)
-	    public ResponseEntity<?> retrieveQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
+	    public ResponseEntity<?> retrieveFile(@RequestParam(Param.ACCESS_TOKEN) String token,
 	                                          @Valid @RequestParam(Param.FILE_ID) Long fileId){
 	        User user = userRepository.findByToken(token);
 

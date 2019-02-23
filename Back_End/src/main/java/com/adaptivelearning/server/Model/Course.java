@@ -142,7 +142,6 @@ public class Course {
         this.level = level;
         DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
         Date localdate = new Date();
-        System.out.println(df.format(localdate));
         this.publishDate = localdate;
     }
 
