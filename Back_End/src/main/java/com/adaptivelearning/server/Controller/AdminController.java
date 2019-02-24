@@ -42,6 +42,8 @@ public class AdminController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
             return new ResponseEntity<>("Session Expired",
                     HttpStatus.UNAUTHORIZED);
         }
@@ -65,6 +67,8 @@ public class AdminController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
             return new ResponseEntity<>("Session Expired",
                     HttpStatus.UNAUTHORIZED);
         }
@@ -98,6 +102,8 @@ public class AdminController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
             return new ResponseEntity<>("Session Expired",
                     HttpStatus.UNAUTHORIZED);
         }
@@ -122,6 +128,8 @@ public class AdminController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
             return new ResponseEntity<>("Session Expired",
                     HttpStatus.UNAUTHORIZED);
         }
@@ -151,6 +159,8 @@ public class AdminController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
             return new ResponseEntity<>("Session Expired",
                     HttpStatus.UNAUTHORIZED);
         }

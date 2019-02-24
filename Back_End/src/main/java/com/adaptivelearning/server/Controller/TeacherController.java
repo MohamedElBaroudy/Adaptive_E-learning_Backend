@@ -49,7 +49,9 @@ public class TeacherController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("invalid token ",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -79,7 +81,9 @@ public class TeacherController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("invalid token ",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -115,8 +119,10 @@ public class TeacherController {
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>("invalid token ",
-                     HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         if(user.isChild()){
@@ -154,8 +160,10 @@ public class TeacherController {
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>(" invalid token ",
-                     HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         FancyClassroom fancyClassroom = new FancyClassroom();
@@ -174,8 +182,10 @@ public class TeacherController {
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>(" invalid token ",
-                     HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         Classroom classroom = classroomRepository.findByClassroomId(classroomId);
@@ -213,7 +223,9 @@ public class TeacherController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>(" invalid token ",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -251,8 +263,10 @@ public class TeacherController {
                       HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	  return new ResponseEntity<>("invalid token",
-                      HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         if(user.getParent() != null){
@@ -299,7 +313,9 @@ public class TeacherController {
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -356,8 +372,10 @@ public class TeacherController {
                       HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	  return new ResponseEntity<>("invalid token",
-                      HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         if(user.getParent() != null){
@@ -412,8 +430,10 @@ public class TeacherController {
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>(" invalid token ",
-                     HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         FancyCourse fancyCourse = new FancyCourse();
@@ -431,10 +451,12 @@ public class TeacherController {
         return new ResponseEntity<>(" user is not present ",
                 HttpStatus.UNAUTHORIZED);
     }
-    if (!jwtTokenChecker.validateToken(token)) {
-        return new ResponseEntity<>(" invalid token ",
-                HttpStatus.UNAUTHORIZED);
-    }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
+        }
 
     Course course = courseRepository.findByCourseId(courseId);
 
@@ -467,8 +489,10 @@ public class TeacherController {
                       HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	  return new ResponseEntity<>("invalid token",
-                      HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
         
         if(user.getParent() != null){
@@ -500,8 +524,10 @@ public class TeacherController {
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>(" invalid token ",
-                     HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         Section section = sectionRepository.findBySectionId(sectionId);
@@ -533,8 +559,10 @@ public class TeacherController {
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>(" invalid token ",
-                     HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         Section section = sectionRepository.findBySectionId(sectionId);
@@ -563,7 +591,9 @@ public class TeacherController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>(" invalid token ",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 

@@ -52,7 +52,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -90,7 +92,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -129,7 +133,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -158,7 +164,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -189,7 +197,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -221,7 +231,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -253,7 +265,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -291,7 +305,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -325,7 +341,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -366,7 +384,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 
@@ -423,7 +443,9 @@ public class QuizController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
 

@@ -44,8 +44,10 @@ public class StudentController {
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-         	 return new ResponseEntity<>("Session Expired",
-                     HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         if(user.getParent() != null){
@@ -91,8 +93,10 @@ public class StudentController {
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>("Session Expired",
-                     HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
         FancyClassroom fancyClassroom = new FancyClassroom();
         return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getJoins()),
@@ -109,8 +113,10 @@ public class StudentController {
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>("Session Expired",
-                     HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
         FancyCourse fancyCourse = new FancyCourse();
         return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(user.getEnrolls()),
@@ -130,7 +136,9 @@ public class StudentController {
                      HttpStatus.UNAUTHORIZED); 
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token ",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
         if(course == null){
@@ -171,7 +179,9 @@ public class StudentController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token ",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
         if(course == null){

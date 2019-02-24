@@ -61,10 +61,12 @@ public class LectureController {
 	            return new ResponseEntity<>("User is not present",
 	                    HttpStatus.UNAUTHORIZED);
 	        }
-	        if (!jwtTokenChecker.validateToken(token)) {
-	            return new ResponseEntity<>("Invalid token",
-	                    HttpStatus.UNAUTHORIZED);
-	        }
+			if (!jwtTokenChecker.validateToken(token)) {
+				user.setToken("");
+				userRepository.save(user);
+				return new ResponseEntity<>("session expired",
+						HttpStatus.UNAUTHORIZED);
+			}
 
 	        Section section = sectionRepository.findBySectionId(sectionId);
 
@@ -121,10 +123,12 @@ public class LectureController {
 	            return new ResponseEntity<>("User is not present",
 	                    HttpStatus.UNAUTHORIZED);
 	        }
-	        if (!jwtTokenChecker.validateToken(token)) {
-	            return new ResponseEntity<>("Invalid token",
-	                    HttpStatus.UNAUTHORIZED);
-	        }
+			if (!jwtTokenChecker.validateToken(token)) {
+				user.setToken("");
+				userRepository.save(user);
+				return new ResponseEntity<>("session expired",
+						HttpStatus.UNAUTHORIZED);
+			}
 
 	        MediaFile file = MediaFileRepository.findByFileId(fileId);
 
@@ -154,10 +158,12 @@ public class LectureController {
 	            return new ResponseEntity<>("User is not present",
 	                    HttpStatus.UNAUTHORIZED);
 	        }
-	        if (!jwtTokenChecker.validateToken(token)) {
-	            return new ResponseEntity<>("Invalid token",
-	                    HttpStatus.UNAUTHORIZED);
-	        }
+			if (!jwtTokenChecker.validateToken(token)) {
+				user.setToken("");
+				userRepository.save(user);
+				return new ResponseEntity<>("session expired",
+						HttpStatus.UNAUTHORIZED);
+			}
 
 	        MediaFile file = MediaFileRepository.findByFileId(fileId);
 
@@ -188,10 +194,13 @@ public class LectureController {
 	        if(user == null){
 	         	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
 	        }
-	        
-	        if (!jwtTokenChecker.validateToken(token)) {
-	       	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
-	        }
+
+			if (!jwtTokenChecker.validateToken(token)) {
+				user.setToken("");
+				userRepository.save(user);
+				return new ResponseEntity<>("session expired",
+						HttpStatus.UNAUTHORIZED);
+			}
 	       
 	        if(lecture == null){
 	            return new ResponseEntity<>("lecture with this id is not found ",
