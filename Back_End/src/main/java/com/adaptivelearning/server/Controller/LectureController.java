@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.adaptivelearning.server.FancyModel.FancyLecture;
 import com.adaptivelearning.server.FancyModel.FancyQuiz;
 import com.adaptivelearning.server.Model.Lecture;
 import com.adaptivelearning.server.Model.MediaFile;
@@ -177,4 +178,33 @@ public class LectureController {
 	        return new ResponseEntity<>(HttpStatus.ACCEPTED);
 	    }
 
+	    @GetMapping(Mapping.LECTURE)
+	    public ResponseEntity<?> retrieveLecture(@RequestParam(Param.ACCESS_TOKEN) String token,
+	    		                                  @Valid @RequestParam(Param.LECTURE_ID) Long lectureId) {
+
+	        User user = userRepository.findByToken(token);
+	        Lecture lecture = lectureRepository.findByLectureId(lectureId);
+
+	        if(user == null){
+	         	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+	        }
+	        
+	        if (!jwtTokenChecker.validateToken(token)) {
+	       	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+	        }
+	       
+	        if(lecture == null){
+	            return new ResponseEntity<>("lecture with this id is not found ",
+	                    HttpStatus.NOT_FOUND);
+	        }
+	        
+	        if (!lecture.getSection().getCourse().getPublisher().getUserId().equals(user.getUserId()) && 
+	        		!lecture.getSection().getCourse().getLearners().contains(user) )
+	        	return new ResponseEntity<>("Not Allowed you are not a teacher or student in this course ",
+	                    HttpStatus.FORBIDDEN);
+	        
+	        FancyLecture fancyLecture = new FancyLecture();
+	        return new ResponseEntity<>(fancyLecture.toFancyLectureMapping(lecture),
+	                HttpStatus.OK);
+	    }
 }

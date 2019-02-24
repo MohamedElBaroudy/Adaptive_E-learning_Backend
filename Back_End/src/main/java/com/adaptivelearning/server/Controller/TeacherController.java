@@ -36,7 +36,7 @@ public class TeacherController {
 
     @Autowired
     TeachingRequestRepository teachingRequestRepository;
-
+    
     @Autowired
     JwtTokenProvider jwtTokenChecker;
 

@@ -58,4 +58,8 @@ public class Param {
     
     //for Media files
     public static final String FILE_ID = "file_id";
+    
+    //for lectures
+    public static final String LECTURE_ID = "lecture_id";
+
 }

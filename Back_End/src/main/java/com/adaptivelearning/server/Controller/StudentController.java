@@ -33,7 +33,6 @@ public class StudentController {
     @Autowired
     JwtTokenProvider jwtTokenChecker;
 
-
     @PostMapping(Mapping.JOIN_CLASSROOM)
     public ResponseEntity<?> joinStudentIntoClassroom(@RequestParam(Param.ACCESS_TOKEN) String token,
                               @Valid @RequestParam(Param.PASSCODE) String passcode) {
@@ -209,4 +208,5 @@ public class StudentController {
         courseRepository.save(course);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+    
 }
