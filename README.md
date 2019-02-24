@@ -258,6 +258,10 @@ or
 #### delete lectue content (DELETE method)
 >http://localhost:8080/teacher/file?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWFTUwNzY2NDg2LCJleHA....VSpeC_24VswUN1EXZ2FLLw81Pz5eMom4S84Ug&file_id=4
 
+#### retrieve lecture by it's id (GET method)
+>http://localhost:8080/lecture?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWFTUwNzY2NDg2LCJleHA....VSpeC_24VswUN1EXZ2FLLw81Pz5eMom4S84Ug&lecture_id=1
+
+
 ### student APIs
 #### Join student in classroom with it's Passcode (POST method)
 >http://localhost:8080/student/join_classroom?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&passcode=Jb6xHKK
@@ -276,3 +280,7 @@ or
 
 #### Retrieve quiz by it's id (GET method)
 >http://localhost:8080/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1
+
+#### Retrieve lecture by it's id (GET method)
+>http://localhost:8080/lecture?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWFTUwNzY2NDg2LCJleHA....VSpeC_24VswUN1EXZ2FLLw81Pz5eMom4S84Ug&lecture_id=1
+
