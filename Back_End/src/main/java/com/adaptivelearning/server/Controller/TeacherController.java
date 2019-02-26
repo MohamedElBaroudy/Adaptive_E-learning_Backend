@@ -63,6 +63,9 @@ public class TeacherController {
         if(user.isTeacher())
             return new ResponseEntity<>("user is already a teacher",
                     HttpStatus.NOT_MODIFIED);
+        if (teachingRequestRepository.existsByClaimerId(user.getUserId()))
+            return new ResponseEntity<>("user is already requested and not approved yet",
+                    HttpStatus.NOT_MODIFIED);
 
         TeachingRequest teachingRequest = new TeachingRequest(user.getUserId(),
                 user.getFirstName()+" "+user.getLastName(),
