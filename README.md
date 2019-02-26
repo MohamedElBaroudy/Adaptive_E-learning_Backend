@@ -173,6 +173,7 @@ or
 
 #### Request teaching (GET method) 
 >http://localhost:8080/teacher/request_teaching?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
+
 >request already sent and not approved yet / request approved  / not found request for this user
 
 #### Request category (POST method)
