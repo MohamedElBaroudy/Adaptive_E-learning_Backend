@@ -107,6 +107,36 @@ public class TeacherController {
         categoryRepository.save(category);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+   
+    @GetMapping(Mapping.REQUEST_TEACHING)
+    public ResponseEntity<?> checkRequest(@Valid @RequestParam(Param.ACCESS_TOKEN) String token){
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+            return new ResponseEntity<>("User Is Not Valid",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("Session Expired",
+                    HttpStatus.UNAUTHORIZED);
+        }
+       
+        
+        if(teachingRequestRepository.existsByClaimerIdAndIsApproved(user.getUserId(), false)) {
+        	return new ResponseEntity<>("request already sent and not approved yet",
+                    HttpStatus.OK);
+        }
+        	
+        if(teachingRequestRepository.existsByClaimerIdAndIsApproved(user.getUserId(), true)) {
+        	return new ResponseEntity<>("request approved",
+                    HttpStatus.OK);
+        }
+       
+        	return new ResponseEntity<>("not found request for this user",
+                    HttpStatus.NO_CONTENT);
+    }
 
     @PostMapping(Mapping.TEACHER_CLASSROOMS)
     public ResponseEntity<?> createClassroom(@RequestParam(Param.ACCESS_TOKEN) String token,
