@@ -65,6 +65,10 @@ public class UserController {
             return new ResponseEntity<>("user is not present",
                     HttpStatus.UNAUTHORIZED);
 
+        if (!user.getPassword().equals(passwordEncoder.encode(password)))
+            return new ResponseEntity<>("Password is incorrect.",
+                    HttpStatus.UNAUTHORIZED);
+
         // already logged in
         String token = user.getToken();
         if(token != null && !token.isEmpty() && tokenProvider.validateToken(token))
