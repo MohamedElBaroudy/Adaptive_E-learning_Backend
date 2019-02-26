@@ -51,8 +51,11 @@ public class ClassRoomController {
          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
 
-         if (!jwtTokenChecker.validateToken(token)) {
-        	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("Session Expired",
+                    HttpStatus.UNAUTHORIZED);
         }
         if(classroom == null){
             return new ResponseEntity<>("classroom with this id is not found ",
@@ -80,9 +83,12 @@ public class ClassRoomController {
           return new ResponseEntity<>("user isn't logged in",
                   HttpStatus.UNAUTHORIZED);
 
-      if (!jwtTokenChecker.validateToken(token))
-    	  return new ResponseEntity<>("session expired",
-                 HttpStatus.UNAUTHORIZED);
+      if (!jwtTokenChecker.validateToken(token)) {
+          user.setToken("");
+          userRepository.save(user);
+          return new ResponseEntity<>("session expired",
+                  HttpStatus.UNAUTHORIZED);
+      }
       
       if(classroom == null){
           return new ResponseEntity<>("classroom with this id is not found ",

@@ -52,9 +52,12 @@ public class CourseController {
         if(user == null){
          	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
-        
+
         if (!jwtTokenChecker.validateToken(token)) {
-       	 return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
         
         if(course == null){
@@ -80,7 +83,10 @@ public class CourseController {
         }
 
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Session Expired",HttpStatus.UNAUTHORIZED);
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         if(course == null){
@@ -109,7 +115,9 @@ public class CourseController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token ",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
         if (course == null) {
@@ -147,7 +155,9 @@ public class CourseController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Invalid token ",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
         if(course == null){
@@ -184,7 +194,9 @@ public class CourseController {
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
-            return new ResponseEntity<>("Session Expired",
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
         FancyCourse fancyCourse = new FancyCourse();
@@ -196,17 +208,20 @@ public class CourseController {
     public ResponseEntity<?> SetProfilePicture(@RequestParam(Param.ACCESS_TOKEN) String token,
     		                            @Valid @RequestParam(Param.COURSE_ID) Long courseId,
     		                                   @RequestParam("file") MultipartFile file) throws IOException {
-    	
-      
+
+
       User user = userRepository.findByToken(token);
       Course course=courseRepository.findByCourseId(courseId);
       if (user == null)
           return new ResponseEntity<>("user isn't logged in",
                   HttpStatus.UNAUTHORIZED);
 
-      if (!jwtTokenChecker.validateToken(token))
-    	  return new ResponseEntity<>("session expired",
-                 HttpStatus.UNAUTHORIZED);
+      if (!jwtTokenChecker.validateToken(token)) {
+          user.setToken("");
+          userRepository.save(user);
+          return new ResponseEntity<>("session expired",
+                  HttpStatus.UNAUTHORIZED);
+      }
       if(course == null){
           return new ResponseEntity<>("course with this id is not found ",
                   HttpStatus.NOT_FOUND);

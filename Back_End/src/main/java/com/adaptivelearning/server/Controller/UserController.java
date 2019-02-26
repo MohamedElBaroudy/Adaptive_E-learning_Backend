@@ -66,8 +66,9 @@ public class UserController {
                     HttpStatus.UNAUTHORIZED);
 
         // already logged in
-        if(user.getToken()!=null)
-            return new ResponseEntity<>(user.getToken(),
+        String token = user.getToken();
+        if(token != null && !token.isEmpty() && tokenProvider.validateToken(token))
+            return new ResponseEntity<>(token,
                     HttpStatus.OK);
 
         Authentication authentication = authenticationManager.authenticate(

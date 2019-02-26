@@ -45,9 +45,9 @@ public class GenerallController {
     public ResponseEntity<?> retrieveNewestCourses(){
         List<Course> courses = courseRepository.findNewestCourses();
         FancyCourse fancyCourse = new FancyCourse();
-        if(courses.size()>20)
+        if(courses.size()>10)
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
-                    courses.subList(0,20)),
+                    courses.subList(0,10)),
                     HttpStatus.OK);
         else
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
@@ -59,9 +59,9 @@ public class GenerallController {
     public ResponseEntity<?> retrieveHotestCourses(){
         List<Course> courses = courseRepository.findHotestCourses();
         FancyCourse fancyCourse = new FancyCourse();
-        if(courses.size()>20)
+        if(courses.size()>10)
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
-                    courses.subList(0,20)),
+                    courses.subList(0,10)),
                     HttpStatus.OK);
         else
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
@@ -73,9 +73,9 @@ public class GenerallController {
     public ResponseEntity<?> retrieveTopRatedCourses(){
         List<Course> courses = courseRepository.findTopRatedCourses();
         FancyCourse fancyCourse = new FancyCourse();
-        if(courses.size()>20)
+        if(courses.size()>10)
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
-                    courses.subList(0,20)),
+                    courses.subList(0,10)),
                     HttpStatus.OK);
         else
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(

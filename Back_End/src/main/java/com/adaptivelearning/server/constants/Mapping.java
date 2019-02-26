@@ -14,6 +14,7 @@ public class Mapping {
     public static final String QUESTION = "/question";
     public static final String ANSWER = "/answer";
     public static final String CATEGORIES = "/categories";
+    public static final String LECTURE = "/lecture";
 
     //Authentication
     public static final String LOGIN = AUTH + "/login";
@@ -72,6 +73,7 @@ public class Mapping {
     public static final String QUIZ_QUESTION = TEACHER + QUESTION;
 
     //For Question
-    public static final String QUeSTION_ANSWER = TEACHER + ANSWER;
+    public static final String QUESTION_ANSWER = TEACHER + ANSWER;
+
 
 }
