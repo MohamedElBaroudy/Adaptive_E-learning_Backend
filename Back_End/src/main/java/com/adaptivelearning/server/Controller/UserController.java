@@ -65,19 +65,16 @@ public class UserController {
             return new ResponseEntity<>("user is not present",
                     HttpStatus.UNAUTHORIZED);
 
-        if (!user.getPassword().equals(passwordEncoder.encode(password)))
-            return new ResponseEntity<>("Password is incorrect.",
-                    HttpStatus.UNAUTHORIZED);
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken( user.getEmail(),password)
+        );
 
         // already logged in
         String token = user.getToken();
         if(token != null && !token.isEmpty() && tokenProvider.validateToken(token))
             return new ResponseEntity<>(token,
                     HttpStatus.OK);
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken( user.getEmail(),password)
-        );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -87,7 +84,7 @@ public class UserController {
 
         userRepository.save(user);
 
-        return new ResponseEntity<>(user.getToken(),HttpStatus.OK);
+        return new ResponseEntity<>(jwt,HttpStatus.OK);
     }
 
     @GetMapping(Mapping.PROFILE)
