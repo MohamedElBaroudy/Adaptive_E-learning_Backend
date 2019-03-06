@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.adaptivelearning.server.FancyModel.FancyLecture;
 import com.adaptivelearning.server.FancyModel.FancyQuiz;
@@ -30,6 +31,7 @@ import com.adaptivelearning.server.Repository.MediafileRepository;
 import com.adaptivelearning.server.Repository.SectionRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
+import com.adaptivelearning.server.Service.FileStorageService;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
 
@@ -50,6 +52,10 @@ public class LectureController {
 
 	    @Autowired
 	    JwtTokenProvider jwtTokenChecker;
+	    
+	    @Autowired
+		  private FileStorageService fileStorageService;
+	     
 	 
 	    @PostMapping(Mapping.TEACHER_MEDIA)
 	    public ResponseEntity<?> uploadfile(@RequestParam(Param.ACCESS_TOKEN) String token,
@@ -81,14 +87,14 @@ public class LectureController {
 	                    HttpStatus.FORBIDDEN);
 	        }
 	        
-	        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+	        String fileName = fileStorageService.storeFile(file);
+
+	         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+	                 .path("/downloadFile/")
+	                 .path(fileName)
+	                 .toUriString();
+	         MediaFile material=new MediaFile(fileName, file.getContentType(), fileDownloadUri, file.getSize());
 	        
-	        if(fileName.contains("..")) {
-	        	return new ResponseEntity<>("Sorry! Filename contains invalid path sequence ",HttpStatus.BAD_REQUEST);
-	        }
-	        
-	        MediaFile material = new MediaFile(fileName, file.getContentType(), file.getBytes());
-	       
 	        String mediaType=material.getFileType();
 	        int index=mediaType.indexOf("/");
 	        mediaType= mediaType.substring(0, index);
@@ -142,11 +148,8 @@ public class LectureController {
 	                .equals(user.getUserId()) && !file.getLecture().getSection().getCourse().getLearners().contains(user))
 	            return new ResponseEntity<>("Not Allowed you are not the creator of this file or a student of this course",
 	                    HttpStatus.FORBIDDEN);
-
-	        return ResponseEntity.ok()
-	                .contentType(MediaType.parseMediaType(file.getFileType()))
-	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
-	                .body(new ByteArrayResource(file.getData()));
+	        
+	        return new ResponseEntity<>(file , HttpStatus.OK);
 	    }
 
 	    @DeleteMapping(Mapping.TEACHER_MEDIA)

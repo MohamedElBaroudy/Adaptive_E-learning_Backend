@@ -32,8 +32,31 @@ public class MediaFile {
 
 	//@Lob
     private byte[] data;
+    
+    @NotBlank
+	@Column(name = "URI")
+    private String fileDownloadUri;
 
-    //Mapping
+   	@Column(name = "SIZE")
+    private long size;
+
+    public String getFileDownloadUri() {
+		return fileDownloadUri;
+	}
+
+	public void setFileDownloadUri(String fileDownloadUri) {
+		this.fileDownloadUri = fileDownloadUri;
+	}
+
+	public long getSize() {
+		return size;
+	}
+
+	public void setSize(long size) {
+		this.size = size;
+	}
+
+	//Mapping
 	@OneToOne(mappedBy = "profile_picture",
 			cascade = {CascadeType.REFRESH})
     private User profile;
@@ -65,6 +88,16 @@ public class MediaFile {
 		this.data = data;
 	}
 
+	public MediaFile(@NotBlank String fileName,
+			 @NotBlank String fileType,
+			 @NotBlank String fileUri,
+			 long size) {
+    this.fileName = fileName;
+    this.fileType = fileType;
+    this.fileDownloadUri=fileUri;
+    this.size=size;
+}
+	
 	public Long getFileId() {
 		return fileId;
 	}
