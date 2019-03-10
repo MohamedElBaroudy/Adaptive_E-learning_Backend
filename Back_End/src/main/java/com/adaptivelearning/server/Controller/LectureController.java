@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.adaptivelearning.server.FancyModel.FancyLecture;
+import com.adaptivelearning.server.FancyModel.FancyMediaFile;
 import com.adaptivelearning.server.FancyModel.FancyQuiz;
 import com.adaptivelearning.server.Model.Lecture;
 import com.adaptivelearning.server.Model.MediaFile;
@@ -137,7 +138,7 @@ public class LectureController {
 			}
 
 	        MediaFile file = MediaFileRepository.findByFileId(fileId);
-
+	       
 	        if (file == null)
 	            return new ResponseEntity<>("Not found file",HttpStatus.NOT_FOUND);
 	        if(file.getLecture()==null) {
@@ -149,7 +150,9 @@ public class LectureController {
 	            return new ResponseEntity<>("Not Allowed you are not the creator of this file or a student of this course",
 	                    HttpStatus.FORBIDDEN);
 	        
-	        return new ResponseEntity<>(file , HttpStatus.OK);
+	        FancyMediaFile fancyfile=new FancyMediaFile();
+	        fancyfile= fancyfile.toFancyFileMapping(file);
+	        return new ResponseEntity<>(fancyfile , HttpStatus.OK);
 	    }
 
 	    @DeleteMapping(Mapping.TEACHER_MEDIA)
