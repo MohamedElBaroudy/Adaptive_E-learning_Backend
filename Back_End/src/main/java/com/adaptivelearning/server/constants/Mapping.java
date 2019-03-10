@@ -54,6 +54,9 @@ public class Mapping {
     public static final String STUDENT_CLASSROOMS = STUDENT + "/classrooms";
     public static final String STUDENT_COURSES = STUDENT + "/courses";
     public static final String STUDENT_RATE_COURSE = STUDENT + "/rate_course";
+    public static final String STUDENT_START_QUIZ = STUDENT + QUIZ + "/start";
+    public static final String STUDENT_SUBMIT_QUIZ = STUDENT + QUIZ + "/submit";
+    public static final String STUDENT_QUIZ = STUDENT + QUIZ;
 
 
     //Parent

@@ -54,6 +54,11 @@ public class Quiz {
     @JoinColumn(name = "LECTURE")
     private Lecture lecture;
 
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "quiz",
+            cascade = CascadeType.REMOVE)
+    private List<StudentQuiz> studentQuizs;
+
     @OneToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.REMOVE},
             mappedBy = "quiz")

@@ -2,23 +2,24 @@ package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.FancyModel.FancyClassroom;
 import com.adaptivelearning.server.FancyModel.FancyCourse;
-import com.adaptivelearning.server.Model.Classroom;
-import com.adaptivelearning.server.Model.Course;
-import com.adaptivelearning.server.Model.User;
-import com.adaptivelearning.server.Repository.ClassroomRepository;
-import com.adaptivelearning.server.Repository.CourseRepository;
-import com.adaptivelearning.server.Repository.UserRepository;
+import com.adaptivelearning.server.FancyModel.FancyStudentQuiz;
+import com.adaptivelearning.server.Model.*;
+import com.adaptivelearning.server.Repository.*;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.*;
 
 @RestController
-//@RequestMapping(Mapping.STUDENT)
 public class StudentController {
 
     @Autowired
@@ -29,6 +30,18 @@ public class StudentController {
     
     @Autowired
     ClassroomRepository classroomRepository;
+
+    @Autowired
+    QuizRepository quizRepository;
+
+    @Autowired
+    QuestionRepository questionRepository;
+
+    @Autowired
+    AnswerRepository answerRepository;
+
+    @Autowired
+    StudentQuizRepository studentQuizRepository;
 
     @Autowired
     JwtTokenProvider jwtTokenChecker;
@@ -218,5 +231,174 @@ public class StudentController {
         courseRepository.save(course);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    
+
+    @PostMapping(Mapping.STUDENT_START_QUIZ)
+    public ResponseEntity<?> studentStartQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                               @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
+        User user = userRepository.findByToken(token);
+        Quiz quiz = quizRepository.findByQuizId(quizId);
+
+        if (user == null) {
+            return new ResponseEntity<>("User is not present ",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (quiz == null) {
+            return new ResponseEntity<>("Quiz with this id is not found ",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
+            return new ResponseEntity<>("You are not enrolled in this course",
+                    HttpStatus.FORBIDDEN);
+
+        StudentQuiz studentQuiz = studentQuizRepository.findByUserAndQuiz(user,quiz);
+
+        if (studentQuiz == null) {
+            studentQuiz = new StudentQuiz(user, quiz);
+            Date date = new Date(new Date().getTime() + quiz.getTime()*60000);
+            studentQuiz.setSubmitDate(date);
+        }
+        else {
+            Date date = new Date();
+            Long diffInHours = (date.getTime() - studentQuiz.getSubmitDate().getTime())/(1000*60*60);
+            if (diffInHours < 4 && studentQuiz.getAttempts()==3)
+                return new ResponseEntity<>("3 attempts every 4 hours",
+                        HttpStatus.FORBIDDEN);
+            if (diffInHours >= 4){
+                studentQuiz.setAttempts(0);
+            }
+            studentQuiz.setStartDate(date);
+            studentQuiz.setSubmitDate(new Date(date.getTime() + quiz.getTime()*60000));
+            studentQuiz.setPassed(false);
+            studentQuiz.setMark(0);
+        }
+        studentQuizRepository.save(studentQuiz);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(Mapping.STUDENT_SUBMIT_QUIZ)
+    public ResponseEntity<?> studentSubmitQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                               @Valid @RequestParam(Param.QUIZ_ID) Long quizId,
+                                               HttpEntity<String> httpEntity) throws JSONException {
+
+        User user = userRepository.findByToken(token);
+        Quiz quiz = quizRepository.findByQuizId(quizId);
+        String json = httpEntity.getBody();
+        JSONObject obj = new JSONObject(json);
+
+
+        if (user == null) {
+            return new ResponseEntity<>("User is not present.",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired.",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (quiz == null) {
+            return new ResponseEntity<>("Quiz with this id is not found.",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
+            return new ResponseEntity<>("You are not enrolled in this course.",
+                    HttpStatus.FORBIDDEN);
+
+        StudentQuiz studentQuiz = studentQuizRepository.findByUserAndQuiz(user,quiz);
+
+        if (studentQuiz == null)
+            return new ResponseEntity<>("You have not started this quiz yet.",
+                    HttpStatus.FORBIDDEN);
+
+        Date now = new Date();
+
+        if (now.after(studentQuiz.getSubmitDate())){
+            studentQuiz.setStartDate(null);
+            studentQuiz.setSubmitDate(null);
+            return new ResponseEntity<>("You have exceeded the time limit of the quiz.",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        JSONArray questions = obj.getJSONArray("questions");
+        for (int i =0;i< questions.length();i++){
+            JSONObject questionObj = questions.getJSONObject(i);
+            Long questionId = questionObj.getLong("question id");
+            JSONArray answersObj = questionObj.getJSONArray("question answers");
+            List<Long> studentAnswers = new LinkedList<>();
+            for (int j =0;j< answersObj.length();j++){
+                studentAnswers.add(answersObj.getLong(j));
+            }
+            // remove duplicates
+            Set<Long> set = new LinkedHashSet<>(studentAnswers);
+            studentAnswers.clear();
+            studentAnswers.addAll(set);
+
+            Question question = questionRepository.findByQuestionId(questionId);
+            List<Answer> answers = question.getAnswers();
+            List<Answer> modelAnswers = new LinkedList<>();
+            for (Answer answer:
+                    answers) {
+                if (answer.isCorrect())
+                    modelAnswers.add(answer);
+            }
+            List<Answer> studentAnswerList = new LinkedList<>();
+            for (Long studentAnswerId:
+                    studentAnswers) {
+                Answer studentAnswer = answerRepository.findByAnswerId(studentAnswerId);
+                studentAnswerList.add(studentAnswer);
+            }
+            if (new LinkedHashSet<>(studentAnswerList).equals(new LinkedHashSet<>(modelAnswers)))
+                studentQuiz.setMark(studentQuiz.getMark() + question.getMark());
+        }
+        if (studentQuiz.getMark() >= 0.7 * quiz.getTotalMark())
+            studentQuiz.setPassed(true);
+        studentQuiz.setSubmitDate(new Date());
+        studentQuiz.setAttempts(studentQuiz.getAttempts() + 1);
+        studentQuizRepository.save(studentQuiz);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(Mapping.STUDENT_QUIZ)
+    public ResponseEntity<?> studentGetQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                               @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
+        User user = userRepository.findByToken(token);
+        Quiz quiz = quizRepository.findByQuizId(quizId);
+
+        if (user == null) {
+            return new ResponseEntity<>("User is not present.",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired.",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (quiz == null) {
+            return new ResponseEntity<>("Quiz with this id is not found.",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
+            return new ResponseEntity<>("You are not enrolled in this course.",
+                    HttpStatus.FORBIDDEN);
+
+        StudentQuiz studentQuiz = studentQuizRepository.findByUserAndQuiz(user,quiz);
+
+        if (studentQuiz == null)
+            return new ResponseEntity<>("Quiz has not taken yet.",
+                    HttpStatus.NOT_FOUND);
+
+        FancyStudentQuiz fancyStudentQuiz= new FancyStudentQuiz();
+        return new ResponseEntity<>(fancyStudentQuiz.toFancyStudentQuiz(studentQuiz),
+                HttpStatus.OK);
+    }
 }

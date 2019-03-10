@@ -145,6 +145,11 @@ public class User {
    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
    @JoinColumn(name = "pic_id")
    private MediaFile profile_picture;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "user",
+            cascade = CascadeType.REMOVE)
+    private List<StudentQuiz> studentQuizs;
     // end of mapping
 
 
@@ -343,4 +348,12 @@ public class User {
 	public void setProfile_picture(MediaFile profile_picture) {
 		this.profile_picture = profile_picture;
 	}
+
+    public List<StudentQuiz> getStudentQuizs() {
+        return studentQuizs;
+    }
+
+    public void setStudentQuizs(List<StudentQuiz> studentQuizs) {
+        this.studentQuizs = studentQuizs;
+    }
 }

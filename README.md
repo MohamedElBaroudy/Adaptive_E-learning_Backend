@@ -289,3 +289,24 @@ or
 #### Retrieve lecture by it's id (GET method)
 >http://localhost:8080/lecture?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWFTUwNzY2NDg2LCJleHA....VSpeC_24VswUN1EXZ2FLLw81Pz5eMom4S84Ug&lecture_id=1
 
+#### start quiz by it's id (POST method)
+>http://localhost:8080/student/quiz/start?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=3
+
+#### Submit quiz by it's id and json of questions and student answers (POST method)
+>http://localhost:8080/student/quiz/submit?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=3
+>body : 
+{
+	"questions":[
+	{
+		"question id": 1,
+		"question answers": [3]
+	},
+	{
+		"question id": 2,
+		"question answers": [6,9,7]
+	}
+	] 
+}
+
+#### Get quiz for student to know if he passed it and some other info by quiz id (GET method)
+>http://localhost:8080/student/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=3
