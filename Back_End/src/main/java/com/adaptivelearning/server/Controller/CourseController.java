@@ -1,6 +1,7 @@
 package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.FancyModel.FancyCourse;
+import com.adaptivelearning.server.FancyModel.FancyMediaFile;
 import com.adaptivelearning.server.FancyModel.FancyUser;
 import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.MediaFile;
@@ -9,6 +10,7 @@ import com.adaptivelearning.server.Repository.CourseRepository;
 import com.adaptivelearning.server.Repository.MediafileRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
+import com.adaptivelearning.server.Service.FileStorageService;
 
 import java.io.IOException;
 
@@ -22,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
@@ -41,6 +44,9 @@ public class CourseController {
 
     @Autowired
     JwtTokenProvider jwtTokenChecker;
+
+    @Autowired
+	  private FileStorageService fileStorageService;
 
     @GetMapping(Mapping.COURSE)
     public ResponseEntity<?> retrieveCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
@@ -207,7 +213,7 @@ public class CourseController {
     @PostMapping("/coursePic")
     public ResponseEntity<?> SetProfilePicture(@RequestParam(Param.ACCESS_TOKEN) String token,
     		                            @Valid @RequestParam(Param.COURSE_ID) Long courseId,
-    		                                   @RequestParam("file") MultipartFile file) throws IOException {
+    		                                   @RequestParam("file") MultipartFile file) {
 
 
       User user = userRepository.findByToken(token);
@@ -230,21 +236,31 @@ public class CourseController {
       if(course.getPublisher()!=user)
     	  return new ResponseEntity<>("only course publisher can set the image",
                   HttpStatus.UNAUTHORIZED);
-   // Normalize file name
-      String fileName = StringUtils.cleanPath(file.getOriginalFilename());
       
-      if(fileName.contains("..")) {
-      	return new ResponseEntity<>("Sorry! Filename contains invalid path sequence ",HttpStatus.BAD_REQUEST);
-      }
-      
-      MediaFile image = new MediaFile(fileName, file.getContentType(), file.getBytes());
+      String mediaType=file.getContentType();
+      int index=mediaType.indexOf("/");
+      mediaType= mediaType.substring(0, index);
+      if (!mediaType.equals("image")){ 
+       	  return new ResponseEntity<>("this file is not image ",
+                     HttpStatus.FORBIDDEN);
+         }
+     
+     else {
+    	 if(course.getCourse_picture()!=null) {
+    		 MediaFileRepository.deleteById(course.getCourse_picture().getFileId());
+    	 }
+     String fileName = fileStorageService.storeFile(file);
+     String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+    	              .path("/downloadFile/")
+    	              .path(fileName)
+    	              .toUriString();
+     MediaFile image=new MediaFile(fileName, file.getContentType(), fileDownloadUri, file.getSize());    	    
       MediaFileRepository.save(image);
       course.setCourse_picture(image);
       courseRepository.save(course);
-      return ResponseEntity.ok()
-              .contentType(MediaType.parseMediaType(image.getFileType()))
-              .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
-              .body(new ByteArrayResource(image.getData()));
-    }
-
+      FancyMediaFile fancyfile=new FancyMediaFile();
+      fancyfile= fancyfile.toFancyFileMapping(image);
+      return new ResponseEntity<>(fancyfile , HttpStatus.OK);
+     }
+   }
 }

@@ -29,18 +29,24 @@ public class FancyClassroom {
     // classroom's courses 
     private List<FancyCourse> courses;
     
+    // classroom picture
+    private FancyMediaFile classroom_picture;
+    
+    
     public FancyClassroom() {
     }
 
     public FancyClassroom toFancyClassroomMapping(Classroom classroom){
     	FancyUser user= new FancyUser();
     	FancyCourse courses=new FancyCourse();
+    	FancyMediaFile picture=new FancyMediaFile();
         this.classroomId = classroom.getClassroomId();
         this.classroomName = classroom.getClassroomName();
         this.passCode = classroom.getPassCode();
         this.creator = user.toFancyUserMapper(classroom.getCreator());
         this.studentsNumber = classroom.getStudents().size();
         this.coursesNumber = (short) classroom.getCourses().size();
+        this.classroom_picture=picture.toFancyFileMapping(classroom.getClassroom_picture());
         this.courses=courses.toFancyCourseListMapping(classroom.getCourses());
         return this;
     }
@@ -111,6 +117,14 @@ public class FancyClassroom {
 
 	public void setCourses(List<FancyCourse> courses) {
 		this.courses = courses;
+	}
+
+	public FancyMediaFile getClassroom_picture() {
+		return classroom_picture;
+	}
+
+	public void setClassroom_picture(FancyMediaFile classroom_picture) {
+		this.classroom_picture = classroom_picture;
 	}
 
 	

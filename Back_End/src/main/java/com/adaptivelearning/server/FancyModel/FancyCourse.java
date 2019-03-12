@@ -1,6 +1,7 @@
 package com.adaptivelearning.server.FancyModel;
 
 import com.adaptivelearning.server.Model.Course;
+import com.adaptivelearning.server.Model.MediaFile;
 import com.adaptivelearning.server.Model.Section;
 import com.adaptivelearning.server.Model.User;
 
@@ -51,6 +52,8 @@ public class FancyCourse {
     // sections
     private List<FancySection> sections;
     
+    // course picture
+    private FancyMediaFile course_picture;
     
     public FancyCourse() {
     }
@@ -59,6 +62,7 @@ public class FancyCourse {
 	public FancyCourse toFancyCourseMapping(Course course){
 		FancyUser user= new FancyUser();
 		FancySection sections=new FancySection();
+		FancyMediaFile picture=new FancyMediaFile();
         this.courseId = course.getCourseId();
         this.title = course.getTitle();
         this.detailedTitle = course.getDetailedTitle();
@@ -70,6 +74,7 @@ public class FancyCourse {
         this.numberOfRaters = course.getNumberOfRaters();
         this.isPublic = course.isPublic();
         this.rate = course.getRate();
+        this.course_picture=picture.toFancyFileMapping(course.getCourse_picture());
         this.publisher = user.toFancyUserMapper(course.getPublisher());
         this.sections=sections.toFancySectionListMapping(course.getSections());
         return this;
@@ -98,7 +103,17 @@ public class FancyCourse {
         return title;
     }
 
-    public void setTitle(String title) {
+    public FancyMediaFile getCourse_picture() {
+		return course_picture;
+	}
+
+
+	public void setCourse_picture(FancyMediaFile course_picture) {
+		this.course_picture = course_picture;
+	}
+
+
+	public void setTitle(String title) {
         this.title = title;
     }
 

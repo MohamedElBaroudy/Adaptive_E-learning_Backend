@@ -12,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.adaptivelearning.server.FancyModel.FancyClassroom;
+import com.adaptivelearning.server.FancyModel.FancyMediaFile;
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.MediaFile;
 import com.adaptivelearning.server.Model.User;
@@ -21,6 +23,7 @@ import com.adaptivelearning.server.Repository.ClassroomRepository;
 import com.adaptivelearning.server.Repository.MediafileRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
+import com.adaptivelearning.server.Service.FileStorageService;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
 
@@ -36,7 +39,10 @@ public class ClassRoomController {
 
     @Autowired
    	MediafileRepository MediaFileRepository;
-
+    
+    @Autowired
+	  private FileStorageService fileStorageService;
+ 
     @Autowired
     JwtTokenProvider jwtTokenChecker;
 
@@ -74,7 +80,7 @@ public class ClassRoomController {
     @PostMapping("/classroomPic")
     public ResponseEntity<?> SetProfilePicture(@RequestParam(Param.ACCESS_TOKEN) String token,
     		                            @Valid @RequestParam(Param.CLASSROOM_ID) Long classroomId,
-    		                                   @RequestParam("file") MultipartFile file) throws IOException {
+    		                                   @RequestParam("file") MultipartFile file)  {
     	
       
       User user = userRepository.findByToken(token);
@@ -99,21 +105,32 @@ public class ClassRoomController {
     	  return new ResponseEntity<>("only classroom creator can set the image",
                   HttpStatus.UNAUTHORIZED);
       
-      // Normalize file name
-      String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-      
-      if(fileName.contains("..")) {
-      	return new ResponseEntity<>("Sorry! Filename contains invalid path sequence ",HttpStatus.BAD_REQUEST);
-      }
-      MediaFile image = new MediaFile(fileName, file.getContentType(), file.getBytes());
-      MediaFileRepository.save(image);
+      String mediaType=file.getContentType();
+      int index=mediaType.indexOf("/");
+      mediaType= mediaType.substring(0, index);
+      if (!mediaType.equals("image")){ 
+       	  return new ResponseEntity<>("this file is not image ",
+                     HttpStatus.FORBIDDEN);
+         }
+     
+     else {
+    	 if(classroom.getClassroom_picture()!=null) {
+    		 MediaFileRepository.deleteById(classroom.getClassroom_picture().getFileId());
+    	 }
+     String fileName = fileStorageService.storeFile(file);
+     String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+    	              .path("/downloadFile/")
+    	              .path(fileName)
+    	              .toUriString();
+     MediaFile image=new MediaFile(fileName, file.getContentType(), fileDownloadUri, file.getSize());    	    
+     MediaFileRepository.save(image);
       classroom.setClassroom_picture(image);
       classroomRepository.save(classroom);
-      return ResponseEntity.ok()
-              .contentType(MediaType.parseMediaType(image.getFileType()))
-              .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
-              .body(new ByteArrayResource(image.getData()));
+      FancyMediaFile fancyfile=new FancyMediaFile();
+      fancyfile= fancyfile.toFancyFileMapping(image);
+      return new ResponseEntity<>(fancyfile , HttpStatus.OK);
     }
+      }
 
 
 
