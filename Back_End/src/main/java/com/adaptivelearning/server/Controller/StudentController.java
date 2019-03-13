@@ -266,6 +266,9 @@ public class StudentController {
         }
         else {
             Date date = new Date();
+            if (studentQuiz.getSubmitDate().after(date) && studentQuiz.getStartDate() != null)
+                return new ResponseEntity<>("Already started.",
+                        HttpStatus.FORBIDDEN);
             Long diffInHours = (date.getTime() - studentQuiz.getSubmitDate().getTime())/(1000*60*60);
             if (diffInHours < 4 && studentQuiz.getAttempts()==3)
                 return new ResponseEntity<>("3 attempts every 4 hours",
@@ -314,7 +317,7 @@ public class StudentController {
 
         StudentQuiz studentQuiz = studentQuizRepository.findByUserAndQuiz(user,quiz);
 
-        if (studentQuiz == null)
+        if (studentQuiz == null || studentQuiz.getStartDate() == null)
             return new ResponseEntity<>("You have not started this quiz yet.",
                     HttpStatus.FORBIDDEN);
 
@@ -330,8 +333,8 @@ public class StudentController {
         JSONArray questions = obj.getJSONArray("questions");
         for (int i =0;i< questions.length();i++){
             JSONObject questionObj = questions.getJSONObject(i);
-            Long questionId = questionObj.getLong("question id");
-            JSONArray answersObj = questionObj.getJSONArray("question answers");
+            Long questionId = questionObj.getLong("question_id");
+            JSONArray answersObj = questionObj.getJSONArray("answers_ids");
             List<Long> studentAnswers = new LinkedList<>();
             for (int j =0;j< answersObj.length();j++){
                 studentAnswers.add(answersObj.getLong(j));
@@ -361,6 +364,7 @@ public class StudentController {
         if (studentQuiz.getMark() >= 0.7 * quiz.getTotalMark())
             studentQuiz.setPassed(true);
         studentQuiz.setSubmitDate(new Date());
+        studentQuiz.setStartDate(null);
         studentQuiz.setAttempts(studentQuiz.getAttempts() + 1);
         studentQuizRepository.save(studentQuiz);
         return new ResponseEntity<>(HttpStatus.OK);

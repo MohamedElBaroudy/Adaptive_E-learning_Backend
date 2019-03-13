@@ -18,19 +18,22 @@ public class FancyAnswer {
     public FancyAnswer() {
     }
 
-    public FancyAnswer toFancyAnswerMapping(Answer answer){
+    public FancyAnswer toFancyAnswerMapping(Answer answer, Boolean isTeacher){
         this.answerId = answer.getAnswerId();
         this.body = answer.getBody();
-        this.isCorrect = answer.isCorrect();
+        if (isTeacher)
+            this.isCorrect = answer.isCorrect();
+        else
+            this.isCorrect = false;
         return this;
     }
 
-    public List<FancyAnswer> toFancyAnswerListMapping(List<Answer> answers){
+    public List<FancyAnswer> toFancyAnswerListMapping(List<Answer> answers, Boolean isTeacher){
         LinkedList<FancyAnswer> fancyAnswerList = new LinkedList<>();
         for (Answer answer:
                 answers) {
             FancyAnswer fancyAnswer = new FancyAnswer();
-            fancyAnswerList.addLast(fancyAnswer.toFancyAnswerMapping(answer));
+            fancyAnswerList.addLast(fancyAnswer.toFancyAnswerMapping(answer,isTeacher));
         }
         return fancyAnswerList;
     }

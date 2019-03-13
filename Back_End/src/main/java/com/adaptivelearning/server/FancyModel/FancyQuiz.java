@@ -27,23 +27,23 @@ public class FancyQuiz {
     public FancyQuiz() {
     }
 
-    public FancyQuiz toFancyQuizMapping(Quiz quiz){
+    public FancyQuiz toFancyQuizMapping(Quiz quiz, Boolean isTeacher){
         FancyQuestion fancyQuestion = new FancyQuestion();
         this.quizId = quiz.getQuizId();
         this.title = quiz.getTitle();
         this.instructions = quiz.getInstructions();
         this.time= quiz.getTime();
         this.totalMark = quiz.getTotalMark();
-        this.questions = fancyQuestion.toFancyQuestionListMapping(quiz.getQuestions());
+        this.questions = fancyQuestion.toFancyQuestionListMapping(quiz.getQuestions(), isTeacher);
         return this;
     }
 
-    public List<FancyQuiz> toFancyQuizListMapping(List<Quiz> quizzes){
+    public List<FancyQuiz> toFancyQuizListMapping(List<Quiz> quizzes, Boolean isTeacher){
         LinkedList<FancyQuiz> fancyQuizList = new LinkedList<>();
         for (Quiz quiz:
                 quizzes) {
             FancyQuiz fancyQuiz = new FancyQuiz();
-            fancyQuizList.addLast(fancyQuiz.toFancyQuizMapping(quiz));
+            fancyQuizList.addLast(fancyQuiz.toFancyQuizMapping(quiz, isTeacher));
         }
         return fancyQuizList;
     }

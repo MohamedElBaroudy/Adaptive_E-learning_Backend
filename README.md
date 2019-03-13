@@ -298,12 +298,12 @@ or
 {
 	"questions":[
 	{
-		"question id": 1,
-		"question answers": [3]
+		"question_id": 1,
+		"answers_ids": [3]
 	},
 	{
-		"question id": 2,
-		"question answers": [6,9,7]
+		"question_id": 2,
+		"answers_ids": [6,9,7]
 	}
 	] 
 }
