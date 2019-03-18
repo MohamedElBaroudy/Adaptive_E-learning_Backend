@@ -46,8 +46,11 @@ public class FancyClassroom {
         this.creator = user.toFancyUserMapper(classroom.getCreator());
         this.studentsNumber = classroom.getStudents().size();
         this.coursesNumber = (short) classroom.getCourses().size();
-        this.classroom_picture=picture.toFancyFileMapping(classroom.getClassroom_picture());
         this.courses=courses.toFancyCourseListMapping(classroom.getCourses());
+        
+        if(classroom.getClassroom_picture()!=null) {
+        this.classroom_picture=picture.toFancyFileMapping(classroom.getClassroom_picture());
+        }
         return this;
     }
 

@@ -74,9 +74,11 @@ public class FancyCourse {
         this.numberOfRaters = course.getNumberOfRaters();
         this.isPublic = course.isPublic();
         this.rate = course.getRate();
-        this.course_picture=picture.toFancyFileMapping(course.getCourse_picture());
         this.publisher = user.toFancyUserMapper(course.getPublisher());
         this.sections=sections.toFancySectionListMapping(course.getSections());
+        if(course.getCourse_picture()!=null) {
+        this.course_picture=picture.toFancyFileMapping(course.getCourse_picture());
+        }
         return this;
     }
 
