@@ -39,7 +39,16 @@ public class Question {
     @Column(name = "MARK")
     private short mark;
 
+    // level 1->3 from easier to harder -> easy=1 , medium(default)=2 , hard=3
+    @NotNull
+    @Column(name = "LEVEL")
+    private short level = 2 ;
 
+    @NotBlank
+    @Size(max = 100)
+    @Column(name = "Message")
+    private String message;
+    
     // mapping
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.REFRESH})
@@ -58,10 +67,14 @@ public class Question {
 
     public Question(@NotBlank @Size(max = 1000) String body,
                     boolean isMultipleChoice,
-                    @NotNull short mark) {
+                    @NotNull short mark,
+                    @NotNull short level, 
+                    @NotBlank @Size(max = 100) String message ) {
         this.body = body;
         this.isMultipleChoice = isMultipleChoice;
         this.mark = mark;
+        this.level=level;
+        this.message=message;
     }
 
     public Long getQuestionId() {
@@ -96,7 +109,15 @@ public class Question {
         this.mark = mark;
     }
 
-    public Quiz getQuiz() {
+    public short getLevel() {
+		return level;
+	}
+
+	public void setLevel(short level) {
+		this.level = level;
+	}
+
+	public Quiz getQuiz() {
         return quiz;
     }
 
@@ -111,4 +132,12 @@ public class Question {
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 }

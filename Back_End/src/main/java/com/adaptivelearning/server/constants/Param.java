@@ -49,6 +49,8 @@ public class Param {
     public static final String QUESTION_BODY = "question_body";
     public static final String QUESTION_IS_MULTIPLE_CHOICE = "is_multiple_choice";
     public static final String QUESTION_MARK = "question_mark";
+    public static final String QUESTION_LEVEL ="question_level ";
+    public static final String QUESTION_REFERENCE ="QUESTION_REFERENCE";
 
 
     //for answers

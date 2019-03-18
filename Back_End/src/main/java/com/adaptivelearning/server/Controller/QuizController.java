@@ -189,7 +189,9 @@ public class QuizController {
                                           @Valid @RequestParam(Param.QUIZ_ID) Long quizId,
                                           @Valid @RequestParam(Param.QUESTION_BODY) String body,
                                           @Valid @RequestParam(Param.QUESTION_IS_MULTIPLE_CHOICE) Boolean isMultipleChoice,
-                                          @Valid @RequestParam(Param.QUESTION_MARK) Short mark){
+                                          @Valid @RequestParam(Param.QUESTION_MARK) Short mark,
+                                          @Valid @RequestParam(Param.QUESTION_LEVEL) Short level,
+                                          @Valid @RequestParam(Param.QUESTION_REFERENCE) String message ){
         User user = userRepository.findByToken(token);
 
         if(user == null){
@@ -213,7 +215,7 @@ public class QuizController {
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz",
                     HttpStatus.FORBIDDEN);
 
-        Question question = new Question(body,isMultipleChoice,mark);
+        Question question = new Question(body,isMultipleChoice,mark,level,message);
         question.setQuiz(quiz);
         questionRepository.save(question);
         quiz.setTotalMark((short) (quiz.getTotalMark()+mark));
@@ -257,7 +259,10 @@ public class QuizController {
                                               @Valid @RequestParam(Param.QUESTION_ID) Long questionId,
                                             @Valid @RequestParam(value = Param.QUESTION_BODY,required = false) String body,
                                             @Valid @RequestParam(value = Param.QUESTION_IS_MULTIPLE_CHOICE,required = false) Boolean isMultipleChoice,
-                                            @Valid @RequestParam(value = Param.QUESTION_MARK,required = false) Short mark){
+                                            @Valid @RequestParam(value = Param.QUESTION_MARK,required = false) Short mark,
+                                            @Valid @RequestParam(value = Param.QUESTION_REFERENCE,required = false) String message,
+                                            @Valid @RequestParam(value = Param.QUESTION_LEVEL,required = false) Short level
+                                             ){
         User user = userRepository.findByToken(token);
 
         if(user == null){
@@ -291,6 +296,12 @@ public class QuizController {
             quizRepository.save(quiz);
             question.setMark(mark);
         }
+        if(level != null) {
+        	question.setLevel(level);
+        }
+        if(message != null) {
+        	question.setMessage(message);
+        }	
         questionRepository.save(question);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -5,6 +5,9 @@ import com.adaptivelearning.server.Model.Question;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
+
 public class FancyQuestion {
     // id
     private Long questionId;
@@ -17,7 +20,12 @@ public class FancyQuestion {
 
     // mark
     private short mark;
+    
+    // level 1->3 from easier to harder -> easy=1 , medium(default)=2 , hard=3
+    private short level = 2 ;
 
+    private String message;
+    
     // answers
     private List<FancyAnswer> answers;
 
@@ -30,6 +38,8 @@ public class FancyQuestion {
         this.body = question.getBody();
         this.isMultipleChoice = question.isMultipleChoice();
         this.mark = question.getMark();
+        this.level=question.getLevel();
+        this.message=question.getMessage();
         this.answers = fancyAnswer.toFancyAnswerListMapping(question.getAnswers(),isTeacher);
         return this;
     }
@@ -76,11 +86,28 @@ public class FancyQuestion {
         this.mark = mark;
     }
 
-    public List<FancyAnswer> getAnswers() {
+    public short getLevel() {
+		return level;
+	}
+
+	public void setLevel(short level) {
+		this.level = level;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public List<FancyAnswer> getAnswers() {
         return answers;
     }
 
     public void setAnswers(List<FancyAnswer> answers) {
         this.answers = answers;
     }
+
 }
