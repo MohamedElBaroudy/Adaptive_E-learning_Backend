@@ -224,6 +224,9 @@ or
 #### Create quiz by section id (POST method)
 >http://localhost:8080/teacher/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&section_id=1&quiz_title=Introduction&quiz_instructions=don't forget your calculator&quiz_time=30
 
+#### Set number of selected questions (POST method)
+>http://localhost:8080/teacher/quiz/no_questions?token=eyJhbGcNTUyNT2ODJ9.PlO-.....tJD_VBAGljcpDDvTFSKlWz9Es2NTD3H0e7Yk_Bj0w&quiz_id=1&no_of_questions=8
+
 #### Update the quiz info by it's id (optional parameters)(PUT method)
 >http://localhost:8080/teacher/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1&quiz_title=Introduction2&quiz_instructions=don't forget your calculator2&quiz_time=45
 
@@ -234,7 +237,8 @@ or
 >http://localhost:8080/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1
 
 #### Add question to quiz by quiz's id (POST method)
->http://localhost:8080/teacher/question?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1&question_body=question1&is_multiple_choice=false&question_mark=2
+>http://localhost:8080/teacher/question?token=eyJhbGciOiJIUzUx....SKEs2NTD3H0e7Yk_Bj0w&quiz_id=1&question_body=question1&is_multiple_choice=false&question_mark=1&question_level=1&question_reference=go to lecture 2
+> easy level =1 , medium level=2 , hard level=3
 
 #### Retrieve question by it's id (GET method)
 >http://localhost:8080/question?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&question_id=1
