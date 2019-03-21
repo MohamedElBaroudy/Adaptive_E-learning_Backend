@@ -121,7 +121,7 @@ public class QuizController {
         quiz.setNo_of_questions(no_of_questions);
         quiz.setEnterdbyTeacher(true);
         quizRepository.save(quiz);
-        return new ResponseEntity<>(questions.size(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PutMapping(Mapping.TEACHER_QUIZ)
@@ -259,7 +259,11 @@ public class QuizController {
                 .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz",
                     HttpStatus.FORBIDDEN);
-
+        
+        if(level!=1 && level!= 2 && level!= 3) {
+        	return new ResponseEntity<>(" question level is not valid ",
+                    HttpStatus.BAD_REQUEST);
+        }
         Question question = new Question(body,isMultipleChoice,mark,level,message);
         question.setQuiz(quiz);
         questionRepository.save(question);
