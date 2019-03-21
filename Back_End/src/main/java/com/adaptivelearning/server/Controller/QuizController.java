@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 @RestController
@@ -77,6 +79,49 @@ public class QuizController {
         lectureRepository.save(lecture);
         quizRepository.save(quiz);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping(Mapping.TEACHER_QUESTIONS)
+    public ResponseEntity<?> setNumberOfQuestions(@RequestParam(Param.ACCESS_TOKEN) String token,
+									            @Valid @RequestParam(Param.QUIZ_ID) Long quizId,
+									            @Valid @RequestParam(Param.QUIZ_NO_OF_QUESTIONS) Short no_of_questions){
+		        
+		User user = userRepository.findByToken(token);
+		
+		if(user == null){
+		return new ResponseEntity<>("User is not present",
+		        HttpStatus.UNAUTHORIZED);
+		}
+		if (!jwtTokenChecker.validateToken(token)) {
+		user.setToken("");
+		userRepository.save(user);
+		return new ResponseEntity<>("session expired",
+		        HttpStatus.UNAUTHORIZED);
+		}
+		
+		Quiz quiz = quizRepository.findByQuizId(quizId);
+
+        if (quiz == null)
+            return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
+
+        if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
+        .equals(user.getUserId()))
+            return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to set no of questions",
+                    HttpStatus.FORBIDDEN);
+        if(no_of_questions==0) {
+        	  return new ResponseEntity<>("not allowed to set no of selected questions by 0 ",
+                      HttpStatus.FORBIDDEN);
+        }
+        List questions= questionRepository.findByQuiz(quiz);
+        if(questions.size() < no_of_questions) {
+        	return new ResponseEntity<>("number of selected questions more than the current number of questions ",
+                    HttpStatus.FORBIDDEN);
+        }
+        
+        quiz.setNo_of_questions(no_of_questions);
+        quiz.setEnterdbyTeacher(true);
+        quizRepository.save(quiz);
+        return new ResponseEntity<>(questions.size(), HttpStatus.ACCEPTED);
     }
 
     @PutMapping(Mapping.TEACHER_QUIZ)
@@ -218,6 +263,15 @@ public class QuizController {
         Question question = new Question(body,isMultipleChoice,mark,level,message);
         question.setQuiz(quiz);
         questionRepository.save(question);
+        
+        if(quiz.isEnterdbyTeacher()==false) {
+        	quiz.setNo_of_questions((short) questionRepository.findByQuiz(quiz).size());
+        }
+        
+        if (quiz.getNo_of_questions()==0) {
+        	quiz.setNo_of_questions((short) questionRepository.findByQuiz(quiz).size());
+        }
+        
         quiz.setTotalMark((short) (quiz.getTotalMark()+mark));
         quizRepository.save(quiz);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -334,9 +388,14 @@ public class QuizController {
 
         Quiz quiz = question.getQuiz();
         quiz.setTotalMark((short) (quiz.getTotalMark()-question.getMark()));
-
+        
+        // if the selected no of questions by teacher will be more more than no of questions after delete question
+        List number_of_questions= questionRepository.findByQuiz(quiz);
+        if(quiz.getNo_of_questions() > number_of_questions.size()-1) {
+        	quiz.setNo_of_questions((short) (number_of_questions.size()-1));            
+        }
         questionRepository.deleteById(questionId);
-
+  
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

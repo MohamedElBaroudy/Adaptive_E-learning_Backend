@@ -71,6 +71,7 @@ public class Mapping {
     public static final String SECTION = TEACHER + "/section";
     public static final String TEACHER_QUIZ = TEACHER + QUIZ;
     public static final String TEACHER_MEDIA = TEACHER + FILE;
+    public static final String TEACHER_QUESTIONS = TEACHER + QUIZ + "/no_questions";
 
     //For quiz
     public static final String QUIZ_QUESTION = TEACHER + QUESTION;

@@ -20,6 +20,12 @@ public class FancyQuiz {
 
     // total mark
     private short totalMark;
+    
+    // no. of questions
+    private short no_of_questions; 
+    // check if the teacher enter the number of questions or not
+    private boolean enterdbyTeacher ;
+
 
     // questions
     private List<FancyQuestion> questions;
@@ -34,7 +40,10 @@ public class FancyQuiz {
         this.instructions = quiz.getInstructions();
         this.time= quiz.getTime();
         this.totalMark = quiz.getTotalMark();
-        this.questions = fancyQuestion.toFancyQuestionListMapping(quiz.getQuestions(), isTeacher);
+        this.questions = fancyQuestion.toFancyQuestionListMapping(quiz.getQuestions(), isTeacher);  
+      	this.no_of_questions = quiz.getNo_of_questions();
+      	this.enterdbyTeacher=quiz.isEnterdbyTeacher();
+                
         return this;
     }
 
@@ -88,7 +97,15 @@ public class FancyQuiz {
         this.totalMark = totalMark;
     }
 
-    public List<FancyQuestion> getQuestions() {
+    public short getNo_of_questions() {
+		return no_of_questions;
+	}
+
+	public void setNo_of_questions(short no_of_questions) {
+		this.no_of_questions = no_of_questions;
+	}
+
+	public List<FancyQuestion> getQuestions() {
         return questions;
     }
 

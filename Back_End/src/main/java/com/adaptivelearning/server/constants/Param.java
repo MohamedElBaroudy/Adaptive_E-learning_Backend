@@ -42,6 +42,7 @@ public class Param {
     public static final String QUIZ_INSTRUCTIONS = "quiz_instructions";
     public static final String QUIZ_TIME = "quiz_time";
     public static final String QUIZ_TOTAL_MARK = "quiz_total_mark";
+    public static final String QUIZ_NO_OF_QUESTIONS = "no_of_questions";
 
 
     //for questions
@@ -49,8 +50,8 @@ public class Param {
     public static final String QUESTION_BODY = "question_body";
     public static final String QUESTION_IS_MULTIPLE_CHOICE = "is_multiple_choice";
     public static final String QUESTION_MARK = "question_mark";
-    public static final String QUESTION_LEVEL ="question_level ";
-    public static final String QUESTION_REFERENCE ="QUESTION_REFERENCE";
+    public static final String QUESTION_LEVEL ="question_level";
+    public static final String QUESTION_REFERENCE ="question_reference";
 
 
     //for answers

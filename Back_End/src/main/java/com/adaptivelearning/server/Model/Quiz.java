@@ -45,10 +45,15 @@ public class Quiz {
     @NotNull
     @Column(name = "TOTAL_MARK")
     private Short totalMark=0;
+ 
+    @Column(name = "NO_OF_QUESTIONS")
+    private Short no_of_questions = 0;
 
+    @Column(name = "teacher_entered_number")
+    private boolean enterdbyTeacher = false;
 
-
-    // mapping
+    
+	// mapping
     @OneToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "LECTURE")
@@ -119,7 +124,15 @@ public class Quiz {
         this.totalMark = totalMark;
     }
 
-    public Lecture getLecture() {
+    public Short getNo_of_questions() {
+		return no_of_questions;
+	}
+
+	public void setNo_of_questions(Short no_of_questions) {
+		this.no_of_questions = no_of_questions;
+	}
+
+	public Lecture getLecture() {
         return lecture;
     }
 
@@ -134,4 +147,13 @@ public class Quiz {
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
+    
+    public boolean isEnterdbyTeacher() {
+		return enterdbyTeacher;
+	}
+
+	public void setEnterdbyTeacher(boolean enterdbyTeacher) {
+		this.enterdbyTeacher = enterdbyTeacher;
+	}
+
 }
