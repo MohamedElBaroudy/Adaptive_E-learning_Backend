@@ -287,6 +287,9 @@ or
 #### Rate course for student (post method)
 >http://localhost:8080/student/rate_course?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=1&rate=4
 
+#### Retrieve random quiz by it's id (GET method)
+http://localhost:8080/student/quiz/generate?token=eyJhbGciOiJI..u4LSW2UyHvgyBoZInecZvrimKebVxo33y5A&quiz_id=1
+
 #### Retrieve quiz by it's id (GET method)
 >http://localhost:8080/student/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1
 
