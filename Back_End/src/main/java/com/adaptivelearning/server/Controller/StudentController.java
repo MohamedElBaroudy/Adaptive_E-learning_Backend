@@ -2,6 +2,7 @@ package com.adaptivelearning.server.Controller;
 
 import com.adaptivelearning.server.FancyModel.FancyClassroom;
 import com.adaptivelearning.server.FancyModel.FancyCourse;
+import com.adaptivelearning.server.FancyModel.FancyQuiz;
 import com.adaptivelearning.server.FancyModel.FancyStudentQuiz;
 import com.adaptivelearning.server.Model.*;
 import com.adaptivelearning.server.Repository.*;
@@ -42,6 +43,9 @@ public class StudentController {
 
     @Autowired
     StudentQuizRepository studentQuizRepository;
+
+    @Autowired
+    StudentCourseRepository studentCourseRepository;
 
     @Autowired
     JwtTokenProvider jwtTokenChecker;
@@ -173,8 +177,9 @@ public class StudentController {
         }
        course.getLearners().add(user);
         course.increamentStudents();
-   
+       StudentCourse studentCourse=new StudentCourse(user, course);
        courseRepository.save(course);
+       studentCourseRepository.save(studentCourse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -232,7 +237,7 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping(Mapping.STUDENT_START_QUIZ)
+      @PostMapping(Mapping.STUDENT_START_QUIZ)
     public ResponseEntity<?> studentStartQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
                                                @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
         User user = userRepository.findByToken(token);
@@ -370,6 +375,179 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping(Mapping.STUDENT_GENERATE_QUIZ)
+    public ResponseEntity<?> studentGenerateRandomQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                               @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
+        User user = userRepository.findByToken(token);
+        Quiz quiz = quizRepository.findByQuizId(quizId);
+
+        if (user == null) {
+            return new ResponseEntity<>("User is not present.",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired.",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (quiz == null) {
+            return new ResponseEntity<>("Quiz with this id is not found.",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
+            return new ResponseEntity<>("You are not enrolled in this course.",
+                    HttpStatus.FORBIDDEN);
+       
+          short selectedQuestions= quiz.getNo_of_questions();
+          List totalQuestions= questionRepository.findByQuiz(quiz);
+        
+          if(totalQuestions.size() == selectedQuestions) {
+        	quiz.setQuestions(totalQuestions);
+            StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+            studentQuizRepository.save(studentQuiz);
+            FancyQuiz fancyquiz=new FancyQuiz();
+            return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                 HttpStatus.OK);
+        }
+        else {
+        StudentCourse studentCourse=studentCourseRepository.findByUserAndCourse(user, quiz.getLecture().getSection().getCourse());
+        float studentRank=studentCourse.getRank();
+        
+        if(studentRank<4) {
+        	 List easyQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 1);
+        	 if(easyQuestions.size() >= selectedQuestions) {
+        		 List questions= questionRepository.findRandom(quizId, 1 ,selectedQuestions );
+                 quiz.setQuestions(questions);
+                 StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                 studentQuizRepository.save(studentQuiz);
+                 FancyQuiz fancyquiz=new FancyQuiz();
+                 return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                      HttpStatus.OK);
+        	     }
+                 else {
+                	int remender= selectedQuestions - easyQuestions.size();
+                	 System.out.println("//////////// "+remender+" ////////////");
+                	List mediumQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 2);
+                	if(mediumQuestions.size() >= remender) {
+               		    List questions= questionRepository.findRandom(quizId, 2 ,remender );
+               		  System.out.println("//////////// "+questions.size()+" ////////////");
+               		    questions.addAll(easyQuestions);
+               		    System.out.println("//////////// "+questions.size()+" ////////////");
+                        quiz.setQuestions(questions);
+                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                        studentQuizRepository.save(studentQuiz);
+                        FancyQuiz fancyquiz=new FancyQuiz();
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                             HttpStatus.OK);
+               	     }
+                	else {
+                		int remender2= selectedQuestions - easyQuestions.size()- mediumQuestions.size();
+                		List hardQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 3);
+                		List questions= questionRepository.findRandom(quizId, 3 ,remender2 );
+               		    questions.addAll(easyQuestions);
+               		    questions.addAll(mediumQuestions);
+                        quiz.setQuestions(questions);
+                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                        studentQuizRepository.save(studentQuiz);
+                        FancyQuiz fancyquiz=new FancyQuiz();
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                             HttpStatus.OK);
+                	}
+        	 }
+        	
+        }
+        else if(studentRank>4 && studentRank<7) {
+        	 List mediumQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 2);
+        	 if(mediumQuestions.size() >= selectedQuestions) {
+        		 List questions= questionRepository.findRandom(quizId, 2 ,selectedQuestions );
+                 quiz.setQuestions(questions);
+                 StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                 studentQuizRepository.save(studentQuiz);
+                 FancyQuiz fancyquiz=new FancyQuiz();
+                 return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                      HttpStatus.OK);
+        	     }
+                 else {
+                	int remender= selectedQuestions - mediumQuestions.size();
+                	 System.out.println("//////////// "+remender+" ////////////");
+                	List hardQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 3);
+                	if(hardQuestions.size() >= remender) {
+               		    List questions= questionRepository.findRandom(quizId, 3 ,remender );
+               		  System.out.println("//////////// "+questions.size()+" ////////////");
+               		    questions.addAll(mediumQuestions);
+               		    System.out.println("//////////// "+questions.size()+" ////////////");
+                        quiz.setQuestions(questions);
+                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                        studentQuizRepository.save(studentQuiz);
+                        FancyQuiz fancyquiz=new FancyQuiz();
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                             HttpStatus.OK);
+               	     }
+                	else {
+                		int remender2= selectedQuestions - hardQuestions.size()- mediumQuestions.size();
+                		List easyQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 1);
+                		List questions= questionRepository.findRandom(quizId, 3 ,remender2 );
+               		    questions.addAll(hardQuestions);
+               		    questions.addAll(mediumQuestions);
+                        quiz.setQuestions(questions);
+                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                        studentQuizRepository.save(studentQuiz);
+                        FancyQuiz fancyquiz=new FancyQuiz();
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                             HttpStatus.OK);
+                	}
+        	 }
+        
+        }
+        else {
+        	 List hardQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 3);
+        	 if(hardQuestions.size() >= selectedQuestions) {
+        		 List questions= questionRepository.findRandom(quizId, 3 ,selectedQuestions );
+                 quiz.setQuestions(questions);
+                 StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                 studentQuizRepository.save(studentQuiz);
+                 FancyQuiz fancyquiz=new FancyQuiz();
+                 return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                      HttpStatus.OK);
+        	     }
+                 else {
+                	int remender= selectedQuestions - hardQuestions.size();
+                	 System.out.println("//////////// "+remender+" ////////////");
+                	List mediumQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 2);
+                	if(mediumQuestions.size() >= remender) {
+               		    List questions= questionRepository.findRandom(quizId, 2 ,remender );
+               		  System.out.println("//////////// "+questions.size()+" ////////////");
+               		    questions.addAll(hardQuestions);
+               		    System.out.println("//////////// "+questions.size()+" ////////////");
+                        quiz.setQuestions(questions);
+                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                        studentQuizRepository.save(studentQuiz);
+                        FancyQuiz fancyquiz=new FancyQuiz();
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                             HttpStatus.OK);
+               	     }
+                	else {
+                		int remender2= selectedQuestions - hardQuestions.size()- mediumQuestions.size();
+                		List easyQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 1);
+                		List questions= questionRepository.findRandom(quizId, 1 ,remender2 );
+               		    questions.addAll(hardQuestions);
+               		    questions.addAll(mediumQuestions);
+                        quiz.setQuestions(questions);
+                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                        studentQuizRepository.save(studentQuiz);
+                        FancyQuiz fancyquiz=new FancyQuiz();
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                             HttpStatus.OK);
+                	}
+        	 }
+        
+        }
+       
+        }
+    }
+    
     @GetMapping(Mapping.STUDENT_QUIZ)
     public ResponseEntity<?> studentGetQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
                                                @Valid @RequestParam(Param.QUIZ_ID) Long quizId){

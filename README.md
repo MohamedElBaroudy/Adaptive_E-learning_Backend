@@ -288,7 +288,7 @@ or
 >http://localhost:8080/student/rate_course?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=1&rate=4
 
 #### Retrieve quiz by it's id (GET method)
->http://localhost:8080/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1
+>http://localhost:8080/student/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1
 
 #### Retrieve lecture by it's id (GET method)
 >http://localhost:8080/lecture?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWFTUwNzY2NDg2LCJleHA....VSpeC_24VswUN1EXZ2FLLw81Pz5eMom4S84Ug&lecture_id=1

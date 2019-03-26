@@ -57,6 +57,8 @@ public class Mapping {
     public static final String STUDENT_START_QUIZ = STUDENT + QUIZ + "/start";
     public static final String STUDENT_SUBMIT_QUIZ = STUDENT + QUIZ + "/submit";
     public static final String STUDENT_QUIZ = STUDENT + QUIZ;
+    public static final String STUDENT_GENERATE_QUIZ = STUDENT + QUIZ+"/generate";
+
 
 
     //Parent

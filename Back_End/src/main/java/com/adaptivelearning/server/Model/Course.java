@@ -86,9 +86,9 @@ public class Course {
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
-    @JoinTable(name = "student_courses",
-            joinColumns = {@JoinColumn(name = "course_id")},
-            inverseJoinColumns = {@JoinColumn(name = "student_id")})
+//    @JoinTable(name = "student_courses",
+//            joinColumns = {@JoinColumn(name = "course_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "student_id")})
     private List<User> learners;
 
     @ManyToMany(fetch = FetchType.LAZY,

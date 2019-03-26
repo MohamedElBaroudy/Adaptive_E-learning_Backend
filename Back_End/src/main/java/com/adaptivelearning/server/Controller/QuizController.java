@@ -221,8 +221,8 @@ public class QuizController {
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
         if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
-                .equals(user.getUserId()) && !quiz.getLecture().getSection().getCourse().getLearners().contains(user))
-            return new ResponseEntity<>("Not Allowed you are not the creator of this quiz or a student of this course",
+                .equals(user.getUserId()))
+            return new ResponseEntity<>(" Not Allowed you are not the creator of this quiz ",
                     HttpStatus.FORBIDDEN);
 
         FancyQuiz fancyQuiz = new FancyQuiz();
