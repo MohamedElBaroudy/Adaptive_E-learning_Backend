@@ -1,6 +1,7 @@
 package com.adaptivelearning.server.FancyModel;
 
 import com.adaptivelearning.server.Model.Lecture;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -72,7 +73,8 @@ public class FancyLecture {
         this.lectureId = lectureId;
     }
 
-    public Boolean getQuiz() {
+    @JsonProperty(value = "isQuiz")
+    public Boolean isQuiz() {
         return isQuiz;
     }
 
@@ -80,7 +82,8 @@ public class FancyLecture {
         isQuiz = quiz;
     }
 
-    public Boolean getFile() {
+    @JsonProperty(value = "isFile")
+    public Boolean isFile() {
         return isFile;
     }
 
@@ -88,7 +91,8 @@ public class FancyLecture {
         isFile = file;
     }
 
-    public Boolean getVideo() {
+    @JsonProperty(value = "isVideo")
+    public Boolean isVideo() {
         return isVideo;
     }
 

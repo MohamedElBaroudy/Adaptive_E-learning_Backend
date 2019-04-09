@@ -1,5 +1,6 @@
 # Adaptive_E-learning_Backend
 Graduation project about adaptive e-learning. This repo is the backend of the app.
+server : http://graduation-server.herokuapp.com/
 
 
 ## Codes
@@ -289,9 +290,6 @@ or
 
 #### Retrieve random quiz by it's id (GET method)
 http://localhost:8080/student/quiz/generate?token=eyJhbGciOiJI..u4LSW2UyHvgyBoZInecZvrimKebVxo33y5A&quiz_id=1
-
-#### Retrieve quiz by it's id (GET method)
->http://localhost:8080/student/quiz?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=1
 
 #### Retrieve lecture by it's id (GET method)
 >http://localhost:8080/lecture?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWFTUwNzY2NDg2LCJleHA....VSpeC_24VswUN1EXZ2FLLw81Pz5eMom4S84Ug&lecture_id=1
