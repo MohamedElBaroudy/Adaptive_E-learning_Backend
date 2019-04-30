@@ -71,9 +71,11 @@ key    value
 body    status_code    hint_if_any
 
 ### user APIs
+=
 #### Register example (POST)
 >pre : none
 
+=
 >https://graduation-server.herokuapp.com/auth/register?
 
 ##### params:
@@ -102,6 +104,7 @@ date_of_birth    2006-07-27
 #### Login example (GET)
 >pre : must have an account
 
+=
 >https://graduation-server.herokuapp.com/auth/login?
 
 ##### params:
@@ -112,6 +115,7 @@ password    12345678
 
 or
 
+=
 >https://graduation-server.herokuapp.com/auth/login?
 
 ##### params:
@@ -129,6 +133,7 @@ password    12345678
 
 
 #### Logout example (GET)
+=
 >https://graduation-server.herokuapp.com/auth/logout?
 
 ##### params:
@@ -143,6 +148,7 @@ token    eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaW....vc8kPCvCrCrk9LJEw
 >none    204
 
 #### Retrieve user data (GET)
+=
 >https://graduation-server.herokuapp.com/profile?
 
 ##### params:
@@ -157,6 +163,7 @@ token    eyJhbGciOiJIUzUxMiJ9.eyJzd....WO-OSbvxAlG9n1li-pGnA
 >fancyuser    200
 
 #### Get saved courses (GET)
+=
 >https://graduation-server.herokuapp.com/saved_courses?
 
 ##### params:
@@ -171,6 +178,7 @@ token    eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 >courses    200
 
 #### Add course to saved courses by course_id (POST)
+=
 >https://graduation-server.herokuapp.com/saved_courses?
 
 ##### params:
@@ -193,6 +201,7 @@ course_id    26
 >none    204
 
 #### Remove course from saved courses bt course's id (DELETE)
+=
 >https://graduation-server.herokuapp.com/saved_courses?
 
 ##### params:
@@ -215,6 +224,7 @@ course_id    26
 >none    204
 
 #### Add profile picture(POST)
+=
 >https://graduation-server.herokuapp.com/profilePic?
 
 ##### params:
@@ -222,7 +232,9 @@ course_id    26
 token    eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ
 
 ### Admin APIs
+=
 #### Retrieve teaching request (GET)
+=
 >https://graduation-server.herokuapp.com/admin/requests?
 
 ##### params:
@@ -239,6 +251,7 @@ token    eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ
 >fancyrequests    200
 
 #### Approve teaching request (PUT)
+=
 >https://graduation-server.herokuapp.com/admin/approve_teaching?
 
 ##### params:
@@ -261,6 +274,7 @@ user_id    2
 >none    204
 
 #### Retrieve All categories (GET)
+=
 >https://graduation-server.herokuapp.com/admin/categories?
 
 ##### params:
@@ -277,6 +291,7 @@ token    eyJhbGciOiJIUzUxMiJ9....QIKvFTMEJ4FK9ZZJLC_LvBQ
 >fancycategories    200
 
 #### Add new category (POST)
+=
 >https://graduation-server.herokuapp.com/admin/categories?
 
 ##### params:
@@ -297,6 +312,7 @@ category    Test Category
 >none    201
 
 #### Approve category by it's id
+=
 >https://graduation-server.herokuapp.com/admin/approve_category?
 
 ##### params:
@@ -321,16 +337,21 @@ category_id    21
 
 
 ### general APIs
+=
 #### Get new courses (max 20 course if we have more and all courses if less) (GET)
+=
 >https://graduation-server.herokuapp.com/new_courses
 
 #### Get hot courses (max 20 course if we have more and all courses if less) (GET)
+=
 >https://graduation-server.herokuapp.com/hot_courses
 
 #### Get top rated courses (max 20 course if we have more and all courses if less) (GET)
+=
 >https://graduation-server.herokuapp.com/top_rated_courses
 
 #### Get courses by category_id (GET)
+=
 >https://graduation-server.herokuapp.com/category_courses?
 
 ##### params:
@@ -345,12 +366,15 @@ category_id    3
 >fancyCourses    200
 
 #### Retrieve approved categories (GET)
+=
 >https://graduation-server.herokuapp.com/categories
 
 
 
 ### Course APIs
+=
 #### Get Course by id (GET)
+=
 >https://graduation-server.herokuapp.com/course?
 
 ##### params:
@@ -369,6 +393,7 @@ course_id    1
 >fancyCourse    200
 
 #### Add picture to course(POST)
+=
 >https://graduation-server.herokuapp.com/coursePic?
 
 ##### params:
@@ -380,7 +405,9 @@ course_id    1
 
 
 ### Classroom APIs
+=
 #### Get classroom by id (GET)
+=
 >https://graduation-server.herokuapp.com/classroom?
 
 ##### params:
@@ -401,6 +428,7 @@ classroom_id    1
 >fancyClassroom    200
 
 #### Add picture to classroom(POST)
+=
 >https://graduation-server.herokuapp.com/classroomPic?
 
 ##### params:
@@ -411,7 +439,9 @@ classroom_id    1
 
 
 ### parent APIs
+=
 #### Add child for a parent (POST)
+=
 >https://graduation-server.herokuapp.com/parent/add_child?
 
 ##### params:
@@ -444,6 +474,7 @@ grade    1'st grade
 >none	201
 
 #### Join child into classroom (POST)
+=
 >https://graduation-server.herokuapp.com/parent/join_child_classroom?
 
 ##### params:
@@ -468,6 +499,7 @@ passcode    Jb6xHKK
 >none	201
 
 #### Enroll Child into course (POST)
+=
 >https://graduation-server.herokuapp.com/parent/enroll_child_course?
 
 ##### params:
@@ -492,6 +524,7 @@ course_id    1
 >none	200
 
 #### Retrieve children (GET)
+=
 >https://graduation-server.herokuapp.com/parent/children?
 
 ##### params:
@@ -506,6 +539,7 @@ token    eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 >User List	200
 
 #### Retrieve child (GET)
+=
 >https://graduation-server.herokuapp.com/parent/child?
 
 ##### params:
@@ -526,6 +560,7 @@ user_id    4
 >user	200
 
 #### Rate course for parent (POST)
+=
 >https://graduation-server.herokuapp.com/parent/rate_course?
 
 ##### params:
@@ -560,7 +595,9 @@ rate    4
 
 
 ### teacher APIs
+=
 #### Request teaching (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/request_teaching?
 
 ##### params:
@@ -581,6 +618,7 @@ token    eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 >none    204
 
 #### Check request (GET)
+=
 >https://graduation-server.herokuapp.com/teacher/request_teaching?
 
 ##### params:
@@ -600,6 +638,7 @@ token    eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 >not found request for this user"    404
 
 #### Request category (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/request_category?
 
 ##### params:
@@ -622,6 +661,7 @@ category    Test Category 2
 >none    201
 
 #### Create classroom (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/classrooms?
 
 ##### params:
@@ -640,6 +680,7 @@ classroom_name    CSE19 ComputerNetworks
 >classroom pass    201
 
 #### Create course (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/courses?
 
 ##### params:
@@ -670,6 +711,7 @@ level    1
 >none    201
 
 #### Update course (PUT)
+=
 >https://graduation-server.herokuapp.com/teacher/courses?
 
 ##### params:
@@ -704,6 +746,7 @@ level    2	(optional)
 >none    201
 
 #### Retrieve course students by course's id (GET)
+=
 >https://graduation-server.herokuapp.com/teacher/course/students?
 
 ##### params:
@@ -725,6 +768,7 @@ course_id    2
 
 
 #### Retrieve classrooms for teacher (GET)
+=
 >https://graduation-server.herokuapp.com/teacher/classrooms?
 
 ##### params:
@@ -739,6 +783,7 @@ token    eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 >Classroom List    200
 
 #### Retrieve courses for teacher (GET)
+=
 >https://graduation-server.herokuapp.com/teacher/courses?
 
 ##### params:
@@ -753,6 +798,7 @@ token    eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 >Course List    200
 
 #### Update the classroom passcode by it's Id (PUT)
+=
 >https://graduation-server.herokuapp.com/teacher/classroom?
 
 ##### params:
@@ -773,6 +819,7 @@ classroom_id    1
 >classroom pass    201
 
 #### Delete classroom by it's Id (DELETE)
+=
 >https://graduation-server.herokuapp.com/teacher/classroom?
 
 ##### params:
@@ -793,6 +840,7 @@ classroom_id    2
 >none    204
 
 #### Create course in a classroom (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/classroom_courses?
 
 ##### params:
@@ -827,6 +875,7 @@ level    2
 >none    201
 
 #### Delete course by it's Id (DELETE)
+=
 >https://graduation-server.herokuapp.com/teacher/courses?
 
 ##### params:
@@ -848,6 +897,7 @@ course_id    2
 >deleted"    204
 
 #### Create section in a course (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/section?
 
 ##### params:
@@ -870,6 +920,7 @@ section_title    Introduction
 >none    201
 
 #### Update the section info by it's id (PUT)
+=
 >https://graduation-server.herokuapp.com/teacher/section?
 
 ##### params:
@@ -892,6 +943,7 @@ section_title    COURSE_INTRO
 >none    201
 
 #### Delete section by it's id (DELETE)
+=
 >https://graduation-server.herokuapp.com/teacher/section?
 
 ##### params:
@@ -913,6 +965,7 @@ section_id    2
 >section deleted"    204
 
 #### Retrieve section by it's id (GET)
+=
 >https://graduation-server.herokuapp.com/teacher/section?
 
 ##### params:
@@ -933,6 +986,7 @@ section_id    2
 >section    200
 
 #### Create quiz by section id (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/quiz?
 
 ##### params:
@@ -959,6 +1013,7 @@ quiz_time    30
 >none    200
 
 #### Set number of selected questions (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/quiz/no_questions?
 
 ##### params:
@@ -985,6 +1040,7 @@ no_of_questions    8
 >none    202
 
 #### Update the quiz info by it's id (optional parameters)(PUT)
+=
 >https://graduation-server.herokuapp.com/teacher/quiz?
 
 ##### params:
@@ -1014,6 +1070,7 @@ quiz_time    45
 >none    202
 
 #### Delete quiz by it's id (DELETE)
+=
 >https://graduation-server.herokuapp.com/teacher/quiz?
 
 ##### params:
@@ -1034,6 +1091,7 @@ quiz_id    2
 >none    202
 
 #### Retrieve quiz by it's id (GET)
+=
 >https://graduation-server.herokuapp.com/quiz?
 
 ##### params:
@@ -1054,6 +1112,7 @@ quiz_id    1
 >Quiz    202
 
 #### Add question to quiz by quiz's id (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/question?
 
 ##### params:
@@ -1088,6 +1147,7 @@ question_reference    go to lecture 2
 >none 201
 
 #### Retrieve question by it's id (GET)
+=
 >https://graduation-server.herokuapp.com/question?
 
 ##### params:
@@ -1108,6 +1168,7 @@ question_id    1
 >Question    200
 
 #### Update question by it's id (PUT)
+=
 >https://graduation-server.herokuapp.com/teacher/question?
 
 ##### params:
@@ -1134,6 +1195,7 @@ question_mark    3
 >none    200
 
 #### Delete question by it's id (DELETE)
+=
 >https://graduation-server.herokuapp.com/teacher/question?
 
 ##### params:
@@ -1154,6 +1216,7 @@ question_id    3
 >none    202
 
 #### Add answer to question by question's id (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/answer?
 
 ##### params:
@@ -1180,6 +1243,7 @@ is_correct    false
 >none    201
 
 #### Update answer by it's id (PUT)
+=
 >https://graduation-server.herokuapp.com/teacher/answer?
 
 ##### params:
@@ -1208,6 +1272,7 @@ is_correct    true
 >none    200
 
 #### Delete answer by it's id (DELETE)
+=
 >https://graduation-server.herokuapp.com/teacher/answer?
 
 ##### params:
@@ -1232,6 +1297,7 @@ answer_id    2
 >none    202
 
 #### upload lecture content (POST)
+=
 >https://graduation-server.herokuapp.com/teacher/file?
 
 ##### params:
@@ -1241,6 +1307,7 @@ token    eyJhbGciOi....B7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ
 section_id    1
 
 #### get lecture by file id (GET)
+=
 >https://graduation-server.herokuapp.com/teacher/file?
 
 ##### params:
@@ -1250,6 +1317,7 @@ token    eyJhbGciOi....B7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ
 file_id    4
 
 #### delete lectue content (DELETE)
+=
 >https://graduation-server.herokuapp.com/teacher/file?
 
 ##### params:
@@ -1259,6 +1327,7 @@ token    eyJhbGciOi....B7VuDtgOLpFIRMyr2bs1Ie1_FcaFwu_QIKvFTMEJ4FK9ZZJLC_LvBQ
 file_id    4
 
 #### retrieve lecture by it's id (GET)
+=
 >https://graduation-server.herokuapp.com/lecture?
 
 ##### params:
@@ -1280,7 +1349,9 @@ lecture_id    1
 
 
 ### student APIs
+=
 #### Join student in classroom with it's Passcode (POST)
+=
 >https://graduation-server.herokuapp.com/student/join_classroom?
 
 ##### params:
@@ -1305,6 +1376,7 @@ passcode    Jb6xHKK
 >none    200
 
 #### Retrieve classrooms for students (GET)
+=
 >https://graduation-server.herokuapp.com/student/classrooms?
 
 ##### params:
@@ -1319,6 +1391,7 @@ token    eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 >Classroom List    200
 
 #### Enroll Student into course (POST)
+=
 >https://graduation-server.herokuapp.com/student/enroll_course?
 
 ##### params:
@@ -1343,6 +1416,7 @@ course_id    1
 >none    200
 
 #### Retrieve courses for students (GET)
+=
 >https://graduation-server.herokuapp.com/student/courses?
 
 ##### params:
@@ -1357,6 +1431,7 @@ token    eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 >Course List    200
 
 #### Rate course for student (post)
+=
 >https://graduation-server.herokuapp.com/student/rate_course?
 
 ##### params:
@@ -1383,6 +1458,7 @@ rate    4
 >none    201
 
 #### Retrieve lecture by it's id (GET)
+=
 >https://graduation-server.herokuapp.com/lecture?
 
 ##### params:
@@ -1412,6 +1488,7 @@ token    eyJhbGciOiJI..u4LSW2UyHvgyBoZInecZvrimKebVxo33y5A
 quiz_id    1-
 
 #### start quiz by it's id (POST)
+=
 >https://graduation-server.herokuapp.com/student/quiz/start?
 
 ##### params:
@@ -1421,6 +1498,7 @@ token    eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA
 quiz_id    3
 
 #### Submit quiz by it's id and json of questions and student answers (POST)
+=
 >https://graduation-server.herokuapp.com/student/quiz/submit?
 
 ##### params:
@@ -1461,6 +1539,7 @@ quiz_id    3
 #### Get quiz for student to know if he passed it and some other info by quiz id (GET)
 >this is to get your score in the quiz. must take quiz first once at least
 
+=
 >https://graduation-server.herokuapp.com/student/quiz?
 
 ##### params:
