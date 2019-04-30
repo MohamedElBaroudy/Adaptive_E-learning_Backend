@@ -38,7 +38,7 @@ public class AdminController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("User Is Not Valid",
+            return new ResponseEntity<>("user isn't logged in",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -63,7 +63,7 @@ public class AdminController {
         User user = userRepository.findByToken(token);
         TeachingRequest teachingRequest = teachingRequestRepository.findByClaimerId(claimerId);
         if(user == null){
-            return new ResponseEntity<>("User Is Not Valid",
+            return new ResponseEntity<>("user isn't logged in",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -98,7 +98,7 @@ public class AdminController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("User Is Not Valid",
+            return new ResponseEntity<>("user isn't logged in",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -124,7 +124,7 @@ public class AdminController {
         Category foundCategory = categoryRepository.findByName(categoryStr);
 
         if(user == null){
-            return new ResponseEntity<>("User Is Not Valid",
+            return new ResponseEntity<>("user isn't logged in",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -155,7 +155,7 @@ public class AdminController {
         Category category = categoryRepository.findByCategoryId(categoryId);
 
         if(user == null){
-            return new ResponseEntity<>("User Is Not Valid",
+            return new ResponseEntity<>("user isn't logged in",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {

@@ -56,7 +56,7 @@ public class CourseController {
         Course course = courseRepository.findByCourseId(courseId);
 
         if(user == null){
-         	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+         	 return new ResponseEntity<>("user isn't logged in",HttpStatus.UNAUTHORIZED);
         }
 
         if (!jwtTokenChecker.validateToken(token)) {
@@ -85,7 +85,8 @@ public class CourseController {
         Course course = courseRepository.findByCourseId(courseId);
 
         if(user == null){
-            return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("user isn't logged in",
+                    HttpStatus.UNAUTHORIZED);
         }
 
         if (!jwtTokenChecker.validateToken(token)) {
@@ -117,7 +118,7 @@ public class CourseController {
         Course course = courseRepository.findByCourseId(courseId);
 
         if (user == null) {
-            return new ResponseEntity<>("User is not present ",
+            return new ResponseEntity<>("user isn't logged in",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -157,7 +158,7 @@ public class CourseController {
         Course course=courseRepository.findByCourseId(courseId);
 
         if(user == null){
-            return new ResponseEntity<>("User is not present ",
+            return new ResponseEntity<>("user isn't logged in",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -196,7 +197,7 @@ public class CourseController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("User Is Not Valid",
+            return new ResponseEntity<>("user isn't logged in",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
