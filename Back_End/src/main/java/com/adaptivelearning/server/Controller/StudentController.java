@@ -1,9 +1,6 @@
 package com.adaptivelearning.server.Controller;
 
-import com.adaptivelearning.server.FancyModel.FancyClassroom;
-import com.adaptivelearning.server.FancyModel.FancyCourse;
-import com.adaptivelearning.server.FancyModel.FancyQuiz;
-import com.adaptivelearning.server.FancyModel.FancyStudentQuiz;
+import com.adaptivelearning.server.FancyModel.*;
 import com.adaptivelearning.server.Model.*;
 import com.adaptivelearning.server.Repository.*;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
@@ -217,24 +214,65 @@ public class StudentController {
                     HttpStatus.FORBIDDEN);
         }
 
-        if(course.getRaters().contains(user)){
-            return new ResponseEntity<>("User can't rate again",
-                    HttpStatus.FORBIDDEN);
-        }
+//        if(course.getRaters().contains(user)){
+//            return new ResponseEntity<>("User can't rate again",
+//                    HttpStatus.FORBIDDEN);
+//        }
 
         /*
 
         validate that the student has finished the course
 
          */
+        StudentCourse studentCourse = studentCourseRepository.findByUserAndCourse(user, course);
 
-        int old_raters_num = course.getNumberOfRaters();
-        float new_rate =  ((course.getRate() * old_raters_num) + studentRate)/(old_raters_num + 1);
-        course.increamentRaters();
-        course.setRate(new_rate);
-        course.getRaters().add(user);
+        if (studentCourse.getRate() == -1){
+            int old_raters_num = course.getNumberOfRaters();
+            float new_rate =  ((course.getRate() * old_raters_num) + studentRate)/(old_raters_num + 1);
+            course.increamentRaters();
+            course.setRate(new_rate);
+        }
+        else {
+            int raters_num = course.getNumberOfRaters();
+            float new_rate =  (((course.getRate() * raters_num)-studentCourse.getRate()) + studentRate)/raters_num;
+            course.setRate(new_rate);
+        }
+
+        studentCourse.setRate(studentRate);
         courseRepository.save(course);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping(Mapping.STUDENT_COURSE)
+    public ResponseEntity<?> getStudentCourseRelatedInfo(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                                         @Valid @RequestParam(Param.COURSE_ID) Long courseId){
+        User user = userRepository.findByToken(token);
+        Course course=courseRepository.findByCourseId(courseId);
+
+        if(user == null){
+            return new ResponseEntity<>("user isn't logged in",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if(course == null){
+            return new ResponseEntity<>("Course is not found",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        StudentCourse studentCourse = studentCourseRepository.findByUserAndCourse(user,course);
+
+        if (studentCourse == null)
+            return new ResponseEntity<>("User is not enrolled in this course",
+                    HttpStatus.BAD_REQUEST);
+
+        FancyStudentCourse fancyStudentCourse = new FancyStudentCourse();
+        return new ResponseEntity<>(fancyStudentCourse.toFancyStudentCourse(studentCourse),
+                HttpStatus.OK);
     }
 
       @PostMapping(Mapping.STUDENT_START_QUIZ)

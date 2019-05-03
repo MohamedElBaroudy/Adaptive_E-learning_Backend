@@ -3,9 +3,11 @@ package com.adaptivelearning.server.Controller;
 import com.adaptivelearning.server.FancyModel.FancyUser;
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.Course;
+import com.adaptivelearning.server.Model.StudentCourse;
 import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Repository.ClassroomRepository;
 import com.adaptivelearning.server.Repository.CourseRepository;
+import com.adaptivelearning.server.Repository.StudentCourseRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
@@ -44,6 +46,9 @@ public class ParentController {
 
     @Autowired
     JwtTokenProvider jwtTokenChecker;
+
+    @Autowired
+    StudentCourseRepository studentCourseRepository;
 
 
     @PostMapping(Mapping.ADD_CHILD)
@@ -273,10 +278,10 @@ public class ParentController {
             return new ResponseEntity<>("Your child isn't enrolled in this course",
                     HttpStatus.FORBIDDEN);
         }
-        if(course.getRaters().contains(user)){
-            return new ResponseEntity<>("User cannot rate again",
-                    HttpStatus.FORBIDDEN);
-        }
+//        if(course.getRaters().contains(user)){
+//            return new ResponseEntity<>("User cannot rate again",
+//                    HttpStatus.FORBIDDEN);
+//        }
 
         /*
 
@@ -284,11 +289,21 @@ public class ParentController {
 
          */
 
-        int old_raters_num = course.getNumberOfRaters();
-        float new_rate = ((course.getRate() * old_raters_num) + parentRate)/(old_raters_num + 1);
-        course.increamentRaters();
-        course.setRate(new_rate);
-        course.getRaters().add(user);
+        StudentCourse studentCourse = studentCourseRepository.findByUserAndCourse(child, course);
+
+        if (studentCourse.getRate() == -1){
+            int old_raters_num = course.getNumberOfRaters();
+            float new_rate =  ((course.getRate() * old_raters_num) + parentRate)/(old_raters_num + 1);
+            course.increamentRaters();
+            course.setRate(new_rate);
+        }
+        else {
+            int raters_num = course.getNumberOfRaters();
+            float new_rate =  (((course.getRate() * raters_num)-studentCourse.getRate()) + parentRate)/raters_num;
+            course.setRate(new_rate);
+        }
+
+        studentCourse.setRate(parentRate);
         courseRepository.save(course);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

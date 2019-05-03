@@ -25,6 +25,9 @@ public class StudentCourse{
     @Column(name = "student_rank")
     private float rank = 0;
 
+    @Column(name = "rate")
+    private float rate = -1;
+
 
     public StudentCourse() {
     }
@@ -69,18 +72,28 @@ public class StudentCourse{
 		this.rank = rank;
 	}
 
-	@Override
+    public float getRate() {
+        return rate;
+    }
+
+    public void setRate(float rate) {
+        this.rate = rate;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StudentCourse that = (StudentCourse) o;
-        return Objects.equals(user, that.user) &&
-                Objects.equals(course, that.course) &&
-                Objects.equals(rank, that.rank) ;
+        return Float.compare(that.rank, rank) == 0 &&
+                Float.compare(that.rate, rate) == 0 &&
+                Objects.equals(studentCourseId, that.studentCourseId) &&
+                Objects.equals(user, that.user) &&
+                Objects.equals(course, that.course);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, course, rank);
+        return Objects.hash(studentCourseId, user, course, rank, rate);
     }
 }
