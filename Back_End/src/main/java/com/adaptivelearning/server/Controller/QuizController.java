@@ -50,7 +50,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -63,7 +63,7 @@ public class QuizController {
         Section section = sectionRepository.findBySectionId(sectionId);
 
         if (section == null) {
-            return new ResponseEntity<>("Section is not found ",
+            return new ResponseEntity<>("Section Is Not Present ",
                     HttpStatus.NOT_FOUND);
         }
 
@@ -89,7 +89,7 @@ public class QuizController {
 		User user = userRepository.findByToken(token);
 		
 		if(user == null){
-		return new ResponseEntity<>("user isn't logged in",
+		return new ResponseEntity<>("User is not present",
 		        HttpStatus.UNAUTHORIZED);
 		}
 		if (!jwtTokenChecker.validateToken(token)) {
@@ -102,20 +102,19 @@ public class QuizController {
 		Quiz quiz = quizRepository.findByQuizId(quizId);
 
         if (quiz == null)
-            return new ResponseEntity<>("Not found quiz",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
         if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
         .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to set no of questions",
                     HttpStatus.FORBIDDEN);
         if(no_of_questions==0) {
-        	  return new ResponseEntity<>("not allowed to set no of selected questions by 0",
+        	  return new ResponseEntity<>("not allowed to set no of selected questions by 0 ",
                       HttpStatus.FORBIDDEN);
         }
         List questions= questionRepository.findByQuiz(quiz);
         if(questions.size() < no_of_questions) {
-        	return new ResponseEntity<>("number of selected questions more than the current number of questions",
+        	return new ResponseEntity<>("number of selected questions more than the current number of questions ",
                     HttpStatus.FORBIDDEN);
         }
         
@@ -134,7 +133,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -147,8 +146,7 @@ public class QuizController {
         Quiz quiz = quizRepository.findByQuizId(quizId);
 
         if (quiz == null)
-            return new ResponseEntity<>("Not found quiz",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
         if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
         .equals(user.getUserId()))
@@ -176,7 +174,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -189,8 +187,7 @@ public class QuizController {
         Quiz quiz = quizRepository.findByQuizId(quizId);
 
         if (quiz == null)
-            return new ResponseEntity<>("Not found quiz",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
         if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
@@ -208,7 +205,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -221,12 +218,11 @@ public class QuizController {
         Quiz quiz = quizRepository.findByQuizId(quizId);
 
         if (quiz == null)
-            return new ResponseEntity<>("Not found quiz",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
         if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
-            return new ResponseEntity<>("Not Allowed you are not the creator of this quiz",
+            return new ResponseEntity<>(" Not Allowed you are not the creator of this quiz ",
                     HttpStatus.FORBIDDEN);
 
         FancyQuiz fancyQuiz = new FancyQuiz();
@@ -244,7 +240,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -257,8 +253,7 @@ public class QuizController {
         Quiz quiz = quizRepository.findByQuizId(quizId);
 
         if (quiz == null)
-            return new ResponseEntity<>("Not found quiz",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
         if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
@@ -266,7 +261,7 @@ public class QuizController {
                     HttpStatus.FORBIDDEN);
         
         if(level!=1 && level!= 2 && level!= 3) {
-        	return new ResponseEntity<>("question level is not valid",
+        	return new ResponseEntity<>(" question level is not valid ",
                     HttpStatus.BAD_REQUEST);
         }
         Question question = new Question(body,isMultipleChoice,mark,level,message);
@@ -292,7 +287,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -305,8 +300,7 @@ public class QuizController {
         Question question = questionRepository.findByQuestionId(questionId);
 
         if (question == null)
-            return new ResponseEntity<>("Not found question",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
         if (!question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()) && !question.getQuiz().getLecture().getSection().getCourse().getLearners().contains(user))
@@ -330,7 +324,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -343,8 +337,7 @@ public class QuizController {
         Question question = questionRepository.findByQuestionId(questionId);
 
         if (question == null)
-            return new ResponseEntity<>("Not found question",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
         if (question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()!=
                 (user.getUserId()))
@@ -377,7 +370,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -390,8 +383,7 @@ public class QuizController {
         Question question = questionRepository.findByQuestionId(questionId);
 
         if (question == null)
-            return new ResponseEntity<>("Not found question",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
         if (!question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
@@ -419,7 +411,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -432,8 +424,7 @@ public class QuizController {
         Question question = questionRepository.findByQuestionId(questionId);
 
         if (question == null)
-            return new ResponseEntity<>("Not found question",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
         if (!question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
@@ -463,7 +454,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -476,8 +467,7 @@ public class QuizController {
         Answer answer = answerRepository.findByAnswerId(answerId);
 
         if (answer == null)
-            return new ResponseEntity<>("Not found answer",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found answer",HttpStatus.NOT_FOUND);
 
         if (!answer.getQuestion().getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
@@ -506,7 +496,7 @@ public class QuizController {
             doesQuestionHasAnotherCorrectAnswer = true;
 
         if (!doesQuestionHasAnotherCorrectAnswer)
-            return new ResponseEntity<>("Cannot make the only correct answer incorrect. please add a correct answer first!",
+            return new ResponseEntity<>("Cannot make the only correct answer incorrect. change the body to be correct",
                     HttpStatus.BAD_REQUEST);
 
         if(body != null && !body.isEmpty())
@@ -523,7 +513,7 @@ public class QuizController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -536,12 +526,11 @@ public class QuizController {
         Answer answer = answerRepository.findByAnswerId(answerId);
 
         if (answer == null)
-            return new ResponseEntity<>("Not found question",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
         if (!answer.getQuestion().getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
-            return new ResponseEntity<>("Not Allowed you are not the creator of this quiz to delete it's content",
+            return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to delete it's content",
                     HttpStatus.FORBIDDEN);
 
         if (answer.isCorrect() && !answer.getQuestion().isMultipleChoice())

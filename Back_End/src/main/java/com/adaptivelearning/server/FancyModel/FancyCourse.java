@@ -54,12 +54,15 @@ public class FancyCourse {
     
     // course picture
     private FancyMediaFile course_picture;
+
+    // who requested role
+    private String role = "";
     
     public FancyCourse() {
     }
 
    
-	public FancyCourse toFancyCourseMapping(Course course){
+	public FancyCourse toFancyCourseMapping(Course course, User requester){
 		FancyUser user= new FancyUser();
 		FancySection sections=new FancySection();
 		FancyMediaFile picture=new FancyMediaFile();
@@ -79,15 +82,22 @@ public class FancyCourse {
         if(course.getCourse_picture()!=null) {
         this.course_picture=picture.toFancyFileMapping(course.getCourse_picture());
         }
+        if (requester != null){
+            if (course.getLearners().contains(requester))
+                this.role = "student";
+            if (course.getPublisher().equals(requester))
+                this.role = "teacher";
+        }
+
         return this;
     }
 
-    public List<FancyCourse> toFancyCourseListMapping(List<Course> courses){
+    public List<FancyCourse> toFancyCourseListMapping(List<Course> courses, User requester){
         List<FancyCourse> FancyCourseList = new LinkedList<>();
         for (Course course:
                 courses) {
             FancyCourse fancyCourse = new FancyCourse();
-            ((LinkedList<FancyCourse>) FancyCourseList).addLast(fancyCourse.toFancyCourseMapping(course));
+            ((LinkedList<FancyCourse>) FancyCourseList).addLast(fancyCourse.toFancyCourseMapping(course, requester));
         }
         return FancyCourseList;
     }
@@ -209,6 +219,12 @@ public class FancyCourse {
 	}
 
 
-	
+	public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
    
 }

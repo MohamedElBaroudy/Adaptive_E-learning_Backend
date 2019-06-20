@@ -80,16 +80,16 @@ public class StudentCourse{
         this.rate = rate;
     }
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StudentCourse that = (StudentCourse) o;
         return Float.compare(that.rank, rank) == 0 &&
-                Float.compare(that.rate, rate) == 0 &&
-                Objects.equals(studentCourseId, that.studentCourseId) &&
-                Objects.equals(user, that.user) &&
-                Objects.equals(course, that.course);
+        Float.compare(that.rate, rate) == 0 &&
+        Objects.equals(studentCourseId, that.studentCourseId) &&
+        Objects.equals(user, that.user) &&
+        Objects.equals(course, that.course);
     }
 
     @Override

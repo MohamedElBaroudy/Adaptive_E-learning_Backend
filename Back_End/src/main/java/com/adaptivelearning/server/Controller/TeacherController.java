@@ -45,7 +45,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>(" user is not present ",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -80,7 +80,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>(" user is not present ",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -91,7 +91,7 @@ public class TeacherController {
         }
 
         if(!user.isTeacher()){
-            return new ResponseEntity<>("user is not a teacher it's not allowed",
+            return new ResponseEntity<>("user is not a teacher it's not allowed ",
                     HttpStatus.FORBIDDEN);
         }
 
@@ -100,7 +100,7 @@ public class TeacherController {
         if (foundCategory != null){
             if (foundCategory.isApproved())
                 return new ResponseEntity<>("Already found and approved",
-                        HttpStatus.NOT_MODIFIED);
+                        HttpStatus.FORBIDDEN);
             else
                 return new ResponseEntity<>("Already requested for approval",
                         HttpStatus.NOT_MODIFIED);
@@ -116,7 +116,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User Is Not Valid",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -138,7 +138,7 @@ public class TeacherController {
         }
        
         	return new ResponseEntity<>("not found request for this user",
-                    HttpStatus.NOT_FOUND);
+                    HttpStatus.NO_CONTENT);
     }
 
     @PostMapping(Mapping.TEACHER_CLASSROOMS)
@@ -148,7 +148,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-        	 return new ResponseEntity<>("user isn't logged in",
+        	 return new ResponseEntity<>(" user is not present ",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -158,10 +158,10 @@ public class TeacherController {
                     HttpStatus.UNAUTHORIZED);
         }
 
-//        if(user.isChild()){
-//        	 return new ResponseEntity<>("user is child it's not allowed",
-//                     HttpStatus.FORBIDDEN);
-//        }
+        if(user.isChild()){
+        	 return new ResponseEntity<>("user is child it's not allowed ",
+                     HttpStatus.FORBIDDEN);
+        }
 
         if(!user.isTeacher())
             return new ResponseEntity<>("user is not a teacher yet please make a request to be teacher",
@@ -189,7 +189,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-        	 return new ResponseEntity<>("user isn't logged in",
+        	 return new ResponseEntity<>(" user is not present ",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -200,7 +200,7 @@ public class TeacherController {
         }
 
         FancyClassroom fancyClassroom = new FancyClassroom();
-       return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getClassrooms()),
+       return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getClassrooms(), user),
                 HttpStatus.OK);
     }
 
@@ -211,7 +211,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-        	 return new ResponseEntity<>("user isn't logged in",
+        	 return new ResponseEntity<>(" user is not present ",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -224,7 +224,7 @@ public class TeacherController {
         Classroom classroom = classroomRepository.findByClassroomId(classroomId);
 
         if (classroom == null) {
-        	 return new ResponseEntity<>("classroom is not found",
+        	 return new ResponseEntity<>(" classroom is not present ",
                      HttpStatus.NOT_FOUND);
         }
 
@@ -252,7 +252,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>(" user is not present ",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -265,12 +265,12 @@ public class TeacherController {
         Classroom classroom = classroomRepository.findByClassroomId(classroomId);
 
         if (classroom == null) {
-            return new ResponseEntity<>("classroom is not found",
+            return new ResponseEntity<>(" classroom is not present ",
                     HttpStatus.NOT_FOUND);
         }
 
         if(classroom.getCreator().getUserId() != user.getUserId()) {
-            return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your classroom to delete",
+            return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your classroom to update",
                     HttpStatus.FORBIDDEN);
         }
 
@@ -292,7 +292,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-        	  return new ResponseEntity<>("user isn't logged in",
+        	  return new ResponseEntity<>("user is not present",
                       HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -302,10 +302,10 @@ public class TeacherController {
                     HttpStatus.UNAUTHORIZED);
         }
 
-//        if(user.getParent() != null){
-//        	 return new ResponseEntity<>("user is child it's not allowed",
-//                     HttpStatus.FORBIDDEN);
-//        }
+        if(user.getParent() != null){
+        	 return new ResponseEntity<>("user is child it's not allowed ",
+                     HttpStatus.FORBIDDEN);
+        }
 
         if(!user.isTeacher())
             return new ResponseEntity<>("user is not a teacher yet please make a request to be teacher",
@@ -342,7 +342,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
         Classroom classroom=classroomRepository.findByClassroomId(classroomId);
         if(user == null){
-        	 return new ResponseEntity<>("user isn't logged in",
+        	 return new ResponseEntity<>("user is not present",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -353,17 +353,17 @@ public class TeacherController {
         }
 
         if(classroom == null){
-      	  return new ResponseEntity<>("classroom is not found",
+      	  return new ResponseEntity<>("classroom is not present",
                   HttpStatus.NOT_FOUND);
         }
 
-//        if(user.getParent() != null){
-//        	 return new ResponseEntity<>("user is child it's not allowed ",
-//                     HttpStatus.FORBIDDEN);
-//        }
+        if(user.getParent() != null){
+        	 return new ResponseEntity<>("user is child it's not allowed ",
+                     HttpStatus.FORBIDDEN);
+        }
         
         if(user.getUserId()!= classroom.getCreator().getUserId()) {
-        	 return new ResponseEntity<>("user is not the creator of this classroom",
+        	 return new ResponseEntity<>("this classroom not belongs to this user",
                      HttpStatus.FORBIDDEN);
         }
 
@@ -401,7 +401,7 @@ public class TeacherController {
         Course course = courseRepository.findByCourseId(requiredCourseId);
 
         if(user == null){
-        	  return new ResponseEntity<>("user isn't logged in",
+        	  return new ResponseEntity<>("user is not present",
                       HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -411,17 +411,17 @@ public class TeacherController {
                     HttpStatus.UNAUTHORIZED);
         }
 
-//        if(user.getParent() != null){
-//        	 return new ResponseEntity<>("user is child it's not allowed ",
-//                     HttpStatus.FORBIDDEN);
-//        }
+        if(user.getParent() != null){
+        	 return new ResponseEntity<>("user is child it's not allowed ",
+                     HttpStatus.FORBIDDEN);
+        }
 
-//        if(!user.isTeacher())
-//            return new ResponseEntity<>("user is not a teacher yet please make a request to be teacher",
-//                    HttpStatus.FORBIDDEN);
+        if(!user.isTeacher())
+            return new ResponseEntity<>("user is not a teacher yet please make a request to be teacher",
+                    HttpStatus.FORBIDDEN);
         
         if (course == null) {
-            return new ResponseEntity<>("course is not found ",
+            return new ResponseEntity<>(" course is not present ",
                     HttpStatus.NOT_FOUND);
         }
 
@@ -459,7 +459,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-        	 return new ResponseEntity<>("user isn't logged in",
+        	 return new ResponseEntity<>(" user is not present ",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -471,7 +471,7 @@ public class TeacherController {
 
         FancyCourse fancyCourse = new FancyCourse();
        return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
-               user.getCourses()), HttpStatus.OK);
+               user.getCourses(), user), HttpStatus.OK);
     }
    
     @DeleteMapping(Mapping.TEACHER_COURSES)
@@ -481,7 +481,7 @@ public class TeacherController {
     User user = userRepository.findByToken(token);
 
     if(user == null){
-        return new ResponseEntity<>("user isn't logged in",
+        return new ResponseEntity<>(" user is not present ",
                 HttpStatus.UNAUTHORIZED);
     }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -494,7 +494,7 @@ public class TeacherController {
     Course course = courseRepository.findByCourseId(courseId);
 
     if (course == null) {
-        return new ResponseEntity<>("course is not found",
+        return new ResponseEntity<>(" course is not present ",
                 HttpStatus.NOT_FOUND);
     }
 
@@ -518,7 +518,7 @@ public class TeacherController {
         Course course = courseRepository.findByCourseId(courseId) ;
 
         if(user == null){
-        	  return new ResponseEntity<>("user isn't logged in",
+        	  return new ResponseEntity<>("user is not present",
                       HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -527,16 +527,16 @@ public class TeacherController {
             return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
-
-        if(course == null){
-            return new ResponseEntity<>("Course is not found",
-                    HttpStatus.NOT_FOUND);
-        }
         
-        if(course.getPublisher().getUserId() != user.getUserId()){
-       	 return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your course to add section in",
+        if(user.getParent() != null){
+       	 return new ResponseEntity<>("user is child it's not allowed ",
                     HttpStatus.FORBIDDEN);
        }
+
+        if(course == null){
+      	  return new ResponseEntity<>("The FancyCourse Is Not Present",
+                    HttpStatus.NOT_FOUND);
+      }
 
         Section section=new Section(sectionTitle);
         section.setCourse(course);
@@ -553,7 +553,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-        	 return new ResponseEntity<>("user isn't logged in",
+        	 return new ResponseEntity<>(" user is not present ",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -566,7 +566,7 @@ public class TeacherController {
         Section section = sectionRepository.findBySectionId(sectionId);
 
         if (section == null) {
-        	 return new ResponseEntity<>("Section is not found",
+        	 return new ResponseEntity<>(" FancySection Is Not Present ",
                      HttpStatus.NOT_FOUND);
         }
 
@@ -588,7 +588,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-        	 return new ResponseEntity<>("user isn't logged in",
+        	 return new ResponseEntity<>(" user is not present ",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -601,13 +601,13 @@ public class TeacherController {
         Section section = sectionRepository.findBySectionId(sectionId);
 
         if (section == null) {
-        	 return new ResponseEntity<>("Section is not found",
+        	 return new ResponseEntity<>("Section Is Not Present ",
                      HttpStatus.NOT_FOUND);
         }
 
         if (section.getCourse().getPublisher().getUserId()!=
                 (user.getUserId())) {
-        	return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your section to delete",
+        	return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your section to update",
                     HttpStatus.FORBIDDEN);
         }
         sectionRepository.deleteById(section.getSectionId());
@@ -620,7 +620,7 @@ public class TeacherController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>(" user is not present ",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -633,13 +633,13 @@ public class TeacherController {
         Section section = sectionRepository.findBySectionId(sectionId);
 
         if (section == null) {
-            return new ResponseEntity<>("Section is not found",
+            return new ResponseEntity<>("Section Is Not Present ",
                     HttpStatus.NOT_FOUND);
         }
 
         if (!section.getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()) && !section.getCourse().getLearners().contains(user)) {
-            return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your section to show",
+            return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your section to update",
                     HttpStatus.FORBIDDEN);
         }
 

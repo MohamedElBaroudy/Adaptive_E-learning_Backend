@@ -47,15 +47,14 @@ public class ClassRoomController {
     JwtTokenProvider jwtTokenChecker;
 
     @GetMapping(Mapping.CLASSROOM)
-    public ResponseEntity<?> retrieveClassroom(@RequestParam(Param.ACCESS_TOKEN) String token,
+    public ResponseEntity<?> retrieveEnrolledCourses(@RequestParam(Param.ACCESS_TOKEN) String token,
     		                                  @Valid @RequestParam(Param.CLASSROOM_ID) Long classroomId) {
 
         User user = userRepository.findByToken(token);
         Classroom classroom = classroomRepository.findByClassroomId(classroomId);
 
         if(user == null){
-         	 return new ResponseEntity<>("user isn't logged in",
-                     HttpStatus.UNAUTHORIZED);
+         	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
         }
 
         if (!jwtTokenChecker.validateToken(token)) {
@@ -75,7 +74,7 @@ public class ClassRoomController {
         
 
         FancyClassroom fancyClassroom = new FancyClassroom();
-        return new ResponseEntity<>(fancyClassroom.toFancyClassroomMapping(classroom),
+        return new ResponseEntity<>(fancyClassroom.toFancyClassroomMapping(classroom, user),
                 HttpStatus.OK);
     }
     @PostMapping("/classroomPic")

@@ -65,7 +65,7 @@ public class LectureController {
 	        User user = userRepository.findByToken(token);
 
 	        if(user == null){
-	            return new ResponseEntity<>("user isn't logged in",
+	            return new ResponseEntity<>("User is not present",
 	                    HttpStatus.UNAUTHORIZED);
 	        }
 			if (!jwtTokenChecker.validateToken(token)) {
@@ -127,7 +127,7 @@ public class LectureController {
 	        User user = userRepository.findByToken(token);
 
 	        if(user == null){
-	            return new ResponseEntity<>("user isn't logged in",
+	            return new ResponseEntity<>("User is not present",
 	                    HttpStatus.UNAUTHORIZED);
 	        }
 			if (!jwtTokenChecker.validateToken(token)) {
@@ -161,7 +161,7 @@ public class LectureController {
 	        User user = userRepository.findByToken(token);
 
 	        if(user == null){
-	            return new ResponseEntity<>("user isn't logged in",
+	            return new ResponseEntity<>("User is not present",
 	                    HttpStatus.UNAUTHORIZED);
 	        }
 			if (!jwtTokenChecker.validateToken(token)) {
@@ -198,7 +198,7 @@ public class LectureController {
 	        Lecture lecture = lectureRepository.findByLectureId(lectureId);
 
 	        if(user == null){
-	         	 return new ResponseEntity<>("user isn't logged in",HttpStatus.UNAUTHORIZED);
+	         	 return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
 	        }
 
 			if (!jwtTokenChecker.validateToken(token)) {
@@ -209,13 +209,13 @@ public class LectureController {
 			}
 	       
 	        if(lecture == null){
-	            return new ResponseEntity<>("lecture is not found",
+	            return new ResponseEntity<>("lecture with this id is not found ",
 	                    HttpStatus.NOT_FOUND);
 	        }
 	        
 	        if (!lecture.getSection().getCourse().getPublisher().getUserId().equals(user.getUserId()) && 
 	        		!lecture.getSection().getCourse().getLearners().contains(user) )
-	        	return new ResponseEntity<>("Not Allowed you are not a teacher or student in this course",
+	        	return new ResponseEntity<>("Not Allowed you are not a teacher or student in this course ",
 	                    HttpStatus.FORBIDDEN);
 	        
 	        FancyLecture fancyLecture = new FancyLecture();

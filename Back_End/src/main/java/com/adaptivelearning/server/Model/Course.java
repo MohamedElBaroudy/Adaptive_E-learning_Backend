@@ -91,12 +91,12 @@ public class Course {
 //            inverseJoinColumns = {@JoinColumn(name = "student_id")})
     private List<User> learners;
 
-//    @ManyToMany(fetch = FetchType.LAZY,
-//            cascade = {CascadeType.REFRESH})
-//    @JoinTable(name = "student_courses_rates",
-//            joinColumns = {@JoinColumn(name = "course_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "student_id")})
-//    private List<User> raters;
+    // @ManyToMany(fetch = FetchType.LAZY,
+    //         cascade = {CascadeType.REFRESH})
+    // @JoinTable(name = "student_courses_rates",
+    //         joinColumns = {@JoinColumn(name = "course_id")},
+    //         inverseJoinColumns = {@JoinColumn(name = "student_id")})
+    // private List<User> raters;
 
 
 
@@ -217,13 +217,13 @@ public class Course {
         this.learners = learners;
     }
 
-//    public List<User> getRaters() {
-//        return raters;
-//    }
-//
-//    public void setRaters(List<User> raters) {
-//        this.raters = raters;
-//    }
+    // public List<User> getRaters() {
+    //     return raters;
+    // }
+
+    // public void setRaters(List<User> raters) {
+    //     this.raters = raters;
+    // }
 
     public List<Classroom> getClassrooms() {
         return classrooms;

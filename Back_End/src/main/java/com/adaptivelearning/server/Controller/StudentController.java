@@ -54,7 +54,7 @@ public class StudentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-          	 return new ResponseEntity<>("user isn't logged in",
+          	 return new ResponseEntity<>("User Is Not Valid",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -65,7 +65,7 @@ public class StudentController {
         }
 
         if(user.getParent() != null){
-         	 return new ResponseEntity<>("your parent has to join you",
+         	 return new ResponseEntity<>("You Must Have Parent permission",
                      HttpStatus.FORBIDDEN);
         }
 
@@ -77,22 +77,22 @@ public class StudentController {
         }
         
         if(classroom.getStudents().contains(user)) {
-        	 return new ResponseEntity<>("Already Joined",
+        	 return new ResponseEntity<>("Already Joined ",
                      HttpStatus.FORBIDDEN); 
         }
         
         // i don't know if the creator can join to his classroom or not
         
-        if(classroom.getCreator().getUserId()==user.getUserId()) {
-       	    return new ResponseEntity<>("classroom creator can't join to his classroom",
-                    HttpStatus.FORBIDDEN);
-       }
+//        if(classroom.getCreator().getUserId()==user.getUserId()) {
+//       	    return new ResponseEntity<>("classroom creator can't join to his classroom",
+//                    HttpStatus.FORBIDDEN); 
+//       }
 
         classroom.getStudents().add(user);
         classroomRepository.save(classroom);
 
         FancyClassroom fancyClassroom = new FancyClassroom();
-        fancyClassroom.toFancyClassroomMapping(classroom);
+        fancyClassroom.toFancyClassroomMapping(classroom, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -103,7 +103,7 @@ public class StudentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-         	 return new ResponseEntity<>("user isn't logged in",
+         	 return new ResponseEntity<>("User Is Not Valid",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -113,7 +113,8 @@ public class StudentController {
                     HttpStatus.UNAUTHORIZED);
         }
         FancyClassroom fancyClassroom = new FancyClassroom();
-        return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getJoins()),
+        return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getJoins(),
+                user),
                 HttpStatus.OK);
     }
     
@@ -123,7 +124,7 @@ public class StudentController {
         User user = userRepository.findByToken(token);
 
         if(user == null){
-         	 return new ResponseEntity<>("user isn't logged in",
+         	 return new ResponseEntity<>("User Is Not Valid",
                      HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -133,7 +134,8 @@ public class StudentController {
                     HttpStatus.UNAUTHORIZED);
         }
         FancyCourse fancyCourse = new FancyCourse();
-        return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(user.getEnrolls()),
+        return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(user.getEnrolls(),
+                user),
                 HttpStatus.OK);
     }
     
@@ -146,7 +148,7 @@ public class StudentController {
         Course course=courseRepository.findByCourseId(courseId);
         
         if(user == null){
-        	 return new ResponseEntity<>("user isn't logged in",
+        	 return new ResponseEntity<>("User is not present ",
                      HttpStatus.UNAUTHORIZED); 
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -156,12 +158,12 @@ public class StudentController {
                     HttpStatus.UNAUTHORIZED);
         }
         if(course == null){
-       	 return new ResponseEntity<>("course is not found",
+       	 return new ResponseEntity<>(" course with this id is not found ",
                     HttpStatus.NOT_FOUND); 
        }
 
         if(user.getParent() != null){
-        	 return new ResponseEntity<>("your parent has to enroll you",
+        	 return new ResponseEntity<>("user is child it's not allowed ",
                      HttpStatus.FORBIDDEN); 
         }
         if(course.getPublisher().getUserId()==user.getUserId()) {
@@ -169,7 +171,7 @@ public class StudentController {
                      HttpStatus.FORBIDDEN); 
         }
         if(course.getLearners().contains(user)) {
-        	 return new ResponseEntity<>("Already Enrolled",
+        	 return new ResponseEntity<>("Already Enrolled ",
                      HttpStatus.FORBIDDEN); 
         }
        course.getLearners().add(user);
@@ -190,7 +192,7 @@ public class StudentController {
         Course course=courseRepository.findByCourseId(courseId);
 
         if(user == null){
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present ",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
@@ -200,12 +202,12 @@ public class StudentController {
                     HttpStatus.UNAUTHORIZED);
         }
         if(course == null){
-            return new ResponseEntity<>("Course is not found",
+            return new ResponseEntity<>("Course with this id is not found ",
                     HttpStatus.NOT_FOUND);
         }
 
         if(user.getParent() != null){
-            return new ResponseEntity<>("User is child it's not allowed",
+            return new ResponseEntity<>("User is child it's not allowed ",
                     HttpStatus.FORBIDDEN);
         }
 
@@ -214,16 +216,17 @@ public class StudentController {
                     HttpStatus.FORBIDDEN);
         }
 
-//        if(course.getRaters().contains(user)){
-//            return new ResponseEntity<>("User can't rate again",
-//                    HttpStatus.FORBIDDEN);
-//        }
+        // if(course.getRaters().contains(user)){
+        //     return new ResponseEntity<>("User cannot rate again",
+        //             HttpStatus.FORBIDDEN);
+        // }
 
         /*
 
         validate that the student has finished the course
 
          */
+
         StudentCourse studentCourse = studentCourseRepository.findByUserAndCourse(user, course);
 
         if (studentCourse.getRate() == -1){
@@ -274,59 +277,59 @@ public class StudentController {
         return new ResponseEntity<>(fancyStudentCourse.toFancyStudentCourse(studentCourse),
                 HttpStatus.OK);
     }
+    
+    // @PostMapping(Mapping.STUDENT_START_QUIZ)
+    // public ResponseEntity<?> studentStartQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
+    //                                            @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
+    //     User user = userRepository.findByToken(token);
+    //     Quiz quiz = quizRepository.findByQuizId(quizId);
 
-      @PostMapping(Mapping.STUDENT_START_QUIZ)
-    public ResponseEntity<?> studentStartQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
-                                               @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
-        User user = userRepository.findByToken(token);
-        Quiz quiz = quizRepository.findByQuizId(quizId);
+    //     if (user == null) {
+    //         return new ResponseEntity<>("User is not present ",
+    //                 HttpStatus.UNAUTHORIZED);
+    //     }
+    //     if (!jwtTokenChecker.validateToken(token)) {
+    //         user.setToken("");
+    //         userRepository.save(user);
+    //         return new ResponseEntity<>("session expired",
+    //                 HttpStatus.UNAUTHORIZED);
+    //     }
+    //     if (quiz == null) {
+    //         return new ResponseEntity<>("Quiz with this id is not found ",
+    //                 HttpStatus.NOT_FOUND);
+    //     }
 
-        if (user == null) {
-            return new ResponseEntity<>("user isn't logged in",
-                    HttpStatus.UNAUTHORIZED);
-        }
-        if (!jwtTokenChecker.validateToken(token)) {
-            user.setToken("");
-            userRepository.save(user);
-            return new ResponseEntity<>("session expired",
-                    HttpStatus.UNAUTHORIZED);
-        }
-        if (quiz == null) {
-            return new ResponseEntity<>("Quiz with this id is not found ",
-                    HttpStatus.NOT_FOUND);
-        }
+    //     if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
+    //         return new ResponseEntity<>("You are not enrolled in this course",
+    //                 HttpStatus.FORBIDDEN);
 
-        if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
-            return new ResponseEntity<>("You are not enrolled in this course",
-                    HttpStatus.FORBIDDEN);
+    //     StudentQuiz studentQuiz = studentQuizRepository.findByUserAndQuiz(user,quiz);
 
-        StudentQuiz studentQuiz = studentQuizRepository.findByUserAndQuiz(user,quiz);
-
-        if (studentQuiz == null) {
-            studentQuiz = new StudentQuiz(user, quiz);
-            Date date = new Date(new Date().getTime() + quiz.getTime()*60000);
-            studentQuiz.setSubmitDate(date);
-        }
-        else {
-            Date date = new Date();
-            if (studentQuiz.getSubmitDate().after(date) && studentQuiz.getStartDate() != null)
-                return new ResponseEntity<>("Already started.",
-                        HttpStatus.FORBIDDEN);
-            Long diffInHours = (date.getTime() - studentQuiz.getSubmitDate().getTime())/(1000*60*60);
-            if (diffInHours < 4 && studentQuiz.getAttempts()==3)
-                return new ResponseEntity<>("3 attempts every 4 hours",
-                        HttpStatus.FORBIDDEN);
-            if (diffInHours >= 4){
-                studentQuiz.setAttempts(0);
-            }
-            studentQuiz.setStartDate(date);
-            studentQuiz.setSubmitDate(new Date(date.getTime() + quiz.getTime()*60000));
-            studentQuiz.setPassed(false);
-            studentQuiz.setMark(0);
-        }
-        studentQuizRepository.save(studentQuiz);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    //     if (studentQuiz == null) {
+    //         studentQuiz = new StudentQuiz(user, quiz);
+    //         Date date = new Date(new Date().getTime() + quiz.getTime()*60000);
+    //         studentQuiz.setSubmitDate(date);
+    //     }
+    //     else {
+    //         Date date = new Date();
+    //         if (studentQuiz.getSubmitDate().after(date) && studentQuiz.getStartDate() != null)
+    //             return new ResponseEntity<>("Already started.",
+    //                     HttpStatus.FORBIDDEN);
+    //         Long diffInHours = (date.getTime() - studentQuiz.getSubmitDate().getTime())/(1000*60*60);
+    //         if (diffInHours < 4 && studentQuiz.getAttempts()==3)
+    //             return new ResponseEntity<>("3 attempts every 4 hours",
+    //                     HttpStatus.FORBIDDEN);
+    //         if (diffInHours >= 4){
+    //             studentQuiz.setAttempts(0);
+    //         }
+    //         studentQuiz.setStartDate(date);
+    //         studentQuiz.setSubmitDate(new Date(date.getTime() + quiz.getTime()*60000));
+    //         studentQuiz.setPassed(false);
+    //         studentQuiz.setMark(0);
+    //     }
+    //     studentQuizRepository.save(studentQuiz);
+    //     return new ResponseEntity<>(HttpStatus.OK);
+    // }
 
     @PostMapping(Mapping.STUDENT_SUBMIT_QUIZ)
     public ResponseEntity<?> studentSubmitQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
@@ -340,28 +343,28 @@ public class StudentController {
 
 
         if (user == null) {
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present.",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
             user.setToken("");
             userRepository.save(user);
-            return new ResponseEntity<>("session expired",
+            return new ResponseEntity<>("session expired.",
                     HttpStatus.UNAUTHORIZED);
         }
         if (quiz == null) {
-            return new ResponseEntity<>("Quiz is not found",
+            return new ResponseEntity<>("Quiz with this id is not found.",
                     HttpStatus.NOT_FOUND);
         }
 
         if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
-            return new ResponseEntity<>("You are not enrolled in this course",
+            return new ResponseEntity<>("You are not enrolled in this course.",
                     HttpStatus.FORBIDDEN);
 
         StudentQuiz studentQuiz = studentQuizRepository.findByUserAndQuiz(user,quiz);
 
         if (studentQuiz == null || studentQuiz.getStartDate() == null)
-            return new ResponseEntity<>("You have not started this quiz yet",
+            return new ResponseEntity<>("You have not started this quiz yet.",
                     HttpStatus.FORBIDDEN);
 
         Date now = new Date();
@@ -369,7 +372,7 @@ public class StudentController {
         if (now.after(studentQuiz.getSubmitDate())){
             studentQuiz.setStartDate(null);
             studentQuiz.setSubmitDate(null);
-            return new ResponseEntity<>("You have exceeded the time limit of the quiz",
+            return new ResponseEntity<>("You have exceeded the time limit of the quiz.",
                     HttpStatus.FORBIDDEN);
         }
 
@@ -420,30 +423,57 @@ public class StudentController {
         Quiz quiz = quizRepository.findByQuizId(quizId);
 
         if (user == null) {
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present.",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
             user.setToken("");
             userRepository.save(user);
-            return new ResponseEntity<>("session expired",
+            return new ResponseEntity<>("session expired.",
                     HttpStatus.UNAUTHORIZED);
         }
         if (quiz == null) {
-            return new ResponseEntity<>("Quiz with this id is not found",
+            return new ResponseEntity<>("Quiz with this id is not found.",
                     HttpStatus.NOT_FOUND);
         }
 
         if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
-            return new ResponseEntity<>("You are not enrolled in this course",
+            return new ResponseEntity<>("You are not enrolled in this course.",
                     HttpStatus.FORBIDDEN);
-       
+      
+        StudentQuiz studentQuiz = studentQuizRepository.findByUserAndQuiz(user,quiz);
+        
+        if (studentQuiz == null) {
+            studentQuiz = new StudentQuiz(user, quiz);
+            Date date = new Date(new Date().getTime() + quiz.getTime()*60000);
+            studentQuiz.setSubmitDate(date);
+        }
+        else {
+            Date date = new Date();
+            if (studentQuiz.getSubmitDate() != null && studentQuiz.getSubmitDate().after(date) && studentQuiz.getStartDate() != null)
+                return new ResponseEntity<>("Already started.",
+                        HttpStatus.FORBIDDEN);
+            if (studentQuiz.getSubmitDate() != null){
+                Long diffInHours = (date.getTime() - studentQuiz.getSubmitDate().getTime())/(1000*60*60);
+                if (diffInHours < 4 && studentQuiz.getAttempts()==3)
+                    return new ResponseEntity<>("3 attempts every 4 hours",
+                            HttpStatus.FORBIDDEN);
+                if (diffInHours >= 4){
+                    studentQuiz.setAttempts(0);
+                }
+            }
+            studentQuiz.setStartDate(date);
+            studentQuiz.setSubmitDate(new Date(date.getTime() + quiz.getTime()*60000));
+            studentQuiz.setPassed(false);
+            studentQuiz.setMark(0);
+        }
+ 
           short selectedQuestions= quiz.getNo_of_questions();
           List totalQuestions= questionRepository.findByQuiz(quiz);
         
           if(totalQuestions.size() == selectedQuestions) {
         	quiz.setQuestions(totalQuestions);
-            StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+       //     StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
             studentQuizRepository.save(studentQuiz);
             FancyQuiz fancyquiz=new FancyQuiz();
             return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
@@ -458,7 +488,7 @@ public class StudentController {
         	 if(easyQuestions.size() >= selectedQuestions) {
         		 List questions= questionRepository.findRandom(quizId, 1 ,selectedQuestions );
                  quiz.setQuestions(questions);
-                 StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+             //    StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                  studentQuizRepository.save(studentQuiz);
                  FancyQuiz fancyquiz=new FancyQuiz();
                  return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
@@ -466,15 +496,15 @@ public class StudentController {
         	     }
                  else {
                 	int remender= selectedQuestions - easyQuestions.size();
-                	 System.out.println("//////////// "+remender+" ////////////");
+                	
                 	List mediumQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 2);
                 	if(mediumQuestions.size() >= remender) {
                		    List questions= questionRepository.findRandom(quizId, 2 ,remender );
-               		  System.out.println("//////////// "+questions.size()+" ////////////");
+               		  
                		    questions.addAll(easyQuestions);
-               		    System.out.println("//////////// "+questions.size()+" ////////////");
+               		
                         quiz.setQuestions(questions);
-                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                 //       StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
                         return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
@@ -487,7 +517,7 @@ public class StudentController {
                		    questions.addAll(easyQuestions);
                		    questions.addAll(mediumQuestions);
                         quiz.setQuestions(questions);
-                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                   //     StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
                         return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
@@ -501,23 +531,21 @@ public class StudentController {
         	 if(mediumQuestions.size() >= selectedQuestions) {
         		 List questions= questionRepository.findRandom(quizId, 2 ,selectedQuestions );
                  quiz.setQuestions(questions);
-                 StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+               //  StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                  studentQuizRepository.save(studentQuiz);
                  FancyQuiz fancyquiz=new FancyQuiz();
                  return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
                       HttpStatus.OK);
         	     }
                  else {
-                	int remender= selectedQuestions - mediumQuestions.size();
-                	 System.out.println("//////////// "+remender+" ////////////");
+                	int remender= selectedQuestions - mediumQuestions.size();                	
                 	List hardQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 3);
                 	if(hardQuestions.size() >= remender) {
                		    List questions= questionRepository.findRandom(quizId, 3 ,remender );
-               		  System.out.println("//////////// "+questions.size()+" ////////////");
+               		 
                		    questions.addAll(mediumQuestions);
-               		    System.out.println("//////////// "+questions.size()+" ////////////");
                         quiz.setQuestions(questions);
-                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                    //    StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
                         return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
@@ -530,7 +558,7 @@ public class StudentController {
                		    questions.addAll(hardQuestions);
                		    questions.addAll(mediumQuestions);
                         quiz.setQuestions(questions);
-                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                    //    StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
                         return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
@@ -544,7 +572,7 @@ public class StudentController {
         	 if(hardQuestions.size() >= selectedQuestions) {
         		 List questions= questionRepository.findRandom(quizId, 3 ,selectedQuestions );
                  quiz.setQuestions(questions);
-                 StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                 //StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                  studentQuizRepository.save(studentQuiz);
                  FancyQuiz fancyquiz=new FancyQuiz();
                  return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
@@ -560,7 +588,7 @@ public class StudentController {
                		    questions.addAll(hardQuestions);
                		    System.out.println("//////////// "+questions.size()+" ////////////");
                         quiz.setQuestions(questions);
-                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                   //     StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
                         return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
@@ -573,7 +601,7 @@ public class StudentController {
                		    questions.addAll(hardQuestions);
                		    questions.addAll(mediumQuestions);
                         quiz.setQuestions(questions);
-                        StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
+                     //   StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
                         return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
@@ -593,28 +621,28 @@ public class StudentController {
         Quiz quiz = quizRepository.findByQuizId(quizId);
 
         if (user == null) {
-            return new ResponseEntity<>("user isn't logged in",
+            return new ResponseEntity<>("User is not present.",
                     HttpStatus.UNAUTHORIZED);
         }
         if (!jwtTokenChecker.validateToken(token)) {
             user.setToken("");
             userRepository.save(user);
-            return new ResponseEntity<>("session expired",
+            return new ResponseEntity<>("session expired.",
                     HttpStatus.UNAUTHORIZED);
         }
         if (quiz == null) {
-            return new ResponseEntity<>("Quiz is not found",
+            return new ResponseEntity<>("Quiz with this id is not found.",
                     HttpStatus.NOT_FOUND);
         }
 
         if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
-            return new ResponseEntity<>("You are not enrolled in this course",
+            return new ResponseEntity<>("You are not enrolled in this course.",
                     HttpStatus.FORBIDDEN);
 
         StudentQuiz studentQuiz = studentQuizRepository.findByUserAndQuiz(user,quiz);
 
         if (studentQuiz == null)
-            return new ResponseEntity<>("Quiz has not taken yet",
+            return new ResponseEntity<>("Quiz has not taken yet.",
                     HttpStatus.NOT_FOUND);
 
         FancyStudentQuiz fancyStudentQuiz= new FancyStudentQuiz();

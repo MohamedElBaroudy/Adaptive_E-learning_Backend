@@ -36,7 +36,7 @@ public class FancyClassroom {
     public FancyClassroom() {
     }
 
-    public FancyClassroom toFancyClassroomMapping(Classroom classroom){
+    public FancyClassroom toFancyClassroomMapping(Classroom classroom, User requester){
     	FancyUser user= new FancyUser();
     	FancyCourse courses=new FancyCourse();
     	FancyMediaFile picture=new FancyMediaFile();
@@ -46,7 +46,7 @@ public class FancyClassroom {
         this.creator = user.toFancyUserMapper(classroom.getCreator());
         this.studentsNumber = classroom.getStudents().size();
         this.coursesNumber = (short) classroom.getCourses().size();
-        this.courses=courses.toFancyCourseListMapping(classroom.getCourses());
+        this.courses=courses.toFancyCourseListMapping(classroom.getCourses(), requester);
         
         if(classroom.getClassroom_picture()!=null) {
         this.classroom_picture=picture.toFancyFileMapping(classroom.getClassroom_picture());
@@ -54,13 +54,13 @@ public class FancyClassroom {
         return this;
     }
 
-    public List<FancyClassroom> toFancyClassroomListMapping(List<Classroom> classrooms){
+    public List<FancyClassroom> toFancyClassroomListMapping(List<Classroom> classrooms, User requester){
         List<FancyClassroom> FancyClassroomList = new LinkedList<>();
         for (Classroom classroom:
                 classrooms) {
             FancyClassroom fancyClassroom = new FancyClassroom();
             ((LinkedList<FancyClassroom>) FancyClassroomList)
-                    .addLast(fancyClassroom.toFancyClassroomMapping(classroom));
+                    .addLast(fancyClassroom.toFancyClassroomMapping(classroom, requester));
         }
         return FancyClassroomList;
     }

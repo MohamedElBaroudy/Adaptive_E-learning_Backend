@@ -47,11 +47,11 @@ public class GenerallController {
         FancyCourse fancyCourse = new FancyCourse();
         if(courses.size()>10)
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
-                    courses.subList(0,10)),
+                    courses.subList(0,10), null),
                     HttpStatus.OK);
         else
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
-                    courses),
+                    courses, null),
                     HttpStatus.OK);
     }
 
@@ -61,11 +61,11 @@ public class GenerallController {
         FancyCourse fancyCourse = new FancyCourse();
         if(courses.size()>10)
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
-                    courses.subList(0,10)),
+                    courses.subList(0,10), null),
                     HttpStatus.OK);
         else
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
-                    courses),
+                    courses, null),
                     HttpStatus.OK);
     }
 
@@ -75,11 +75,11 @@ public class GenerallController {
         FancyCourse fancyCourse = new FancyCourse();
         if(courses.size()>10)
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
-                    courses.subList(0,10)),
+                    courses.subList(0,10), null),
                     HttpStatus.OK);
         else
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
-                    courses),
+                    courses, null),
                     HttpStatus.OK);
     }
 
@@ -109,7 +109,7 @@ public class GenerallController {
     	
         FancyCourse fancyCourse=new FancyCourse();
         
-            return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(courses),
+            return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(courses, null),
                     HttpStatus.OK);
     }
 }

@@ -62,8 +62,8 @@ public class UserController {
         User user = userRepository.findByEmailOrUsername(email,username);
 
         if (user == null)
-            return new ResponseEntity<>("user is not found",
-                    HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("user is not present",
+                    HttpStatus.UNAUTHORIZED);
 
 
         Authentication authentication = authenticationManager.authenticate(
