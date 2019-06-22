@@ -33,6 +33,7 @@ public class Mapping {
     //For courses
     public static final String NEW_COURSES = "/new_courses";
     public static final String HOT_COURSES = "/hot_courses";
+    public static final String ALL_COURSES = "/all_courses";
     public static final String TOP_RATED_COURSES = "/top_rated_courses";
     public static final String CATEGORY_COURSES = "/category_courses";
     public static final String SAVED_COURSES = "/saved_courses";
@@ -57,8 +58,8 @@ public class Mapping {
     public static final String STUDENT_RATE_COURSE = STUDENT + "/rate_course";
     public static final String STUDENT_START_QUIZ = STUDENT + QUIZ + "/start";
     public static final String STUDENT_SUBMIT_QUIZ = STUDENT + QUIZ + "/submit";
-    public static final String STUDENT_QUIZ = STUDENT + QUIZ;
-    public static final String STUDENT_GENERATE_QUIZ = STUDENT + QUIZ+"/generate";
+    public static final String STUDENT_QUIZ_SCORE = STUDENT + QUIZ + "/score";
+    public static final String STUDENT_QUIZ_INFO = STUDENT + QUIZ + "/info";
 
 
 

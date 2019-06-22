@@ -331,6 +331,35 @@ public class StudentController {
     //     return new ResponseEntity<>(HttpStatus.OK);
     // }
 
+    @GetMapping(Mapping.STUDENT_QUIZ_INFO)
+    public ResponseEntity<?> studentGetQuizInfo(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                                @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
+        User user = userRepository.findByToken(token);
+        Quiz quiz = quizRepository.findByQuizId(quizId);
+
+        if (user == null) {
+            return new ResponseEntity<>("User is not present.",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired.",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (quiz == null) {
+            return new ResponseEntity<>("Quiz with this id is not found.",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
+            return new ResponseEntity<>("You are not enrolled in this course.",
+                    HttpStatus.FORBIDDEN);
+
+        return new ResponseEntity<>(quizRepository.getCustomQuiz(quizId),
+                HttpStatus.OK);
+    }
+
     @PostMapping(Mapping.STUDENT_SUBMIT_QUIZ)
     public ResponseEntity<?> studentSubmitQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
                                                @Valid @RequestParam(Param.QUIZ_ID) Long quizId,
@@ -412,12 +441,13 @@ public class StudentController {
         studentQuiz.setSubmitDate(new Date());
         studentQuiz.setStartDate(null);
         studentQuiz.setAttempts(studentQuiz.getAttempts() + 1);
+        studentQuiz.setTotalAttempts(studentQuiz.getTotalAttempts()+1);
         studentQuizRepository.save(studentQuiz);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(Mapping.STUDENT_GENERATE_QUIZ)
-    public ResponseEntity<?> studentGenerateRandomQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
+    @GetMapping(Mapping.STUDENT_START_QUIZ)
+    public ResponseEntity<?> studentStartRandomQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
                                                @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
         User user = userRepository.findByToken(token);
         Quiz quiz = quizRepository.findByQuizId(quizId);
@@ -614,7 +644,7 @@ public class StudentController {
         }
     }
     
-    @GetMapping(Mapping.STUDENT_QUIZ)
+    @GetMapping(Mapping.STUDENT_QUIZ_SCORE)
     public ResponseEntity<?> studentGetQuiz(@RequestParam(Param.ACCESS_TOKEN) String token,
                                                @Valid @RequestParam(Param.QUIZ_ID) Long quizId){
         User user = userRepository.findByToken(token);

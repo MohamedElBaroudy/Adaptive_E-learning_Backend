@@ -4,7 +4,6 @@ import com.adaptivelearning.server.FancyModel.FancyCategory;
 import com.adaptivelearning.server.FancyModel.FancyCourse;
 import com.adaptivelearning.server.Model.Category;
 import com.adaptivelearning.server.Model.Course;
-import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Repository.CategoryRepository;
 import com.adaptivelearning.server.Repository.CourseRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
@@ -111,5 +110,11 @@ public class GenerallController {
         
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(courses, null),
                     HttpStatus.OK);
+    }
+
+    @GetMapping(Mapping.ALL_COURSES)
+    public ResponseEntity<?> retrieveCoursesTitles(){
+        return new ResponseEntity<>(courseRepository.findAllCourses(),
+                HttpStatus.OK);
     }
 }

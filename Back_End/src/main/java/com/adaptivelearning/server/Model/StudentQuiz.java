@@ -37,6 +37,9 @@ public class StudentQuiz{
     @Column(name = "Attempts")
     private Integer attempts = 0;
 
+    @Column(name = "TotalAttempts")
+    private  Integer totalAttempts = 0;
+
     public StudentQuiz() {
     }
 
@@ -112,22 +115,32 @@ public class StudentQuiz{
         this.attempts = attempts;
     }
 
+    public Integer getTotalAttempts() {
+        return totalAttempts;
+    }
+
+    public void setTotalAttempts(Integer totalAttempts) {
+        this.totalAttempts = totalAttempts;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof StudentQuiz)) return false;
         StudentQuiz that = (StudentQuiz) o;
-        return Objects.equals(user, that.user) &&
-                Objects.equals(quiz, that.quiz) &&
-                Objects.equals(mark, that.mark) &&
+        return Objects.equals(getStudentQuizId(), that.getStudentQuizId()) &&
+                Objects.equals(getUser(), that.getUser()) &&
+                Objects.equals(getQuiz(), that.getQuiz()) &&
+                Objects.equals(getMark(), that.getMark()) &&
                 Objects.equals(isPassed, that.isPassed) &&
-                Objects.equals(startDate, that.startDate) &&
-                Objects.equals(submitDate, that.submitDate) &&
-                Objects.equals(attempts, that.attempts);
+                Objects.equals(getStartDate(), that.getStartDate()) &&
+                Objects.equals(getSubmitDate(), that.getSubmitDate()) &&
+                Objects.equals(getAttempts(), that.getAttempts()) &&
+                Objects.equals(totalAttempts, that.totalAttempts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, quiz, mark, isPassed, startDate, submitDate, attempts);
+        return Objects.hash(getStudentQuizId(), getUser(), getQuiz(), getMark(), isPassed, getStartDate(), getSubmitDate(), getAttempts(), totalAttempts);
     }
 }
