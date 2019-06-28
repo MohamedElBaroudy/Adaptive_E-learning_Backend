@@ -308,7 +308,7 @@ or
 #### get quiz info before start by it's id (GET method)
 >graduation-server.herokuapp.com/student/quiz/info?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=3
 
-#### start quiz by it's id (POST method)
+#### start quiz by it's id (GET method)
 >graduation-server.herokuapp.com/student/quiz/start?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=3
 
 #### Submit quiz by it's id and json of questions and student answers (POST method)
