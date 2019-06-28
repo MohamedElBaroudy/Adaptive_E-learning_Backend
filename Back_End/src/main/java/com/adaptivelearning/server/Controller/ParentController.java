@@ -269,7 +269,7 @@ public class ParentController {
         return new ResponseEntity<>(childCourses.toFancyStudentCourseListMapping( studentCourseRepository.findByUser(child)) ,HttpStatus.OK);
     }
 
-    @GetMapping(Mapping.CHILD_REPORTS)
+    @GetMapping(Mapping.COURSE_REPORTS)
     ResponseEntity<?> retrieveChildCourseReports(@RequestParam(Param.ACCESS_TOKEN) String token,
                                     @Valid @RequestParam(Param.USER_ID) Long childId,
                                     @Valid @RequestParam(Param.COURSE_ID) Long courseID) {
@@ -309,6 +309,37 @@ public class ParentController {
         
         return new ResponseEntity<>(reportRepository.findByCourseIDAndChildID(courseID, childId) ,HttpStatus.OK);
     }
+    
+    @GetMapping(Mapping.CHILD_REPORTS)
+    ResponseEntity<?> retrieveChildReports(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                    @Valid @RequestParam(Param.USER_ID) Long childId) {
+
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+            return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
+        }
+
+        User child = userRepository.findByUserId(childId);
+
+        if (child == null)
+            return new ResponseEntity<>("Child is not found",
+                    HttpStatus.NOT_FOUND);
+        if (!user.equals(child.getParent()))
+            return new ResponseEntity<>("User is not your child",
+                    HttpStatus.FORBIDDEN);
+
+      
+        
+        return new ResponseEntity<>(reportRepository.findByChildID(childId) ,HttpStatus.OK);
+    }
+
 
 
     

@@ -9,5 +9,6 @@ import com.adaptivelearning.server.Model.Report;
 public interface ReportRepository  extends JpaRepository<Report,Long> {
 
 	Report findByReportId(Long reportId);
+	List<Report> findByChildID(Long ChildId);
 	List<Report> findByCourseIDAndChildID(Long courseId,Long ChildId);
 }

@@ -73,6 +73,7 @@ public class Mapping {
     public static final String CHILDREN = PARENT + "/children";
     public static final String CHILD = PARENT + "/child";
     public static final String CHILD_COURSES = PARENT + "/child"+"/courses";
+    public static final String COURSE_REPORTS = PARENT + "/course"+"/reports";
     public static final String CHILD_REPORTS = PARENT + "/child"+"/reports";
     public static final String PARENT_RATE_COURSE = PARENT + "/rate_course";
     
