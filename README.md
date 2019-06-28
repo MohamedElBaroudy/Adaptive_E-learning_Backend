@@ -169,6 +169,11 @@ or
 #### Rate course for parent (POST method)
 >graduation-server.herokuapp.com/parent/rate_course?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=1&first_name=Habebbaba&rate=4
 
+#### Retrieve child courses(GET method)
+>graduation-server.herokuapp.com/parent/child/courses?token=eyJhbGciOiJIUzUxMiJ9.eykjq................e20-skCcVv0wYJby5smU9ZRvTSw&user_id=4
+
+#### Retrieve child reports for each course(GET method)
+>graduation-server.herokuapp.com/parent/child/reports?token=eyJhbGciOiJIUzUxMiJ9.eyJzdW..............skJby5smU9ZRvTSw&user_id=2&course_id=1
 
 
 ### teacher APIs
@@ -209,6 +214,9 @@ or
 
 #### Create course in a classroom (POST method)
 >graduation-server.herokuapp.com/teacher/classroom_courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&classroom_id=1&title=c++&detailed_title=datastructure&description=it's datastructure and algorithm course&category=it_and_software&level=2
+
+#### Add course into classroom (POST method)
+>graduation-server.herokuapp.com/teacher/classroom/course?token=eyJhbGciOiJIUzUxMiJ9...............CcVv0wYJby5smU9ZRvTSw&classroom_id=1&course_id=1
 
 #### Delete course by it's Id (DELETE method)
 >graduation-server.herokuapp.com/teacher/courses?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&course_id=2
@@ -318,3 +326,6 @@ or
 
 #### Get quiz score for student to know if he passed it and some other info by quiz id (GET method)
 >graduation-server.herokuapp.com/student/quiz/score?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&quiz_id=3
+
+#### Get Accomplished courses (GET method)
+>graduation-server.herokuapp.com/student/accomplished?token=eyJhbGciOJ9.eyJz..........2nmastkqauCWLC5RmnRuCpUUBg
