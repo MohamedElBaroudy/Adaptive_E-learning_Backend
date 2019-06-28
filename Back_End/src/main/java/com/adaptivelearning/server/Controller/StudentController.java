@@ -376,6 +376,7 @@ public class StudentController {
 
         User user = userRepository.findByToken(token);
         Quiz quiz = quizRepository.findByQuizId(quizId);
+        Course course = courseRepository.findByCourseId(quiz.getLecture().getSection().getCourse().getCourseId());
         String json = httpEntity.getBody();
         JSONObject obj = new JSONObject(json);
 
@@ -452,6 +453,15 @@ public class StudentController {
         studentQuiz.setAttempts(studentQuiz.getAttempts() + 1);
         studentQuiz.setTotalAttempts(studentQuiz.getTotalAttempts()+1);
         studentQuizRepository.save(studentQuiz);
+        // from here the updating of student rank according to quiz mark and number of
+ 		// attempts and old rank
+ 		StudentCourse studentCourse = studentCourseRepository.findByUserAndCourse(user, course);
+ 		float old_rank = studentCourse.getRank();
+ 		int no_of_attempts = studentQuiz.getAttempts();
+ 		float quiz_grade = ( studentQuiz.getMark() / studentQuiz.getQuiz().getTotalMark() ) * 100 ;
+ 		float new_rank = studentCourse.updateRank(old_rank, no_of_attempts, quiz_grade);
+ 		studentCourse.setRank(new_rank);
+ 		studentCourseRepository.save(studentCourse);
         
         if(user.isChild()) {
         Report childReport = new Report();

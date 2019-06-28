@@ -68,7 +68,7 @@ public class StudentCourse{
 		return rank;
 	}
 
-	public void setMark(float rank) {
+	public void setRank(float rank) {
 		this.rank = rank;
 	}
 
@@ -96,4 +96,68 @@ public class StudentCourse{
     public int hashCode() {
         return Objects.hash(studentCourseId, user, course, rank, rate);
     }
+    
+ // function to put newRank between certain range 0-10
+ 	public float adjustedRank (float newRank) {
+ 		if(newRank > 10 )
+ 			return 10.0f ;
+ 		else if(newRank < 0 )
+ 			return 0.0f ;
+ 		else 
+ 			return newRank ;
+ 	}
+
+ 	public float updateRank(float oldRank, int no_of_attempts, float quiz_grade) {
+ 		// we must make the rank range between 0-10 , 0 <= rank <= 10
+ 		// 0-3 low level
+ 		// 4-7 medium level
+ 		// 7-10 advanced level
+ 		float newRank = 0.0f ;
+         if (quiz_grade >= 80 && no_of_attempts >= 0 && no_of_attempts < 4) 
+         {
+         	newRank = oldRank + 3 ;
+         	return adjustedRank(newRank) ;
+         }
+         else if (quiz_grade >= 80 && no_of_attempts >= 4 && no_of_attempts < 8 )
+ 		{
+         	newRank = oldRank + 1.5f ;
+         	return adjustedRank(newRank) ;
+ 		}
+         else if (quiz_grade >= 80 && no_of_attempts >= 8)
+ 		{
+         	newRank = oldRank + 0.5f ;
+         	return adjustedRank(newRank) ;
+ 		}
+         else if (quiz_grade >= 60 && quiz_grade < 80 && no_of_attempts >= 0 && no_of_attempts < 4)
+         {
+         	newRank = oldRank + 2 ;
+         	return adjustedRank(newRank) ;
+         }
+         else if (quiz_grade >= 60 && quiz_grade < 80 && no_of_attempts >= 4 && no_of_attempts < 8)
+         {
+         	newRank = oldRank + 1 ;
+         	return adjustedRank(newRank) ;
+         }
+         else if (quiz_grade >= 60 && quiz_grade < 80 && no_of_attempts >= 8)
+         {
+         	newRank = oldRank + 0.25f ;
+         	return adjustedRank(newRank) ;
+         }
+         else if (quiz_grade < 60 && no_of_attempts >= 0 && no_of_attempts < 4)
+         {
+         	newRank = oldRank - 1 ;
+         	return adjustedRank(newRank) ;
+         }
+         else if (quiz_grade < 60 && no_of_attempts >= 4 && no_of_attempts < 8)
+         {
+         	newRank = oldRank - 2 ;
+         	return adjustedRank(newRank) ;
+         }
+         else // quiz_grade < 60 && no_of_attempts >= 8
+         {
+         	newRank = oldRank - 3 ;
+         	return adjustedRank(newRank) ;
+         }
+ 	}
+    
 }
