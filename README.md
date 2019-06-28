@@ -173,7 +173,10 @@ or
 >graduation-server.herokuapp.com/parent/child/courses?token=eyJhbGciOiJIUzUxMiJ9.eykjq................e20-skCcVv0wYJby5smU9ZRvTSw&user_id=4
 
 #### Retrieve child reports for each course(GET method)
->graduation-server.herokuapp.com/parent/child/reports?token=eyJhbGciOiJIUzUxMiJ9.eyJzdW..............skJby5smU9ZRvTSw&user_id=2&course_id=1
+>graduation-server.herokuapp.com/parent/course/reports?token=eyJhbGciOiJIUzUxMiJ9.eyJzdW..............skJby5smU9ZRvTSw&user_id=2&course_id=1
+
+#### Retrieve child reports (GET method)
+>graduation-server.herokuapp.com/parent/child/reports?token=eyJhbGciOiJIUzUxMiJ9.eyJzdW..............skJby5smU9ZRvTSw&user_id=2
 
 
 ### teacher APIs
