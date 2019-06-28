@@ -27,6 +27,12 @@ public class StudentController {
     CourseRepository courseRepository;
     
     @Autowired
+    SectionRepository sectionRepository;
+    
+    @Autowired
+    LectureRepository lectureRepository;
+    
+    @Autowired
     ClassroomRepository classroomRepository;
 
     @Autowired
@@ -43,6 +49,9 @@ public class StudentController {
 
     @Autowired
     StudentCourseRepository studentCourseRepository;
+    
+    @Autowired
+    ReportRepository reportRepository;
 
     @Autowired
     JwtTokenProvider jwtTokenChecker;
@@ -443,6 +452,21 @@ public class StudentController {
         studentQuiz.setAttempts(studentQuiz.getAttempts() + 1);
         studentQuiz.setTotalAttempts(studentQuiz.getTotalAttempts()+1);
         studentQuizRepository.save(studentQuiz);
+        
+        if(user.isChild()) {
+        Report childReport = new Report();
+        childReport.setChildID(user.getUserId());
+        childReport.setParentID(user.getParent().getUserId());
+        childReport.setQuizID(quizId);
+        childReport.setPassed(studentQuiz.getPassed());
+        childReport.setStudentMark(studentQuiz.getMark());
+        childReport.setSubmitDate(studentQuiz.getSubmitDate());
+        childReport.setTotalMark(quiz.getTotalMark());
+        childReport.setTotalAttempts(studentQuiz.getTotalAttempts());
+        childReport.setCourseID(quiz.getLecture().getSection().getCourse().getCourseId());
+        
+        reportRepository.save(childReport);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -679,4 +703,54 @@ public class StudentController {
         return new ResponseEntity<>(fancyStudentQuiz.toFancyStudentQuiz(studentQuiz),
                 HttpStatus.OK);
     }
+    
+    @GetMapping(Mapping.ACCOMPLISHED_COURSES)
+    public ResponseEntity<?> AccomplishedCourses(@RequestParam(Param.ACCESS_TOKEN) String token){
+        User user = userRepository.findByToken(token);
+        
+        if (user == null) {
+            return new ResponseEntity<>("User is not present.",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired.",
+                    HttpStatus.UNAUTHORIZED);
+        }
+        List <Course> accomplishedCourses= new LinkedList<>();
+        List<StudentCourse> Courses=studentCourseRepository.findByUser(user);
+        for(int i=0;i<Courses.size();i++) {
+        	boolean accomplished=true;
+        	List<Section> sections=sectionRepository.findByCourse(Courses.get(i).getCourse());
+        	for(int j=0;j<sections.size();j++) {  
+//        		if(accomplished=false) {
+//        			break;
+//        		}
+        		List<Lecture> quizes= lectureRepository.findBySectionAndIsQuiz(sections.get(j),true);
+        		
+        		for(int k=0;k<quizes.size();k++) {
+        			
+        			Quiz quiz=quizRepository.findByLecture(quizes.get(k));
+        			StudentQuiz studentquiz=studentQuizRepository.findByUserAndQuiz(user, quiz);
+        		    if (studentquiz==null || studentquiz.getPassed()==false) {
+        		    	 accomplished=false;
+        		    	 j=sections.size();
+        		    	 
+        		    	break;
+        		    	}
+        		    else if(j==sections.size()-1){
+        		    	accomplishedCourses.add(Courses.get(i).getCourse());
+        		    	
+        		    }
+        		    
+        		}
+        	}
+        }
+        FancyCourse fancyCourse = new FancyCourse();
+               return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(accomplishedCourses, user),
+                HttpStatus.OK);
+    }
+
+    
 }

@@ -106,9 +106,8 @@ public class Course {
             joinColumns = {@JoinColumn(name = "course_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> savedBy ; 
-
-
-    @ManyToMany(fetch = FetchType.LAZY,
+    
+	 @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH},
             mappedBy = "courses")
     private List<Classroom> classrooms=new ArrayList<Classroom>();

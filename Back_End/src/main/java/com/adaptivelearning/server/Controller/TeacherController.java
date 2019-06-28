@@ -388,6 +388,50 @@ public class TeacherController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
    
+    @PostMapping(Mapping.TEACHER_CLASSROOM_COURSE)
+    public ResponseEntity<?> AddCourseToClassroom (@RequestParam(Param.ACCESS_TOKEN) String token,
+                                                    @Valid @RequestParam(Param.CLASSROOM_ID) Long classroomId,
+                                                    @Valid @RequestParam(Param.COURSE_ID) Long courseId ) {
+
+        User user = userRepository.findByToken(token);
+        Classroom classroom=classroomRepository.findByClassroomId(classroomId);
+        Course course=courseRepository.findByCourseId(courseId);
+        
+        if(user == null){
+        	 return new ResponseEntity<>("user is not present",
+                     HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
+        }
+
+        if(classroom == null){
+      	  return new ResponseEntity<>("classroom is not present",
+                  HttpStatus.NOT_FOUND);
+        }
+
+        if(user.getParent() != null){
+        	 return new ResponseEntity<>("user is child it's not allowed ",
+                     HttpStatus.FORBIDDEN);
+        }
+        
+        if(user.getUserId()!= classroom.getCreator().getUserId()) {
+        	 return new ResponseEntity<>("this classroom not belongs to this user",
+                     HttpStatus.FORBIDDEN);
+        }
+
+        if(course.isPublic()==false) {
+        	 return new ResponseEntity<>("this course is private it's not allowed to be added into classroom",
+                     HttpStatus.FORBIDDEN);
+        }
+        classroom.getCourses().add(course); // the mapping will do it automatically
+        classroomRepository.save(classroom);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
     @PutMapping(Mapping.TEACHER_COURSES)
     public ResponseEntity<?> updateCourseInformation(@RequestParam(Param.ACCESS_TOKEN) String token,
                                                      @Valid @RequestParam(Param.COURSE_ID) Long requiredCourseId ,

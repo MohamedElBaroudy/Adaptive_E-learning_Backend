@@ -1,5 +1,6 @@
 package com.adaptivelearning.server.Controller;
 
+import com.adaptivelearning.server.FancyModel.FancyStudentCourse;
 import com.adaptivelearning.server.FancyModel.FancyUser;
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.Course;
@@ -7,6 +8,7 @@ import com.adaptivelearning.server.Model.StudentCourse;
 import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Repository.ClassroomRepository;
 import com.adaptivelearning.server.Repository.CourseRepository;
+import com.adaptivelearning.server.Repository.ReportRepository;
 import com.adaptivelearning.server.Repository.StudentCourseRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
@@ -49,6 +51,9 @@ public class ParentController {
 
     @Autowired
     StudentCourseRepository studentCourseRepository;
+
+    @Autowired
+    ReportRepository reportRepository;
 
 
     @PostMapping(Mapping.ADD_CHILD)
@@ -173,9 +178,12 @@ public class ParentController {
                    HttpStatus.FORBIDDEN); 
       }
      
+     
+      StudentCourse studentCourse=new StudentCourse(enrollChild, course);
       course.getLearners().add(enrollChild);
       course.increamentStudents();
       courseRepository.save(course);
+      studentCourseRepository.save(studentCourse);
       return new ResponseEntity<>(HttpStatus.OK);
    }
 
@@ -232,6 +240,78 @@ public class ParentController {
     }
 
 
+    @GetMapping(Mapping.CHILD_COURSES)
+    ResponseEntity<?> retrieveChildCourses(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                    @Valid @RequestParam(Param.USER_ID) Long childId) {
+
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+            return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
+        }
+
+        User child = userRepository.findByUserId(childId);
+
+        if (child == null)
+            return new ResponseEntity<>("Child is not found",
+                    HttpStatus.NOT_FOUND);
+        if (!user.equals(child.getParent()))
+            return new ResponseEntity<>("User is not your child",
+                    HttpStatus.FORBIDDEN);
+
+        FancyStudentCourse childCourses=new FancyStudentCourse();
+        return new ResponseEntity<>(childCourses.toFancyStudentCourseListMapping( studentCourseRepository.findByUser(child)) ,HttpStatus.OK);
+    }
+
+    @GetMapping(Mapping.CHILD_REPORTS)
+    ResponseEntity<?> retrieveChildCourseReports(@RequestParam(Param.ACCESS_TOKEN) String token,
+                                    @Valid @RequestParam(Param.USER_ID) Long childId,
+                                    @Valid @RequestParam(Param.COURSE_ID) Long courseID) {
+
+        User user = userRepository.findByToken(token);
+
+        if(user == null){
+            return new ResponseEntity<>("User Is Not Valid",HttpStatus.UNAUTHORIZED);
+        }
+        if (!jwtTokenChecker.validateToken(token)) {
+            user.setToken("");
+            userRepository.save(user);
+            return new ResponseEntity<>("session expired",
+                    HttpStatus.UNAUTHORIZED);
+        }
+
+        User child = userRepository.findByUserId(childId);
+
+        if (child == null)
+            return new ResponseEntity<>("Child is not found",
+                    HttpStatus.NOT_FOUND);
+        if (!user.equals(child.getParent()))
+            return new ResponseEntity<>("User is not your child",
+                    HttpStatus.FORBIDDEN);
+
+        Course course = courseRepository.findByCourseId(courseID);
+        if(course==null)
+        	return new ResponseEntity<>("course is not found",
+                    HttpStatus.NOT_FOUND);
+        
+        StudentCourse studentCourse=studentCourseRepository.findByUserAndCourse(child, course);
+        if(studentCourse==null)
+        	 return new ResponseEntity<>("child is not enrolled in this course",
+                     HttpStatus.FORBIDDEN);
+        
+       // reportRepository.findByCourseIdAndChildId(courseID, childId);
+        
+        return new ResponseEntity<>(reportRepository.findByCourseIDAndChildID(courseID, childId) ,HttpStatus.OK);
+    }
+
+
+    
     @PostMapping(Mapping.PARENT_RATE_COURSE)
     public ResponseEntity<?> parentRateCourse(@RequestParam(Param.ACCESS_TOKEN) String token,
                                                @Valid @RequestParam(Param.COURSE_ID) Long courseId,

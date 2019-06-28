@@ -1,6 +1,10 @@
 package com.adaptivelearning.server.FancyModel;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.adaptivelearning.server.Model.StudentCourse;
+import com.adaptivelearning.server.Model.User;
 
 public class FancyStudentCourse {
     // user id
@@ -8,7 +12,7 @@ public class FancyStudentCourse {
 
     // course id
     private Long courseId;
-
+   
     // student rank
     private float rank;
 
@@ -28,6 +32,26 @@ public class FancyStudentCourse {
         return this;
     }
 
+    public FancyStudentCourse toFancyStudentCoursedetailed(StudentCourse studentCourse){
+        this.userId = studentCourse.getUser().getUserId();
+        this.courseId = studentCourse.getCourse().getCourseId();
+        this.rank = studentCourse.getRank();
+        this.rate = studentCourse.getRate();
+
+        return this;
+    }
+
+    public List<FancyStudentCourse> toFancyStudentCourseListMapping(List<StudentCourse> StudentCourses){
+        List<FancyStudentCourse> FancyStudentCourseList = new LinkedList<>();
+        for (StudentCourse studentCourse:
+        	StudentCourses) {
+        	FancyStudentCourse fancyStudentCourse = new FancyStudentCourse();
+            ((LinkedList<FancyStudentCourse>) FancyStudentCourseList)
+                    .addLast(fancyStudentCourse.toFancyStudentCoursedetailed(studentCourse));
+        }
+        return FancyStudentCourseList;
+    }
+    
     public Long getUserId() {
         return userId;
     }

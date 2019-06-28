@@ -45,6 +45,7 @@ public class Mapping {
     public static final String TEACHER_CLASSROOM = TEACHER + "/classroom";
     public static final String TEACHER_COURSES = TEACHER + "/courses";
     public static final String TEACHER_CLASSROOM_COURSES = TEACHER + "/classroom_courses";
+    public static final String TEACHER_CLASSROOM_COURSE = TEACHER + "/classroom"+"/course";
     public static final String REQUEST_TEACHING = TEACHER + "/request_teaching";
     public static final String REQUEST_CATEGORY = TEACHER + "/request_category";
 
@@ -60,7 +61,9 @@ public class Mapping {
     public static final String STUDENT_SUBMIT_QUIZ = STUDENT + QUIZ + "/submit";
     public static final String STUDENT_QUIZ_SCORE = STUDENT + QUIZ + "/score";
     public static final String STUDENT_QUIZ_INFO = STUDENT + QUIZ + "/info";
-
+    public static final String ACCOMPLISHED_COURSES = STUDENT + "/accomplished";
+    
+    
 
 
     //Parent
@@ -69,6 +72,8 @@ public class Mapping {
     public static final String ENROLL_CHILD_IN_COURSE = PARENT + "/enroll_child_course";
     public static final String CHILDREN = PARENT + "/children";
     public static final String CHILD = PARENT + "/child";
+    public static final String CHILD_COURSES = PARENT + "/child"+"/courses";
+    public static final String CHILD_REPORTS = PARENT + "/child"+"/reports";
     public static final String PARENT_RATE_COURSE = PARENT + "/rate_course";
     
     //For sections
