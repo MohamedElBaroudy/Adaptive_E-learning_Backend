@@ -1,13 +1,17 @@
 package com.adaptivelearning.server.Controller;
 
+import com.adaptivelearning.server.FancyModel.FancyReport;
 import com.adaptivelearning.server.FancyModel.FancyStudentCourse;
 import com.adaptivelearning.server.FancyModel.FancyUser;
 import com.adaptivelearning.server.Model.Classroom;
 import com.adaptivelearning.server.Model.Course;
+import com.adaptivelearning.server.Model.Quiz;
+import com.adaptivelearning.server.Model.Report;
 import com.adaptivelearning.server.Model.StudentCourse;
 import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Repository.ClassroomRepository;
 import com.adaptivelearning.server.Repository.CourseRepository;
+import com.adaptivelearning.server.Repository.QuizRepository;
 import com.adaptivelearning.server.Repository.ReportRepository;
 import com.adaptivelearning.server.Repository.StudentCourseRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
@@ -23,6 +27,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.validation.Valid;
 
 @RestController
@@ -55,6 +62,8 @@ public class ParentController {
     @Autowired
     ReportRepository reportRepository;
 
+    @Autowired
+    QuizRepository quizRepository;
 
     @PostMapping(Mapping.ADD_CHILD)
     public ResponseEntity<?> addChild(@RequestParam(Param.ACCESS_TOKEN) String token,
@@ -334,10 +343,21 @@ public class ParentController {
         if (!user.equals(child.getParent()))
             return new ResponseEntity<>("User is not your child",
                     HttpStatus.FORBIDDEN);
-
-      
         
-        return new ResponseEntity<>(reportRepository.findByChildID(childId) ,HttpStatus.OK);
+        
+      
+        FancyReport fancyreport = new FancyReport();
+        List<Report> reports= reportRepository.findByChildID(childId);
+        LinkedList<FancyReport> fancyReportList = new LinkedList<>();
+        
+        for (Report report:
+            reports) {
+    	FancyReport fancyReport = new FancyReport();
+    	Course course=courseRepository.findByCourseId(report.getCourseID());
+    	Quiz quiz=quizRepository.findByQuizId(report.getQuizID());
+        fancyReportList.addLast(fancyReport.toFancyReportMapping(report, user, child, quiz, course));
+    }
+              return new ResponseEntity<>(fancyReportList ,HttpStatus.OK);
     }
 
 
