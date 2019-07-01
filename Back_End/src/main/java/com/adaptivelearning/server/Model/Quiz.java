@@ -56,8 +56,8 @@ public class Quiz {
 	// mapping
     @OneToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.REMOVE})
-    @JoinColumn(name = "LECTURE")
-    private Lecture lecture;
+    @JoinColumn(name = "SECTION")
+    private Section section;
 
     @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "quiz",
@@ -132,12 +132,12 @@ public class Quiz {
 		this.no_of_questions = no_of_questions;
 	}
 
-	public Lecture getLecture() {
-        return lecture;
+    public Section getSection() {
+        return section;
     }
 
-    public void setLecture(Lecture lecture) {
-        this.lecture = lecture;
+    public void setSection(Section section) {
+        this.section = section;
     }
 
     public List<Question> getQuestions() {

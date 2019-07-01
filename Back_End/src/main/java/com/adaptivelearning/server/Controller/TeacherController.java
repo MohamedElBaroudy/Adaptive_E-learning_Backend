@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.ArrayList;
 
 @RestController
 //@RequestMapping(Mapping.TEACHER)
@@ -21,6 +22,9 @@ public class TeacherController {
 	
 	@Autowired
 	SectionRepository sectionRepository ;
+
+	@Autowired
+    VersionRepository versionRepository;
 
     @Autowired
     ClassroomRepository classroomRepository;
@@ -33,6 +37,9 @@ public class TeacherController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    StudentCourseRepository studentCourseRepository;
 
     @Autowired
     TeachingRequestRepository teachingRequestRepository;
@@ -199,7 +206,7 @@ public class TeacherController {
                     HttpStatus.UNAUTHORIZED);
         }
 
-        FancyClassroom fancyClassroom = new FancyClassroom();
+        FancyClassroom fancyClassroom = new FancyClassroom(studentCourseRepository);
        return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getClassrooms(), user),
                 HttpStatus.OK);
     }
@@ -513,7 +520,7 @@ public class TeacherController {
                     HttpStatus.UNAUTHORIZED);
         }
 
-        FancyCourse fancyCourse = new FancyCourse();
+        FancyCourse fancyCourse = new FancyCourse(studentCourseRepository);
        return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
                user.getCourses(), user), HttpStatus.OK);
     }
@@ -582,8 +589,21 @@ public class TeacherController {
                     HttpStatus.NOT_FOUND);
       }
 
-        Section section=new Section(sectionTitle);
+        Section section = new Section(sectionTitle);
+        Version version1 = new Version(1, section);
+        Version version2 = new Version(2, section);
+        Version version3 = new Version(3, section);
+        ArrayList<Version> versionList = new ArrayList<>();
+        versionList.add(version1);
+        versionList.add(version2);
+        versionList.add(version3);
+
+        versionRepository.save(version1);
+        versionRepository.save(version2);
+        versionRepository.save(version3);
+
         section.setCourse(course);
+        section.setVersions(versionList);
         sectionRepository.save(section);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -688,6 +708,8 @@ public class TeacherController {
         }
 
         FancySection fancySection = new FancySection();
-        return new ResponseEntity<>(fancySection.toFancySectionMapping(section),HttpStatus.OK);
+        Float rank = studentCourseRepository.findByUserAndCourse(user,section.getCourse()).getRank();
+
+        return new ResponseEntity<>(fancySection.toFancySectionMapping(section, section.getCourse().getPublisher().equals(user), rank),HttpStatus.OK);
     }
 }

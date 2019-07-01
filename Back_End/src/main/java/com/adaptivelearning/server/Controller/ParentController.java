@@ -18,7 +18,6 @@ import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -346,13 +345,13 @@ public class ParentController {
         
         
       
-        FancyReport fancyreport = new FancyReport();
+        FancyReport fancyreport = new FancyReport(studentCourseRepository);
         List<Report> reports= reportRepository.findByChildID(childId);
         LinkedList<FancyReport> fancyReportList = new LinkedList<>();
         
         for (Report report:
             reports) {
-    	FancyReport fancyReport = new FancyReport();
+    	FancyReport fancyReport = new FancyReport(studentCourseRepository);
     	Course course=courseRepository.findByCourseId(report.getCourseID());
     	Quiz quiz=quizRepository.findByQuizId(report.getQuizID());
         fancyReportList.addLast(fancyReport.toFancyReportMapping(report, user, child, quiz, course));

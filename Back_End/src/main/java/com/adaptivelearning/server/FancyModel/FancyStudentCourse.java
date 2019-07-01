@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.adaptivelearning.server.Model.StudentCourse;
-import com.adaptivelearning.server.Model.User;
 
 public class FancyStudentCourse {
     // user id

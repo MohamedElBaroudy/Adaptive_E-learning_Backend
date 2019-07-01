@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LectureRepository extends JpaRepository<Lecture,Long> {
     Lecture findByLectureId(Long lectureId);
-    List<Lecture> findBySectionAndIsQuiz(Section section ,boolean isquiz );
+//    List<Lecture> findBySectionAndIsQuiz(Section section ,boolean isquiz );
 }

@@ -100,7 +100,7 @@ public class StudentController {
         classroom.getStudents().add(user);
         classroomRepository.save(classroom);
 
-        FancyClassroom fancyClassroom = new FancyClassroom();
+        FancyClassroom fancyClassroom = new FancyClassroom(studentCourseRepository);
         fancyClassroom.toFancyClassroomMapping(classroom, user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -121,7 +121,7 @@ public class StudentController {
             return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
-        FancyClassroom fancyClassroom = new FancyClassroom();
+        FancyClassroom fancyClassroom = new FancyClassroom(studentCourseRepository);
         return new ResponseEntity<>(fancyClassroom.toFancyClassroomListMapping(user.getJoins(),
                 user),
                 HttpStatus.OK);
@@ -142,7 +142,7 @@ public class StudentController {
             return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
-        FancyCourse fancyCourse = new FancyCourse();
+        FancyCourse fancyCourse = new FancyCourse(studentCourseRepository);
         return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(user.getEnrolls(),
                 user),
                 HttpStatus.OK);
@@ -361,7 +361,7 @@ public class StudentController {
                     HttpStatus.NOT_FOUND);
         }
 
-        if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
+        if (!quiz.getSection().getCourse().getLearners().contains(user))
             return new ResponseEntity<>("You are not enrolled in this course.",
                     HttpStatus.FORBIDDEN);
 
@@ -376,7 +376,7 @@ public class StudentController {
 
         User user = userRepository.findByToken(token);
         Quiz quiz = quizRepository.findByQuizId(quizId);
-        Course course = courseRepository.findByCourseId(quiz.getLecture().getSection().getCourse().getCourseId());
+        Course course = courseRepository.findByCourseId(quiz.getSection().getCourse().getCourseId());
         String json = httpEntity.getBody();
         JSONObject obj = new JSONObject(json);
 
@@ -396,7 +396,7 @@ public class StudentController {
                     HttpStatus.NOT_FOUND);
         }
 
-        if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
+        if (!quiz.getSection().getCourse().getLearners().contains(user))
             return new ResponseEntity<>("You are not enrolled in this course.",
                     HttpStatus.FORBIDDEN);
 
@@ -473,7 +473,7 @@ public class StudentController {
         childReport.setSubmitDate(studentQuiz.getSubmitDate());
         childReport.setTotalMark(quiz.getTotalMark());
         childReport.setTotalAttempts(studentQuiz.getTotalAttempts());
-        childReport.setCourseID(quiz.getLecture().getSection().getCourse().getCourseId());
+        childReport.setCourseID(quiz.getSection().getCourse().getCourseId());
         
         reportRepository.save(childReport);
         }
@@ -501,7 +501,7 @@ public class StudentController {
                     HttpStatus.NOT_FOUND);
         }
 
-        if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
+        if (!quiz.getSection().getCourse().getLearners().contains(user))
             return new ResponseEntity<>("You are not enrolled in this course.",
                     HttpStatus.FORBIDDEN);
       
@@ -544,7 +544,7 @@ public class StudentController {
                  HttpStatus.OK);
         }
         else {
-        StudentCourse studentCourse=studentCourseRepository.findByUserAndCourse(user, quiz.getLecture().getSection().getCourse());
+        StudentCourse studentCourse=studentCourseRepository.findByUserAndCourse(user, quiz.getSection().getCourse());
         float studentRank=studentCourse.getRank();
         
         if(studentRank<4) {
@@ -699,7 +699,7 @@ public class StudentController {
                     HttpStatus.NOT_FOUND);
         }
 
-        if (!quiz.getLecture().getSection().getCourse().getLearners().contains(user))
+        if (!quiz.getSection().getCourse().getLearners().contains(user))
             return new ResponseEntity<>("You are not enrolled in this course.",
                     HttpStatus.FORBIDDEN);
 
@@ -714,10 +714,62 @@ public class StudentController {
                 HttpStatus.OK);
     }
     
+//    @GetMapping(Mapping.ACCOMPLISHED_COURSES)
+//    public ResponseEntity<?> AccomplishedCourses(@RequestParam(Param.ACCESS_TOKEN) String token){
+//        User user = userRepository.findByToken(token);
+//
+//        if (user == null) {
+//            return new ResponseEntity<>("User is not present.",
+//                    HttpStatus.UNAUTHORIZED);
+//        }
+//        if (!jwtTokenChecker.validateToken(token)) {
+//            user.setToken("");
+//            userRepository.save(user);
+//            return new ResponseEntity<>("session expired.",
+//                    HttpStatus.UNAUTHORIZED);
+//        }
+//        List <Course> accomplishedCourses= new LinkedList<>();
+//        List<StudentCourse> Courses=studentCourseRepository.findByUser(user);
+//        for(int i=0;i<Courses.size();i++) {
+//        	boolean accomplished=true;
+//        	List<Section> sections=sectionRepository.findByCourse(Courses.get(i).getCourse());
+//        	for(int j=0;j<sections.size();j++) {
+////        		if(accomplished=false) {
+////        			break;
+////        		}
+//        		List<Lecture> quizes= lectureRepository.findBySectionAndIsQuiz(sections.get(j),true);
+//
+//        		for(int k=0;k<quizes.size();k++) {
+//
+//        			Quiz quiz=quizRepository.findByLecture(quizes.get(k));
+//        			StudentQuiz studentquiz=studentQuizRepository.findByUserAndQuiz(user, quiz);
+//        		    if (studentquiz==null || studentquiz.getPassed()==false) {
+//        		    	 accomplished=false;
+//        		    	 j=sections.size();
+//
+//        		    	break;
+//        		    	}
+//        		    else if(j==sections.size()-1){
+//        		    	accomplishedCourses.add(Courses.get(i).getCourse());
+//
+//        		    }
+//
+//        		}
+//        	}
+//        }
+//        FancyCourse fancyCourse = new FancyCourse();
+//               return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(accomplishedCourses, user),
+//                HttpStatus.OK);
+//    }
+//
+//
+//}
+
+
     @GetMapping(Mapping.ACCOMPLISHED_COURSES)
     public ResponseEntity<?> AccomplishedCourses(@RequestParam(Param.ACCESS_TOKEN) String token){
         User user = userRepository.findByToken(token);
-        
+
         if (user == null) {
             return new ResponseEntity<>("User is not present.",
                     HttpStatus.UNAUTHORIZED);
@@ -731,36 +783,34 @@ public class StudentController {
         List <Course> accomplishedCourses= new LinkedList<>();
         List<StudentCourse> Courses=studentCourseRepository.findByUser(user);
         for(int i=0;i<Courses.size();i++) {
-        	boolean accomplished=true;
-        	List<Section> sections=sectionRepository.findByCourse(Courses.get(i).getCourse());
-        	for(int j=0;j<sections.size();j++) {  
-//        		if(accomplished=false) {
-//        			break;
-//        		}
-        		List<Lecture> quizes= lectureRepository.findBySectionAndIsQuiz(sections.get(j),true);
-        		
-        		for(int k=0;k<quizes.size();k++) {
-        			
-        			Quiz quiz=quizRepository.findByLecture(quizes.get(k));
-        			StudentQuiz studentquiz=studentQuizRepository.findByUserAndQuiz(user, quiz);
-        		    if (studentquiz==null || studentquiz.getPassed()==false) {
-        		    	 accomplished=false;
-        		    	 j=sections.size();
-        		    	 
-        		    	break;
-        		    	}
-        		    else if(j==sections.size()-1){
-        		    	accomplishedCourses.add(Courses.get(i).getCourse());
-        		    	
-        		    }
-        		    
-        		}
-        	}
+            boolean accomplished=true;
+            List<Section> sections=sectionRepository.findByCourse(Courses.get(i).getCourse());
+            for(int j=0;j<sections.size();j++) {
+                Quiz quiz = sections.get(j).getQuiz();
+                StudentQuiz studentquiz = studentQuizRepository.findByUserAndQuiz(user, quiz);
+                if (studentquiz==null || studentquiz.getPassed()==false) {
+                    accomplished=false;
+                    j=sections.size();
+                    break;
+                }
+                else if(j==sections.size()-1){
+                    accomplishedCourses.add(Courses.get(i).getCourse());
+                }
+            }
         }
-        FancyCourse fancyCourse = new FancyCourse();
-               return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(accomplishedCourses, user),
+        FancyCourse fancyCourse = new FancyCourse(studentCourseRepository);
+        return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(accomplishedCourses, user),
                 HttpStatus.OK);
     }
 
-    
+    public Float getRank(User student, Course course){
+        StudentCourse studentCourse = studentCourseRepository.findByUserAndCourse(student,course);
+        if (studentCourse != null)
+            return studentCourse.getRank();
+        else
+            return null;
+    }
+
 }
+
+

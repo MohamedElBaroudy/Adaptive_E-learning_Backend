@@ -6,16 +6,15 @@ import com.adaptivelearning.server.Model.Category;
 import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Repository.CategoryRepository;
 import com.adaptivelearning.server.Repository.CourseRepository;
+import com.adaptivelearning.server.Repository.StudentCourseRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +27,9 @@ public class GenerallController {
 
     @Autowired
     CourseRepository courseRepository;
+
+    @Autowired
+    StudentCourseRepository studentCourseRepository;
     
     @Autowired
     UserRepository userRepository;
@@ -43,7 +45,7 @@ public class GenerallController {
     @GetMapping(Mapping.NEW_COURSES)
     public ResponseEntity<?> retrieveNewestCourses(){
         List<Course> courses = courseRepository.findNewestCourses();
-        FancyCourse fancyCourse = new FancyCourse();
+        FancyCourse fancyCourse = new FancyCourse(studentCourseRepository);
         if(courses.size()>10)
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
                     courses.subList(0,10), null),
@@ -57,7 +59,7 @@ public class GenerallController {
     @GetMapping(Mapping.HOT_COURSES)
     public ResponseEntity<?> retrieveHotestCourses(){
         List<Course> courses = courseRepository.findHotestCourses();
-        FancyCourse fancyCourse = new FancyCourse();
+        FancyCourse fancyCourse = new FancyCourse(studentCourseRepository);
         if(courses.size()>10)
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
                     courses.subList(0,10), null),
@@ -71,7 +73,7 @@ public class GenerallController {
     @GetMapping(Mapping.TOP_RATED_COURSES)
     public ResponseEntity<?> retrieveTopRatedCourses(){
         List<Course> courses = courseRepository.findTopRatedCourses();
-        FancyCourse fancyCourse = new FancyCourse();
+        FancyCourse fancyCourse = new FancyCourse(studentCourseRepository);
         if(courses.size()>10)
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(
                     courses.subList(0,10), null),
@@ -106,7 +108,7 @@ public class GenerallController {
     	//get public courses
     	List<Course> courses = courseRepository.findByCategoryAndIsPublic(category,true); 
     	
-        FancyCourse fancyCourse=new FancyCourse();
+        FancyCourse fancyCourse=new FancyCourse(studentCourseRepository);
         
             return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(courses, null),
                     HttpStatus.OK);

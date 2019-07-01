@@ -1,18 +1,17 @@
 package com.adaptivelearning.server.FancyModel;
 
 import com.adaptivelearning.server.Model.Course;
-import com.adaptivelearning.server.Model.MediaFile;
-import com.adaptivelearning.server.Model.Section;
 import com.adaptivelearning.server.Model.User;
+import com.adaptivelearning.server.Repository.StudentCourseRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javassist.compiler.ast.NewExpr;
-
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class FancyCourse {
+    @JsonIgnore
+    private StudentCourseRepository studentCourseRepository;
     // id
     private Long courseId;
 
@@ -58,9 +57,9 @@ public class FancyCourse {
     // who requested role
     private String role = "";
     
-    public FancyCourse() {
+    public FancyCourse(StudentCourseRepository studentCourseRepository) {
+        this.studentCourseRepository = studentCourseRepository;
     }
-
    
 	public FancyCourse toFancyCourseMapping(Course course, User requester){
 		FancyUser user= new FancyUser();
@@ -78,16 +77,25 @@ public class FancyCourse {
         this.isPublic = course.isPublic();
         this.rate = course.getRate();
         this.publisher = user.toFancyUserMapper(course.getPublisher());
-        this.sections=sections.toFancySectionListMapping(course.getSections());
         if(course.getCourse_picture()!=null) {
         this.course_picture=picture.toFancyFileMapping(course.getCourse_picture());
         }
         if (requester != null){
-            if (course.getLearners().contains(requester))
+            Float rank;
+            if (course.getLearners().contains(requester)){
                 this.role = "student";
-            if (course.getPublisher().equals(requester))
+                rank = studentCourseRepository.findByUserAndCourse(requester, course).getRank();
+            }
+            else if (course.getPublisher().equals(requester)){
                 this.role = "teacher";
+                rank = null;
+            }
+            else
+                rank = null;
+            this.sections=sections.toFancySectionListMapping(course.getSections(),course.getPublisher().equals(requester),rank);
         }
+        else
+            this.sections=sections.toFancySectionListMapping(course.getSections(),false,null);
 
         return this;
     }
@@ -96,7 +104,7 @@ public class FancyCourse {
         List<FancyCourse> FancyCourseList = new LinkedList<>();
         for (Course course:
                 courses) {
-            FancyCourse fancyCourse = new FancyCourse();
+            FancyCourse fancyCourse = new FancyCourse(this.studentCourseRepository);
             ((LinkedList<FancyCourse>) FancyCourseList).addLast(fancyCourse.toFancyCourseMapping(course, requester));
         }
         return FancyCourseList;
@@ -226,5 +234,5 @@ public class FancyCourse {
     public void setRole(String role) {
         this.role = role;
     }
-   
+
 }

@@ -1,13 +1,16 @@
 package com.adaptivelearning.server.FancyModel;
 
 import com.adaptivelearning.server.Model.Classroom;
-import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.User;
+import com.adaptivelearning.server.Repository.StudentCourseRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class FancyClassroom {
+    @JsonIgnore
+    private StudentCourseRepository studentCourseRepository;
     // id
     private Long classroomId;
 
@@ -33,12 +36,13 @@ public class FancyClassroom {
     private FancyMediaFile classroom_picture;
     
     
-    public FancyClassroom() {
+    public FancyClassroom(StudentCourseRepository studentCourseRepository) {
+        this.studentCourseRepository = studentCourseRepository;
     }
 
     public FancyClassroom toFancyClassroomMapping(Classroom classroom, User requester){
     	FancyUser user= new FancyUser();
-    	FancyCourse courses=new FancyCourse();
+    	FancyCourse courses=new FancyCourse(this.studentCourseRepository);
     	FancyMediaFile picture=new FancyMediaFile();
         this.classroomId = classroom.getClassroomId();
         this.classroomName = classroom.getClassroomName();
@@ -58,7 +62,7 @@ public class FancyClassroom {
         List<FancyClassroom> FancyClassroomList = new LinkedList<>();
         for (Classroom classroom:
                 classrooms) {
-            FancyClassroom fancyClassroom = new FancyClassroom();
+            FancyClassroom fancyClassroom = new FancyClassroom(this.studentCourseRepository);
             ((LinkedList<FancyClassroom>) FancyClassroomList)
                     .addLast(fancyClassroom.toFancyClassroomMapping(classroom, requester));
         }

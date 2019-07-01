@@ -8,24 +8,17 @@ import com.adaptivelearning.server.Model.MediaFile;
 import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Repository.CourseRepository;
 import com.adaptivelearning.server.Repository.MediafileRepository;
+import com.adaptivelearning.server.Repository.StudentCourseRepository;
 import com.adaptivelearning.server.Repository.UserRepository;
 import com.adaptivelearning.server.Security.JwtTokenProvider;
 import com.adaptivelearning.server.Service.FileStorageService;
-
-import java.io.IOException;
-
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import com.adaptivelearning.server.constants.Mapping;
 import com.adaptivelearning.server.constants.Param;
 
@@ -38,6 +31,9 @@ public class CourseController {
 
     @Autowired
     CourseRepository courseRepository;
+
+    @Autowired
+    StudentCourseRepository studentCourseRepository;
     
     @Autowired
 	MediafileRepository MediaFileRepository;
@@ -72,7 +68,7 @@ public class CourseController {
         }
 
         
-        FancyCourse fancyCourse = new FancyCourse();
+        FancyCourse fancyCourse = new FancyCourse(studentCourseRepository);
         return new ResponseEntity<>(fancyCourse.toFancyCourseMapping(course, user),
                 HttpStatus.OK);
     }
@@ -205,7 +201,7 @@ public class CourseController {
             return new ResponseEntity<>("session expired",
                     HttpStatus.UNAUTHORIZED);
         }
-        FancyCourse fancyCourse = new FancyCourse();
+        FancyCourse fancyCourse = new FancyCourse(studentCourseRepository);
         return new ResponseEntity<>(fancyCourse.toFancyCourseListMapping(user.getSavedCourses(), user),
                 HttpStatus.OK);
     }

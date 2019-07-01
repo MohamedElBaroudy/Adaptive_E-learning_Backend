@@ -274,7 +274,7 @@ or
 >graduation-server.herokuapp.com/teacher/answer?token=eyJhbGciOiJIUzUx....WO-OSbvxAlG9n1li-pGnA&answer_id=2
 
 #### upload lecture content (POST method)
->graduation-server.herokuapp.com/teacher/file?token=eyJhbGciOiJIUzUxMiJ9.eyJzd...0iDEz7_E6hsYeVwJe7_FCnfMzUHxe9GNOPHRv-J731kO91lepTvn_pRplVnxawGcw&section_id=1
+>graduation-server.herokuapp.com/teacher/file?token=eyJhbGciOiJIUzUxMiJ9.eyJzd...0iDEz7_E6hsYeVwJe7_FCnfMzUHxe9GNOPHRv-J731kO91lepTvn_pRplVnxawGcw&section_id=1&version_level=2
 
 #### get lecture by file id (GET method)
 >graduation-server.herokuapp.com/teacher/file?token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyI0IjoxNTUwNzY2NDg2LCJleHAiO......C_24VswUN1EXZ2FLLw81Pz5eMom4S84Ug&file_id=4

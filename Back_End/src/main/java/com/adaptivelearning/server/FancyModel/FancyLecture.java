@@ -13,9 +13,6 @@ public class FancyLecture {
     // string name
     private String name;
 
-    // is quiz
-    private Boolean isQuiz;
-
     // is file
     private Boolean isFile;
 
@@ -24,6 +21,9 @@ public class FancyLecture {
 
     // quiz
     private Long lectureContentId;
+
+    // version
+    private String version;
 
     // video id
 
@@ -37,13 +37,9 @@ public class FancyLecture {
     public FancyLecture toFancyLectureMapping(Lecture lecture){
         this.lectureId = lecture.getLectureId();
         this.isFile = lecture.isReadFile();
-        this.isQuiz = lecture.isQuiz();
         this.isVideo = lecture.isVideo();
-        if (lecture.isQuiz()){
-            this.name = "Quiz :" + lecture.getQuiz().getTitle();
-            this.lectureContentId = lecture.getQuiz().getQuizId();
-        }
-        else if (lecture.isVideo()){
+
+        if (lecture.isVideo()){
         	// not sure can be changed later
                 this.name = "video :" + lecture.getMedia().getFileName();
                 this.lectureContentId = lecture.getMedia().getFileId();
@@ -52,6 +48,12 @@ public class FancyLecture {
         	this.name = "Read file :" + lecture.getMedia().getFileName();
             this.lectureContentId = lecture.getMedia().getFileId();	
         }
+        if (lecture.getVersion().getLevel() == 1)
+            this.version = "Easy";
+        else if (lecture.getVersion().getLevel() == 2)
+            this.version = "Medium";
+        else if (lecture.getVersion().getLevel() == 3)
+            this.version = "Hard";
         return this;
     }
 
@@ -71,15 +73,6 @@ public class FancyLecture {
 
     public void setLectureId(Long lectureId) {
         this.lectureId = lectureId;
-    }
-
-    @JsonProperty(value = "isQuiz")
-    public Boolean isQuiz() {
-        return isQuiz;
-    }
-
-    public void setQuiz(Boolean quiz) {
-        isQuiz = quiz;
     }
 
     @JsonProperty(value = "isFile")
@@ -114,5 +107,21 @@ public class FancyLecture {
 
     public void setLectureContentId(Long lectureContentId) {
         this.lectureContentId = lectureContentId;
+    }
+
+    public Boolean getFile() {
+        return isFile;
+    }
+
+    public Boolean getVideo() {
+        return isVideo;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

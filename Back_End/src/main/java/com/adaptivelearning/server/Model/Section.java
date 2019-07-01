@@ -37,11 +37,15 @@ public class Section {
     @JoinColumn(name = "COURSE")
     private Course course;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REMOVE},
             mappedBy = "section")
-    private List<Lecture> lectures;
+    private List<Version> versions;
 
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.REMOVE},
+            mappedBy = "section")
+    private Quiz quiz;
     // end of mapping
 
 
@@ -76,11 +80,19 @@ public class Section {
         this.course = course;
     }
 
-    public List<Lecture> getLectures() {
-        return lectures;
+    public List<Version> getVersions() {
+        return versions;
     }
 
-    public void setLectures(List<Lecture> lectures) {
-        this.lectures = lectures;
+    public void setVersions(List<Version> versions) {
+        this.versions = versions;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
     }
 }

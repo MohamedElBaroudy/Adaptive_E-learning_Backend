@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 import javax.validation.Valid;
 
 @RestController
@@ -72,11 +70,15 @@ public class QuizController {
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your section to add quiz in",
                     HttpStatus.FORBIDDEN);
         }
-        Lecture lecture = new Lecture(true,false,false);
-        lecture.setSection(section);
+
+        if (section.getQuiz() != null)
+            return new ResponseEntity<>("section already has a quiz",
+                    HttpStatus.FORBIDDEN);
+//        Lecture lecture = new Lecture(true,false,false);
+//        lecture.setSection(section);
         Quiz quiz = new Quiz(title,instructions,time,(short)0);
-        quiz.setLecture(lecture);
-        lectureRepository.save(lecture);
+        quiz.setSection(section);
+        sectionRepository.save(section);
         quizRepository.save(quiz);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -104,7 +106,7 @@ public class QuizController {
         if (quiz == null)
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
-        if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
+        if (!quiz.getSection().getCourse().getPublisher().getUserId()
         .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to set no of questions",
                     HttpStatus.FORBIDDEN);
@@ -149,7 +151,7 @@ public class QuizController {
         if (quiz == null)
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
-        if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
+        if (!quiz.getSection().getCourse().getPublisher().getUserId()
         .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to update",
                     HttpStatus.FORBIDDEN);
@@ -190,7 +192,7 @@ public class QuizController {
         if (quiz == null)
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
-        if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
+        if (!quiz.getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to delete",
                     HttpStatus.FORBIDDEN);
@@ -221,7 +223,7 @@ public class QuizController {
         if (quiz == null)
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
-        if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
+        if (!quiz.getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
             return new ResponseEntity<>(" Not Allowed you are not the creator of this quiz ",
                     HttpStatus.FORBIDDEN);
@@ -256,7 +258,7 @@ public class QuizController {
         if (quiz == null)
             return new ResponseEntity<>("Not found quiz",HttpStatus.NOT_FOUND);
 
-        if (!quiz.getLecture().getSection().getCourse().getPublisher().getUserId()
+        if (!quiz.getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz",
                     HttpStatus.FORBIDDEN);
@@ -303,8 +305,8 @@ public class QuizController {
         if (question == null)
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
-        if (!question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
-                .equals(user.getUserId()) && !question.getQuiz().getLecture().getSection().getCourse().getLearners().contains(user))
+        if (!question.getQuiz().getSection().getCourse().getPublisher().getUserId()
+                .equals(user.getUserId()) && !question.getQuiz().getSection().getCourse().getLearners().contains(user))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz or a student of this course",
                     HttpStatus.FORBIDDEN);
 
@@ -340,7 +342,7 @@ public class QuizController {
         if (question == null)
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
-        if (question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()!=
+        if (question.getQuiz().getSection().getCourse().getPublisher().getUserId()!=
                 (user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz to update it's content",
                     HttpStatus.FORBIDDEN);
@@ -386,7 +388,7 @@ public class QuizController {
         if (question == null)
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
-        if (!question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
+        if (!question.getQuiz().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to delete it's content",
                     HttpStatus.FORBIDDEN);
@@ -427,7 +429,7 @@ public class QuizController {
         if (question == null)
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
-        if (!question.getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
+        if (!question.getQuiz().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz",
                     HttpStatus.FORBIDDEN);
@@ -470,7 +472,7 @@ public class QuizController {
         if (answer == null)
             return new ResponseEntity<>("Not found answer",HttpStatus.NOT_FOUND);
 
-        if (!answer.getQuestion().getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
+        if (!answer.getQuestion().getQuiz().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not the creator of this quiz to update it's content",
                     HttpStatus.FORBIDDEN);
@@ -529,7 +531,7 @@ public class QuizController {
         if (answer == null)
             return new ResponseEntity<>("Not found question",HttpStatus.NOT_FOUND);
 
-        if (!answer.getQuestion().getQuiz().getLecture().getSection().getCourse().getPublisher().getUserId()
+        if (!answer.getQuestion().getQuiz().getSection().getCourse().getPublisher().getUserId()
                 .equals(user.getUserId()))
             return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your quiz to delete it's content",
                     HttpStatus.FORBIDDEN);

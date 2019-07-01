@@ -5,9 +5,6 @@ import com.adaptivelearning.server.Model.Question;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
-
 public class FancyQuestion {
     // id
     private Long questionId;

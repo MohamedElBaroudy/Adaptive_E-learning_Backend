@@ -1,16 +1,14 @@
 package com.adaptivelearning.server.Controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.validation.Valid;
 
+import com.adaptivelearning.server.Model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,15 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import com.adaptivelearning.server.FancyModel.FancyLecture;
 import com.adaptivelearning.server.FancyModel.FancyMediaFile;
-import com.adaptivelearning.server.FancyModel.FancyQuiz;
-import com.adaptivelearning.server.Model.Lecture;
-import com.adaptivelearning.server.Model.MediaFile;
-import com.adaptivelearning.server.Model.Quiz;
-import com.adaptivelearning.server.Model.Section;
-import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Repository.LectureRepository;
 import com.adaptivelearning.server.Repository.MediafileRepository;
 import com.adaptivelearning.server.Repository.SectionRepository;
@@ -61,6 +52,7 @@ public class LectureController {
 	    @PostMapping(Mapping.TEACHER_MEDIA)
 	    public ResponseEntity<?> uploadfile(@RequestParam(Param.ACCESS_TOKEN) String token,
 	                                        @Valid @RequestParam(Param.SECTION_ID) Long sectionId,
+											@Valid @RequestParam(Param.VERSION_LEVEL) Integer version_level,
 	                                        @RequestParam("file") MultipartFile file) throws IOException{
 	        User user = userRepository.findByToken(token);
 
@@ -101,19 +93,31 @@ public class LectureController {
 	        mediaType= mediaType.substring(0, index);
 	        if (mediaType.equals("video")){ 
 	        	 MediaFileRepository.save(material);
-	        	Lecture lecture = new Lecture(false,true,false);
-	            lecture.setSection(section);
+	        	Lecture lecture = new Lecture(true,false);
+				List<Version> versions = section.getVersions();
+				for (Version version:
+					 versions) {
+					if (version.getLevel() == version_level)
+						lecture.setVersion(version);
+				}
+//	            lecture.setSection(section);
 	            material.setLecture(lecture);
 	            lectureRepository.save(lecture);
 	            return new ResponseEntity<>("video added ",HttpStatus.CREATED);
 	         }
 	        else if (mediaType.equals("application")) {
-	          MediaFileRepository.save(material);
-	          Lecture lecture = new Lecture(false,false,true);
-	           lecture.setSection(section);
-	           material.setLecture(lecture);
-	           lectureRepository.save(lecture);
-	           return new ResponseEntity<>("read file added",HttpStatus.CREATED);
+	        	MediaFileRepository.save(material);
+	          	Lecture lecture = new Lecture(false,true);
+	          	List<Version> versions = section.getVersions();
+				for (Version version:
+						versions) {
+					if (version.getLevel() == version_level)
+						lecture.setVersion(version);
+				}
+//	           lecture.setSection(section);
+	           	material.setLecture(lecture);
+	           	lectureRepository.save(lecture);
+	           	return new ResponseEntity<>("read file added",HttpStatus.CREATED);
 	        }
 	       
 	        else {
@@ -145,8 +149,8 @@ public class LectureController {
 	        	 return new ResponseEntity<>("Not course file",HttpStatus.BAD_REQUEST);
 	        }
 
-	        if (!file.getLecture().getSection().getCourse().getPublisher().getUserId()
-	                .equals(user.getUserId()) && !file.getLecture().getSection().getCourse().getLearners().contains(user))
+	        if (!file.getLecture().getVersion().getSection().getCourse().getPublisher().getUserId()
+	                .equals(user.getUserId()) && !file.getLecture().getVersion().getSection().getCourse().getLearners().contains(user))
 	            return new ResponseEntity<>("Not Allowed you are not the creator of this file or a student of this course",
 	                    HttpStatus.FORBIDDEN);
 	        
@@ -180,7 +184,7 @@ public class LectureController {
 	        	 return new ResponseEntity<>("Not course file",HttpStatus.BAD_REQUEST);
 	        }
 
-	        if (!file.getLecture().getSection().getCourse().getPublisher().getUserId()
+	        if (!file.getLecture().getVersion().getSection().getCourse().getPublisher().getUserId()
 	                .equals(user.getUserId()))
 	            return new ResponseEntity<>("Not Allowed you are not a teacher or this is not your file to delete",
 	                    HttpStatus.FORBIDDEN);
@@ -213,8 +217,8 @@ public class LectureController {
 	                    HttpStatus.NOT_FOUND);
 	        }
 	        
-	        if (!lecture.getSection().getCourse().getPublisher().getUserId().equals(user.getUserId()) && 
-	        		!lecture.getSection().getCourse().getLearners().contains(user) )
+	        if (!lecture.getVersion().getSection().getCourse().getPublisher().getUserId().equals(user.getUserId()) &&
+	        		!lecture.getVersion().getSection().getCourse().getLearners().contains(user) )
 	        	return new ResponseEntity<>("Not Allowed you are not a teacher or student in this course ",
 	                    HttpStatus.FORBIDDEN);
 	        

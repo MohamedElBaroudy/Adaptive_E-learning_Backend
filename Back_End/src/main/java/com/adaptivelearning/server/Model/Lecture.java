@@ -20,10 +20,6 @@ public class Lecture {
     @Column(name = "ID", unique = true, nullable = false)
     private Long lectureId;
 
-    // is quiz
-    @Column(name = "IS_Quiz")
-    private boolean isQuiz = false;
-
     // is video
     @Column(name = "IS_VIDEO")
     private boolean isVideo = false;
@@ -35,13 +31,8 @@ public class Lecture {
     // mapping
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "SECTION")
-    private Section section;
-
-    @OneToOne(fetch = FetchType.EAGER,
-            cascade = {CascadeType.REMOVE},
-            mappedBy = "lecture")
-    private Quiz quiz;
+    @JoinColumn(name = "VERSION")
+    private Version version;
     
     @OneToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.REMOVE},
@@ -54,10 +45,8 @@ public class Lecture {
     public Lecture() {
     }
 
-    public Lecture(boolean isQuiz,
-                   boolean isVideo,
+    public Lecture(boolean isVideo,
                    boolean isReadFile) {
-        this.isQuiz = isQuiz;
         this.isVideo = isVideo;
         this.isReadFile = isReadFile;
     }
@@ -68,14 +57,6 @@ public class Lecture {
 
     public void setLectureId(Long lectureId) {
         this.lectureId = lectureId;
-    }
-
-    public boolean isQuiz() {
-        return isQuiz;
-    }
-
-    public void setQuiz(boolean quiz) {
-        isQuiz = quiz;
     }
 
     public boolean isVideo() {
@@ -94,20 +75,12 @@ public class Lecture {
         isReadFile = readFile;
     }
 
-    public Section getSection() {
-        return section;
+    public Version getVersion() {
+        return version;
     }
 
-    public void setSection(Section section) {
-        this.section = section;
-    }
-
-    public Quiz getQuiz() {
-        return quiz;
-    }
-
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz;
+    public void setVersion(Version version) {
+        this.version = version;
     }
 
 	public MediaFile getMedia() {

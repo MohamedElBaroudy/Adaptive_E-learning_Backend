@@ -1,19 +1,13 @@
 package com.adaptivelearning.server.Controller;
 
-import java.io.IOException;
-
 import javax.validation.Valid;
+import com.adaptivelearning.server.Repository.StudentCourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import com.adaptivelearning.server.FancyModel.FancyClassroom;
 import com.adaptivelearning.server.FancyModel.FancyMediaFile;
 import com.adaptivelearning.server.Model.Classroom;
@@ -30,6 +24,8 @@ import com.adaptivelearning.server.constants.Param;
 
 @RestController
 public class ClassRoomController {
+    @Autowired
+    StudentCourseRepository studentCourseRepository;
 
     @Autowired
     ClassroomRepository classroomRepository;
@@ -73,7 +69,7 @@ public class ClassRoomController {
         }
         
 
-        FancyClassroom fancyClassroom = new FancyClassroom();
+        FancyClassroom fancyClassroom = new FancyClassroom(studentCourseRepository);
         return new ResponseEntity<>(fancyClassroom.toFancyClassroomMapping(classroom, user),
                 HttpStatus.OK);
     }

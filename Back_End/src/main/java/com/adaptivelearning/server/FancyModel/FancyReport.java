@@ -1,16 +1,16 @@
 package com.adaptivelearning.server.FancyModel;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.adaptivelearning.server.Model.Course;
 import com.adaptivelearning.server.Model.Report;
-import com.adaptivelearning.server.Model.Section;
 import com.adaptivelearning.server.Model.User;
 import com.adaptivelearning.server.Model.Quiz;
+import com.adaptivelearning.server.Repository.StudentCourseRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 public class FancyReport {
+	@JsonIgnore
+	private StudentCourseRepository studentCourseRepository;
 	
 	 private Long reportId;
      private boolean isPassed;
@@ -21,12 +21,16 @@ public class FancyReport {
  	 private FancyUser child;
  	 private FancyQuiz Quiz;
  	 private FancyCourse course;
-     
+
+ 	 public FancyReport(StudentCourseRepository studentCourseRepository){
+ 	 	this.studentCourseRepository = studentCourseRepository;
+	 }
+
  	public FancyReport toFancyReportMapping(Report report,User parent,User child,Quiz quiz,Course course){
         FancyUser fancyparent= new FancyUser();
         FancyUser fancychild= new FancyUser();
         FancyQuiz fancyquiz = new FancyQuiz();
-        FancyCourse fancycourse = new FancyCourse();
+        FancyCourse fancycourse = new FancyCourse(this.studentCourseRepository);
         
         this.reportId =report.getReportId();
         this.isPassed=report.isPassed();

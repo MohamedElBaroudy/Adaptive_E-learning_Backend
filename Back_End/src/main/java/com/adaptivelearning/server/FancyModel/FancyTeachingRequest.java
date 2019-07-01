@@ -1,7 +1,6 @@
 package com.adaptivelearning.server.FancyModel;
 
 import com.adaptivelearning.server.Model.TeachingRequest;
-import com.adaptivelearning.server.Model.User;
 
 import java.util.LinkedList;
 import java.util.List;
