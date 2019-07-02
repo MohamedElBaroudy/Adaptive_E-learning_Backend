@@ -13,6 +13,9 @@ public class FancyStudentQuiz {
     // student mark
     private Integer studentMark;
 
+    // student best mark
+    private Integer studentBestMark;
+
     // is passed
     private Boolean isPassed;
 
@@ -32,6 +35,7 @@ public class FancyStudentQuiz {
         this.quizId = studentQuiz.getStudentQuizId().getQuizId();
         this.totalMark = studentQuiz.getQuiz().getTotalMark();
         this.studentMark = studentQuiz.getMark();
+        this.studentBestMark = studentQuiz.getBestMark();
         this.isPassed = studentQuiz.getPassed();
         this.attempts = studentQuiz.getAttempts();
         this.startDate = studentQuiz.getStartDate();
@@ -93,5 +97,13 @@ public class FancyStudentQuiz {
 
     public void setSubmitDate(Date submitDate) {
         this.submitDate = submitDate;
+    }
+
+    public Integer getStudentBestMark() {
+        return studentBestMark;
+    }
+
+    public void setStudentBestMark(Integer studentBestMark) {
+        this.studentBestMark = studentBestMark;
     }
 }

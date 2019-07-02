@@ -115,6 +115,7 @@ public class Course {
     @OneToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REMOVE},
             mappedBy = "course")
+    @OrderBy(value = "id")
     private List<Section> sections;
     
     

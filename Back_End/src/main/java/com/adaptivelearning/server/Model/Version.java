@@ -30,9 +30,10 @@ public class Version {
     @JoinColumn(name = "SECTION")
     private Section section;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REMOVE},
             mappedBy = "version")
+    @OrderBy(value = "id")
     private List<Lecture> lectures;
 
     public Version() {

@@ -33,14 +33,14 @@ public class FancyQuiz {
     public FancyQuiz() {
     }
 
-    public FancyQuiz toFancyQuizMapping(Quiz quiz, Boolean isTeacher){
+    public FancyQuiz toFancyQuizMapping(Quiz quiz, Boolean isPublisher){
         FancyQuestion fancyQuestion = new FancyQuestion();
         this.quizId = quiz.getQuizId();
         this.title = quiz.getTitle();
         this.instructions = quiz.getInstructions();
         this.time= quiz.getTime();
         this.totalMark = quiz.getTotalMark();
-        this.questions = fancyQuestion.toFancyQuestionListMapping(quiz.getQuestions(), isTeacher);  
+        this.questions = fancyQuestion.toFancyQuestionListMapping(quiz.getQuestions(), isPublisher);
       	this.no_of_questions = quiz.getNo_of_questions();
       	this.enterdbyTeacher=quiz.isEnterdbyTeacher();
                 

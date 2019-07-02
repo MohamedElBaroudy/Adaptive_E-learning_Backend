@@ -55,7 +55,7 @@ public class Quiz {
     
 	// mapping
     @OneToOne(fetch = FetchType.EAGER,
-            cascade = {CascadeType.REMOVE})
+            cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "SECTION")
     private Section section;
 
@@ -64,7 +64,7 @@ public class Quiz {
             cascade = CascadeType.REMOVE)
     private List<StudentQuiz> studentQuizs;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REMOVE},
             mappedBy = "quiz")
     private List<Question> questions;

@@ -602,6 +602,7 @@ public class TeacherController {
         versionRepository.save(version2);
         versionRepository.save(version3);
 
+        course.getSections().add(section);
         section.setCourse(course);
         section.setVersions(versionList);
         sectionRepository.save(section);

@@ -229,7 +229,7 @@ public class QuizController {
                     HttpStatus.FORBIDDEN);
 
         FancyQuiz fancyQuiz = new FancyQuiz();
-        return new ResponseEntity<>(fancyQuiz.toFancyQuizMapping(quiz, user.isTeacher()),HttpStatus.OK);
+        return new ResponseEntity<>(fancyQuiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),HttpStatus.OK);
     }
 
     @PostMapping(Mapping.QUIZ_QUESTION)

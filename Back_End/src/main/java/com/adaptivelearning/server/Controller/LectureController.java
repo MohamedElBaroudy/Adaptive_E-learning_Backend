@@ -97,8 +97,10 @@ public class LectureController {
 				List<Version> versions = section.getVersions();
 				for (Version version:
 					 versions) {
-					if (version.getLevel() == version_level)
+					if (version.getLevel() == version_level) {
+						version.getLectures().add(lecture);
 						lecture.setVersion(version);
+					}
 				}
 //	            lecture.setSection(section);
 	            material.setLecture(lecture);

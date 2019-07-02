@@ -25,6 +25,9 @@ public class StudentQuiz{
     @Column(name = "student_mark")
     private Integer mark = 0;
 
+    @Column(name = "student_best_mark")
+    private Integer bestMark = 0;
+
     @Column(name = "isPassed")
     private Boolean isPassed = false;
 
@@ -123,6 +126,14 @@ public class StudentQuiz{
         this.totalAttempts = totalAttempts;
     }
 
+    public Integer getBestMark() {
+        return bestMark;
+    }
+
+    public void setBestMark(Integer bestMark) {
+        this.bestMark = bestMark;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -132,15 +143,16 @@ public class StudentQuiz{
                 Objects.equals(getUser(), that.getUser()) &&
                 Objects.equals(getQuiz(), that.getQuiz()) &&
                 Objects.equals(getMark(), that.getMark()) &&
+                Objects.equals(getBestMark(), that.getBestMark()) &&
                 Objects.equals(isPassed, that.isPassed) &&
                 Objects.equals(getStartDate(), that.getStartDate()) &&
                 Objects.equals(getSubmitDate(), that.getSubmitDate()) &&
                 Objects.equals(getAttempts(), that.getAttempts()) &&
-                Objects.equals(totalAttempts, that.totalAttempts);
+                Objects.equals(getTotalAttempts(), that.getTotalAttempts());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStudentQuizId(), getUser(), getQuiz(), getMark(), isPassed, getStartDate(), getSubmitDate(), getAttempts(), totalAttempts);
+        return Objects.hash(getStudentQuizId(), getUser(), getQuiz(), getMark(), getBestMark(), isPassed, getStartDate(), getSubmitDate(), getAttempts(), getTotalAttempts());
     }
 }

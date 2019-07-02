@@ -448,6 +448,8 @@ public class StudentController {
         }
         if (studentQuiz.getMark() >= 0.7 * quiz.getTotalMark())
             studentQuiz.setPassed(true);
+        if (studentQuiz.getMark() > studentQuiz.getBestMark())
+            studentQuiz.setBestMark(studentQuiz.getMark());
         studentQuiz.setSubmitDate(new Date());
         studentQuiz.setStartDate(null);
         studentQuiz.setAttempts(studentQuiz.getAttempts() + 1);
@@ -540,7 +542,7 @@ public class StudentController {
        //     StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
             studentQuizRepository.save(studentQuiz);
             FancyQuiz fancyquiz=new FancyQuiz();
-            return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+            return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),
                  HttpStatus.OK);
         }
         else {
@@ -555,7 +557,7 @@ public class StudentController {
              //    StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                  studentQuizRepository.save(studentQuiz);
                  FancyQuiz fancyquiz=new FancyQuiz();
-                 return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                 return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),
                       HttpStatus.OK);
         	     }
                  else {
@@ -571,7 +573,7 @@ public class StudentController {
                  //       StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
-                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),
                              HttpStatus.OK);
                	     }
                 	else {
@@ -584,7 +586,7 @@ public class StudentController {
                    //     StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
-                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),
                              HttpStatus.OK);
                 	}
         	 }
@@ -598,7 +600,7 @@ public class StudentController {
                //  StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                  studentQuizRepository.save(studentQuiz);
                  FancyQuiz fancyquiz=new FancyQuiz();
-                 return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                 return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),
                       HttpStatus.OK);
         	     }
                  else {
@@ -612,7 +614,7 @@ public class StudentController {
                     //    StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
-                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),
                              HttpStatus.OK);
                	     }
                 	else {
@@ -625,7 +627,7 @@ public class StudentController {
                     //    StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
-                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),
                              HttpStatus.OK);
                 	}
         	 }
@@ -639,7 +641,7 @@ public class StudentController {
                  //StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                  studentQuizRepository.save(studentQuiz);
                  FancyQuiz fancyquiz=new FancyQuiz();
-                 return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                 return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),
                       HttpStatus.OK);
         	     }
                  else {
@@ -655,7 +657,7 @@ public class StudentController {
                    //     StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
-                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),
                              HttpStatus.OK);
                	     }
                 	else {
@@ -668,7 +670,7 @@ public class StudentController {
                      //   StudentQuiz studentQuiz = new StudentQuiz(user, quiz);
                         studentQuizRepository.save(studentQuiz);
                         FancyQuiz fancyquiz=new FancyQuiz();
-                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, user.isTeacher()),
+                        return new ResponseEntity<>(fancyquiz.toFancyQuizMapping(quiz, quiz.getSection().getCourse().getPublisher().equals(user)),
                              HttpStatus.OK);
                 	}
         	 }

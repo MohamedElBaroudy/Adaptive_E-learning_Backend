@@ -40,6 +40,7 @@ public class Section {
     @OneToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REMOVE},
             mappedBy = "section")
+    @OrderBy(value = "id")
     private List<Version> versions;
 
     @OneToOne(fetch = FetchType.EAGER,
