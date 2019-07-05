@@ -379,7 +379,7 @@ public class StudentController {
         Course course = courseRepository.findByCourseId(quiz.getSection().getCourse().getCourseId());
         String json = httpEntity.getBody();
         JSONObject obj = new JSONObject(json);
-
+        String notes =new String();
 
         if (user == null) {
             return new ResponseEntity<>("User is not present.",
@@ -445,7 +445,13 @@ public class StudentController {
             }
             if (new LinkedHashSet<>(studentAnswerList).equals(new LinkedHashSet<>(modelAnswers)))
                 studentQuiz.setMark(studentQuiz.getMark() + question.getMark());
+            
+            else {
+            	notes += "Your answer of question ' "+question.getBody() + " ' was wrong. Message: "+question.getMessage() + System.lineSeparator() ;
+            }
         }
+        
+        studentQuiz.setNotes(notes);
         if (studentQuiz.getMark() >= 0.7 * quiz.getTotalMark())
             studentQuiz.setPassed(true);
         if (studentQuiz.getMark() > studentQuiz.getBestMark())

@@ -42,8 +42,19 @@ public class StudentQuiz{
 
     @Column(name = "TotalAttempts")
     private  Integer totalAttempts = 0;
+    
+    @Column(name = "notes")
+    private  String notes;
 
-    public StudentQuiz() {
+    public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public StudentQuiz() {
     }
 
     public StudentQuiz(User user,Quiz quiz) {

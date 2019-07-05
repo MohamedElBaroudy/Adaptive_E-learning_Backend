@@ -27,8 +27,12 @@ public class FancyStudentQuiz {
 
     // start date
     private Date submitDate;
+    
+ 	//quiz notes
+    private String notes;
 
-    public FancyStudentQuiz() {
+
+	public FancyStudentQuiz() {
     }
 
     public FancyStudentQuiz toFancyStudentQuiz(StudentQuiz studentQuiz){
@@ -40,6 +44,7 @@ public class FancyStudentQuiz {
         this.attempts = studentQuiz.getAttempts();
         this.startDate = studentQuiz.getStartDate();
         this.submitDate = studentQuiz.getSubmitDate();
+        this.notes=studentQuiz.getNotes();
         return this;
     }
 
@@ -106,4 +111,12 @@ public class FancyStudentQuiz {
     public void setStudentBestMark(Integer studentBestMark) {
         this.studentBestMark = studentBestMark;
     }
+
+    public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 }
