@@ -416,6 +416,7 @@ public class StudentController {
         }
 
         JSONArray questions = obj.getJSONArray("questions");
+        int currentMark = 0;
         for (int i =0;i< questions.length();i++){
             JSONObject questionObj = questions.getJSONObject(i);
             Long questionId = questionObj.getLong("question_id");
@@ -430,6 +431,7 @@ public class StudentController {
             studentAnswers.addAll(set);
 
             Question question = questionRepository.findByQuestionId(questionId);
+            currentMark += question.getMark();
             List<Answer> answers = question.getAnswers();
             List<Answer> modelAnswers = new LinkedList<>();
             for (Answer answer:
@@ -447,12 +449,12 @@ public class StudentController {
                 studentQuiz.setMark(studentQuiz.getMark() + question.getMark());
             
             else {
-            	notes += "Your answer of question ' "+question.getBody() + " ' was wrong. Message: "+question.getMessage() + System.lineSeparator() ;
+            	notes += question.getQuestionId().toString()+",";
             }
         }
         
         studentQuiz.setNotes(notes);
-        if (studentQuiz.getMark() >= 0.7 * quiz.getTotalMark())
+        if (studentQuiz.getMark() >= 0.7 * currentMark)
             studentQuiz.setPassed(true);
         if (studentQuiz.getMark() > studentQuiz.getBestMark())
             studentQuiz.setBestMark(studentQuiz.getMark());
@@ -517,7 +519,7 @@ public class StudentController {
         
         if (studentQuiz == null) {
             studentQuiz = new StudentQuiz(user, quiz);
-            Date date = new Date(new Date().getTime() + quiz.getTime()*60000);
+            Date date = new Date(new Date().getTime() + quiz.getTime()*60000 + 20000);
             studentQuiz.setSubmitDate(date);
         }
         else {
@@ -536,7 +538,7 @@ public class StudentController {
             }
             studentQuiz.setStartDate(date);
             studentQuiz.setSubmitDate(new Date(date.getTime() + quiz.getTime()*60000));
-            studentQuiz.setPassed(false);
+            // studentQuiz.setPassed(false);
             studentQuiz.setMark(0);
         }
  
