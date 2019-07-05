@@ -434,6 +434,10 @@ public class TeacherController {
         	 return new ResponseEntity<>("this course is private it's not allowed to be added into classroom",
                      HttpStatus.FORBIDDEN);
         }
+
+        if (classroom.getCourses().contains(course))
+            return new ResponseEntity<>("this course already included in the classroom",
+                    HttpStatus.FORBIDDEN);
         classroom.getCourses().add(course); // the mapping will do it automatically
         classroomRepository.save(classroom);
 
