@@ -98,6 +98,14 @@ public class StudentController {
 //       }
 
         classroom.getStudents().add(user);
+        List<Course> courses=classroom.getCourses();
+        for(int i=0;i<courses.size();i++ ) {
+        	courses.get(i).getLearners().add(user);
+        	courses.get(i).increamentStudents();
+            StudentCourse studentCourse=new StudentCourse(user, courses.get(i));
+            courseRepository.save(courses.get(i));
+            studentCourseRepository.save(studentCourse);
+        }
         classroomRepository.save(classroom);
 
         FancyClassroom fancyClassroom = new FancyClassroom(studentCourseRepository);

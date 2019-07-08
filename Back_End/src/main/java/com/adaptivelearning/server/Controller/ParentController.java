@@ -148,6 +148,14 @@ public class ParentController {
                     HttpStatus.FORBIDDEN);
         }
         classroom.getStudents().add(enrollChild);
+        List<Course> courses=classroom.getCourses();
+        for(int i=0;i<courses.size();i++ ) {
+        	courses.get(i).getLearners().add(user);
+        	courses.get(i).increamentStudents();
+            StudentCourse studentCourse=new StudentCourse(enrollChild, courses.get(i));
+            courseRepository.save(courses.get(i));
+            studentCourseRepository.save(studentCourse);
+        }
         classroomRepository.save(classroom);
        return new ResponseEntity<>(HttpStatus.CREATED);
     }
