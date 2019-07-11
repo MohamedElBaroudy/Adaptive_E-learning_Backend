@@ -46,6 +46,9 @@ public class StudentQuiz{
     @Column(name = "notes")
     private  String notes;
 
+    @Column(name = "retrieved_quiz_total_mark")
+    private Integer retrievedQuizTotalMark = 0;
+
     public String getNotes() {
 		return notes;
 	}
@@ -143,6 +146,14 @@ public class StudentQuiz{
 
     public void setBestMark(Integer bestMark) {
         this.bestMark = bestMark;
+    }
+
+    public Integer getRetrievedQuizTotalMark() {
+        return retrievedQuizTotalMark;
+    }
+
+    public void setRetrievedQuizTotalMark(Integer retrievedQuizTotalMark) {
+        this.retrievedQuizTotalMark = retrievedQuizTotalMark;
     }
 
     @Override

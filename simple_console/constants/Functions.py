@@ -55,6 +55,7 @@ def get_func(name):
         return rate_course
 
 
+
 top_courses = {
     "mapping": Mapping.TOP_RATED_COURSES,
     "method": "get",
@@ -216,6 +217,17 @@ rate_course = {
     ]
 }
 
+create_section = {
+    "mapping": Mapping.SECTION,
+    "method": "post",
+    "parameters": [
+        Parameters.ACCESS_TOKEN,
+        Parameters.COURSE_ID,
+        Parameters.SECTION_TITLE
+    ]
+}
+
+
 create_quiz = {
     "mapping": Mapping.TEACHER_QUIZ,
     "method": "post",
@@ -225,5 +237,30 @@ create_quiz = {
         Parameters.QUIZ_TITLE,
         Parameters.QUIZ_INSTRUCTIONS,
         Parameters.QUIZ_TIME
+    ]
+}
+
+add_question = {
+    "mapping": Mapping.QUIZ_QUESTION,
+    "method": "post",
+    "parameters": [
+        Parameters.ACCESS_TOKEN,
+        Parameters.QUIZ_ID,
+        Parameters.QUESTION_BODY,
+        Parameters.QUESTION_IS_MULTIPLE_CHOICE,
+        Parameters.QUESTION_MARK,
+        Parameters.QUESTION_LEVEL,
+        Parameters.QUESTION_REFERENCE
+    ]
+}
+
+add_answer = {
+    "mapping": Mapping.QUESTION_ANSWER,
+    "method": "post",
+    "parameters": [
+        Parameters.ACCESS_TOKEN,
+        Parameters.QUESTION_ID,
+        Parameters.ANSWER_BODY,
+        Parameters.ANSWER_IS_CORRECT
     ]
 }

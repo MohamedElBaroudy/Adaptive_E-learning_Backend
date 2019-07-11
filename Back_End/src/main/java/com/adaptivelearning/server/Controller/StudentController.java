@@ -466,6 +466,7 @@ public class StudentController {
             studentQuiz.setPassed(true);
         if (studentQuiz.getMark() > studentQuiz.getBestMark())
             studentQuiz.setBestMark(studentQuiz.getMark());
+        studentQuiz.setRetrievedQuizTotalMark(currentMark);
         studentQuiz.setSubmitDate(new Date());
         studentQuiz.setStartDate(null);
         studentQuiz.setAttempts(studentQuiz.getAttempts() + 1);

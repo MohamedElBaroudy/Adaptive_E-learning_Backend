@@ -13,7 +13,7 @@ public class FancyQuestion {
     private String body;
 
     // is multiple choice
-    private boolean isMultipleChoice;
+    private boolean multipleChoice;
 
     // mark
     private short mark;
@@ -33,7 +33,7 @@ public class FancyQuestion {
         FancyAnswer fancyAnswer = new FancyAnswer();
         this.questionId = question.getQuestionId();
         this.body = question.getBody();
-        this.isMultipleChoice = question.isMultipleChoice();
+        this.multipleChoice = question.isMultipleChoice();
         this.mark = question.getMark();
         this.level=question.getLevel();
         this.message=question.getMessage();
@@ -68,11 +68,11 @@ public class FancyQuestion {
     }
 
     public boolean isMultipleChoice() {
-        return isMultipleChoice;
+        return multipleChoice;
     }
 
     public void setMultipleChoice(boolean multipleChoice) {
-        isMultipleChoice = multipleChoice;
+        this.multipleChoice = multipleChoice;
     }
 
     public short getMark() {

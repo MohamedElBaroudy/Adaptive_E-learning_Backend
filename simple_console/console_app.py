@@ -5,37 +5,38 @@ from time import sleep
 from sys import exit
 
 
-USERS = [["mohamedrambo" + str(randrange(0, 1000)) + "@gmail.com", "mohamedX" + str(randrange(0, 1000)), ""],
-         ["tarekkabo" + str(randrange(0, 1000)) + "@gmail.com", "tarekX" + str(randrange(0, 1000)), ""],
-         ["mahmoudbando" + str(randrange(0, 1000)) + "@gmail.com", "mahmoudX" + str(randrange(0, 1000)), ""],
-         ["ahmedabdo" + str(randrange(0, 1000)) + "@gmail.com", "ahmedX" + str(randrange(0, 1000)), ""],
-         ["hossam_snow" + str(randrange(0, 1000)) + "@gmail.com", "hossamX" + str(randrange(0, 1000)), ""],
-         ["amir_sand" + str(randrange(0, 1000)) + "@gmail.com", "amirX" + str(randrange(0, 1000)), ""]
+USERS = [["mohamedrambo" + str(randrange(0, 100)) + "@gmail.com", "mohamedX" + str(randrange(0, 100)), ""],
+         ["tarekkabo" + str(randrange(0, 100)) + "@gmail.com", "tarekX" + str(randrange(0, 100)), ""],
+         ["mahmoudbando" + str(randrange(0, 100)) + "@gmail.com", "mahmoudX" + str(randrange(0, 100)), ""],
+         ["ahmedabdo" + str(randrange(0, 100)) + "@gmail.com", "ahmedX" + str(randrange(0, 100)), ""],
+         ["hossam_snow" + str(randrange(0, 100)) + "@gmail.com", "hossamX" + str(randrange(0, 100)), ""],
+         ["amir_sand" + str(randrange(0, 100)) + "@gmail.com", "amirX" + str(randrange(0, 100)), ""]
          ]
-COURSES = ["Electrical Testing" + str(randrange(0, 1000)),
-           "Data base" + str(randrange(0, 1000)),
-           "Networks" + str(randrange(0, 1000)),
-           "Neural Networks" + str(randrange(0, 1000)),
-           "Security" + str(randrange(0, 1000)),
-           "Control Systems" + str(randrange(0, 1000)),
-           "Artificial Intelligence" + str(randrange(0, 1000)),
-           "Distributed Systems" + str(randrange(0, 1000)),
-           "Biomedical Engineering" + str(randrange(0, 1000)),
-           "Machine Learning" + str(randrange(0, 1000)),
-           "Big Data" + str(randrange(0, 1000)),
-           "Image Processing" + str(randrange(0, 1000))
+COURSES = ["CSE" + str(randrange(0, 1000)) + " Electrical Testing",
+           "CSE" + str(randrange(0, 1000)) + " Data base",
+           "CSE" + str(randrange(0, 1000)) + " Networks",
+           "CSE" + str(randrange(0, 1000)) + " Neural Networks",
+           "CSE" + str(randrange(0, 1000)) + " Security",
+           "CSE" + str(randrange(0, 1000)) + " Control Systems",
+           "CSE" + str(randrange(0, 1000)) + " Artificial Intelligence",
+           "CSE" + str(randrange(0, 1000)) + " Distributed Systems",
+           "CSE" + str(randrange(0, 1000)) + " Biomedical Engineering",
+           "CSE" + str(randrange(0, 1000)) + " Machine Learning",
+           "CSE" + str(randrange(0, 1000)) + " Big Data",
+           "CSE" + str(randrange(0, 1000)) + " Image Processing"
            ]
-CLASSROOMS = [["Physics" + str(randrange(0, 1000)), ""],
-              ["Maths" + str(randrange(0, 1000)), ""],
-              ["Chemistry" + str(randrange(0, 1000)), ""],
-              ["History" + str(randrange(0, 1000)), ""],
-              ["Geography" + str(randrange(0, 1000)), ""],
-              ["Literature" + str(randrange(0, 1000)), ""]
+CLASSROOMS = [["Physics" + " CSE" + str(randrange(0, 1000)) + " Classroom", ""],
+              ["Maths" + " CSE" + str(randrange(0, 1000)) + " Classroom", ""],
+              ["Chemistry" + " CSE" + str(randrange(0, 1000)) + " Classroom", ""],
+              ["History" + " CSE" + str(randrange(0, 1000)) + " Classroom", ""],
+              ["Geography" + " CSE" + str(randrange(0, 1000)) + " Classroom", ""],
+              ["Literature" + " CSE" + str(randrange(0, 1000)) + " Classroom", ""]
               ]
 
 EXIT_FLAG = 0
 OPEN_FLAG = 1
 ADMIN_FLAG = 0
+GENERATED_FLAG = 0
 
 USERID = 0
 USERNAME = ""
@@ -53,9 +54,9 @@ FUNCTION = ""
 
 
 HELP = [
-    ["call admin", "generate random", "register", "login", "get new courses", "get hot courses", "get top courses",
+    ["call admin", "generate random", "generate random quizzes", "register", "login", "get new courses", "get hot courses", "get top courses",
      "get categories", "get category courses", "get courses titles"],
-    ["call admin", "generate random", "logout", "profile", "request teaching", "create classroom", "get enrolled courses",
+    ["call admin", "generate random", "generate random quizzes", "logout", "profile", "request teaching", "create classroom", "get enrolled courses",
      "get joined classrooms", "create course", "join classroom", "enroll course", "rate course"]
 ]
 
@@ -160,6 +161,7 @@ def exec_request(request_dictionary):
 
 def main():
     global OPEN_FLAG, USERNAME, USERID, TOKEN, ADMIN_TOKEN, ADMIN_FLAG
+    global USERS, COURSES, CLASSROOMS, ADMIN_TOKEN, GENERATED_FLAG
     while EXIT_FLAG != 1:
         if OPEN_FLAG == 1:
             welcome_message()
@@ -179,7 +181,7 @@ def main():
             if ADMIN_FLAG != 1:
                 print("cannot do this at normal mode please \"call admin\" first!")
                 continue
-            global USERS, COURSES, CLASSROOMS, ADMIN_TOKEN
+            global USERS, COURSES, CLASSROOMS, ADMIN_TOKEN, GENERATED_FLAG
             try:
                 number_of_users = 0
                 for i in USERS:
@@ -260,6 +262,7 @@ def main():
                     CLASSROOMS[number_of_users][1] = response.text
 
                     number_of_users += 1  # increment number of users
+                GENERATED_FLAG = 1
             except:
                 print("something wrong happened.")
 
@@ -272,6 +275,105 @@ def main():
             print("########### classrooms ###########")
             for i in CLASSROOMS:
                 print(i)
+
+        if request == "generate random quizzes":
+            if GENERATED_FLAG != 1:
+                print("cannot do this at normal mode please \"generate random\" first!")
+                continue
+            try:
+                for i in range(6):
+                    current_token = USERS[i][2]
+                    create_section = Functions.create_section
+                    create_quiz = Functions.create_quiz
+                    add_question = Functions.add_question
+                    add_answer = Functions.add_answer
+
+                    for j in range(2):
+                        for k in range(2):
+                            course_id = 2 * i + j + 1
+                            section_id = 4*i + 2*j + k + 1
+                            quiz_id = section_id
+                            request_api = SERVER_LINK + create_section["mapping"] + "?"
+                            request_api += create_section["parameters"][0] + "=" + current_token + "&"  # token
+                            request_api += create_section["parameters"][1] + "=" + str(course_id) + "&"
+                            request_api += create_section["parameters"][2] + "=" + "section " + str(k) + " \"you can name your section\""
+                            response = requests.post(request_api)
+                            if response.status_code > 300:
+                                print("cannot create section")
+                                break
+                            request_api = SERVER_LINK + create_quiz["mapping"] + "?"
+                            request_api += create_quiz["parameters"][0] + "=" + current_token + "&"  # token
+                            request_api += create_quiz["parameters"][1] + "=" + str(section_id) + "&"
+                            request_api += create_quiz["parameters"][2] + "=" + "section " + str(k+1) + " quiz" + "&"
+                            request_api += create_quiz["parameters"][3] + "=" + "section " + str(k+1) + " instruction" + "&"
+                            request_api += create_quiz["parameters"][4] + "=" + str(randrange(10,21))
+                            response = requests.post(request_api)
+                            if response.status_code > 300:
+                                print("cannot create quiz")
+                                break
+                            for l in range(15):
+                                if l%2 == 0 :
+                                    request_api = SERVER_LINK + add_question["mapping"] + "?"
+                                    request_api += add_question["parameters"][0] + "=" + current_token + "&"  # token
+                                    request_api += add_question["parameters"][1] + "=" + str(quiz_id) + "&"
+                                    request_api += add_question["parameters"][2] + "=" + "question " + str(l + 1) + " of single choice test" + "&"
+                                    request_api += add_question["parameters"][3] + "=" + "false" + "&"
+                                    request_api += add_question["parameters"][4] + "=" + str(randrange(2, 5)) + "&"
+                                    request_api += add_question["parameters"][5] + "=" + str(randrange(1, 4)) + "&"
+                                    request_api += add_question["parameters"][6] + "=" + "you can write here a reference of this question to help students"
+                                    response = requests.post(request_api)
+                                    if response.status_code > 300:
+                                        print("cannot create question")
+                                        break
+                                    question_id = 60*i + 30*j + 15*k + l + 1
+                                    correct_answer = randrange(0, 4)
+                                    for o in range(4):
+                                        request_api = SERVER_LINK + add_answer["mapping"] + "?"
+                                        request_api += add_answer["parameters"][0] + "=" + current_token + "&"  # token
+                                        request_api += add_answer["parameters"][1] + "=" + str(question_id) + "&"
+                                        if correct_answer == o:
+                                            request_api += add_answer["parameters"][2] + "=" + "answer " + str(o) + " and is correct" + "&"
+                                            request_api += add_answer["parameters"][3] + "=" + "true"
+                                        else:
+                                            request_api += add_answer["parameters"][2] + "=" + "answer " + str(o) + " and is wrong" + "&"
+                                            request_api += add_answer["parameters"][3] + "=" + "false"
+                                        response = requests.post(request_api)
+                                        if response.status_code > 300:
+                                            print("cannot create answer")
+                                            break
+                                else:
+                                    request_api = SERVER_LINK + add_question["mapping"] + "?"
+                                    request_api += add_question["parameters"][0] + "=" + current_token + "&"  # token
+                                    request_api += add_question["parameters"][1] + "=" + str(quiz_id) + "&"
+                                    request_api += add_question["parameters"][2] + "=" + "question " + str(
+                                        l + 1) + " of multiple choice test" + "&"
+                                    request_api += add_question["parameters"][3] + "=" + "true" + "&"
+                                    request_api += add_question["parameters"][4] + "=" + str(randrange(2, 5)) + "&"
+                                    request_api += add_question["parameters"][5] + "=" + str(randrange(1, 4)) + "&"
+                                    request_api += add_question["parameters"][
+                                                       6] + "=" + "you can write here a reference of this question to help students"
+                                    response = requests.post(request_api)
+                                    if response.status_code > 300:
+                                        print("cannot create answer")
+                                        break
+                                    question_id = 60 * i + 30 * j + 15 * k + l + 1
+                                    for o in range(4):
+                                        correct_answer = randrange(0, 2)
+                                        request_api = SERVER_LINK + add_answer["mapping"] + "?"
+                                        request_api += add_answer["parameters"][0] + "=" + current_token + "&"  # token
+                                        request_api += add_answer["parameters"][1] + "=" + str(question_id) + "&"
+                                        if correct_answer == 1:
+                                            request_api += add_answer["parameters"][2] + "=" + "answer " + str(o) + " and is correct" + "&"
+                                            request_api += add_answer["parameters"][3] + "=" + "true"
+                                        else:
+                                            request_api += add_answer["parameters"][2] + "=" + "answer " + str(o) + " and is wrong" + "&"
+                                            request_api += add_answer["parameters"][3] + "=" + "false"
+                                        response = requests.post(request_api)
+                                        if response.status_code > 300:
+                                            print("cannot create answer")
+                                            break
+            except:
+                print("something wrong happened.")
 
         if request == "call admin":
             request_api = SERVER_LINK + "/auth/login?email=admin@gmail.com&password=123456789123456789"

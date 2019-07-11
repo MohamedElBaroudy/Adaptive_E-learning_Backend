@@ -31,6 +31,9 @@ public class FancyStudentQuiz {
  	//quiz notes
     private String notes;
 
+    //retrieved quiz total mark
+    private Integer retrievedQuizTotalMark;
+
 
 	public FancyStudentQuiz() {
     }
@@ -45,6 +48,7 @@ public class FancyStudentQuiz {
         this.startDate = studentQuiz.getStartDate();
         this.submitDate = studentQuiz.getSubmitDate();
         this.notes=studentQuiz.getNotes();
+        this.retrievedQuizTotalMark = studentQuiz.getRetrievedQuizTotalMark();
         return this;
     }
 
@@ -119,4 +123,12 @@ public class FancyStudentQuiz {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
+
+    public Integer getRetrievedQuizTotalMark() {
+        return retrievedQuizTotalMark;
+    }
+
+    public void setRetrievedQuizTotalMark(Integer retrievedQuizTotalMark) {
+        this.retrievedQuizTotalMark = retrievedQuizTotalMark;
+    }
 }
