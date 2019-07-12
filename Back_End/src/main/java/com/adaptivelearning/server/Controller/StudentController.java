@@ -476,8 +476,8 @@ public class StudentController {
  		// attempts and old rank
  		StudentCourse studentCourse = studentCourseRepository.findByUserAndCourse(user, course);
  		float old_rank = studentCourse.getRank();
- 		int no_of_attempts = studentQuiz.getAttempts();
- 		float quiz_grade = ( studentQuiz.getMark() / studentQuiz.getQuiz().getTotalMark() ) * 100 ;
+ 		int no_of_attempts = studentQuiz.getTotalAttempts();
+ 		float quiz_grade = ( studentQuiz.getMark() / currentMark ) * 100 ;
  		float new_rank = studentCourse.updateRank(old_rank, no_of_attempts, quiz_grade);
  		studentCourse.setRank(new_rank);
  		studentCourseRepository.save(studentCourse);
@@ -609,7 +609,7 @@ public class StudentController {
         	 }
         	
         }
-        else if(studentRank>4 && studentRank<7) {
+        else if(studentRank>=4 && studentRank<7) {
         	 List mediumQuestions= questionRepository.findByQuizAndLevel(quiz, (short) 2);
         	 if(mediumQuestions.size() >= selectedQuestions) {
         		 List questions= questionRepository.findRandom(quizId, 2 ,selectedQuestions );

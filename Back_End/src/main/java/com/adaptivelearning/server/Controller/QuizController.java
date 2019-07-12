@@ -121,7 +121,7 @@ public class QuizController {
         }
         
         quiz.setNo_of_questions(no_of_questions);
-        quiz.setTotalMark(no_of_questions);
+//        quiz.setTotalMark(no_of_questions);
         quiz.setEnterdbyTeacher(true);
         quizRepository.save(quiz);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
